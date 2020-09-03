@@ -446,25 +446,25 @@ class BaselineDetector:
               optimizer=None,
               criterion=None,
               device=None):
+        for epoch in range(n_epochs):
+            self.model.train()
 
-        self.model.train()
+            total_loss = 0
 
-        total_loss = 0
+            for x, y in train_dl:
 
-        for x, y in train_dl:
+                loss = self.train_step(x, y, optimizer, criterion, device)
+                total_loss += loss
 
-            loss = self.train_step(x, y, optimizer, criterion, device)
-            total_loss += loss
+            # print avg train loss using tqdm
 
-        # print avg train loss using tqdm
+            if val_dl is not None:
+                self.model.eval()
 
-        if val_dl is not None:
-            self.model.eval()
+                eval_loss = 0
 
-            eval_loss = 0
+                for x, y in val_dl:
+                    loss = self.val_step(x, y, criterion, device)
+                    eval_loss += loss
 
-            for x, y in val_dl:
-                loss = self.val_step(x, y, criterion, device)
-                eval_loss += loss
-
-            # print avg val loss using tqdm
+                # print avg val loss using tqdm
