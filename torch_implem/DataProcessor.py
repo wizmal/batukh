@@ -4,6 +4,7 @@ import torch.nn as nn
 import torch
 import torch.nn.functional as F
 from torch import optim
+from tqdm import tqdm
 
 # Data Prep
 
@@ -54,7 +55,12 @@ class MyDataset(Dataset):
 
 
 class MultipleRandomRotation(transforms.RandomRotation):
-    def __init__(self, degrees, resample=False, expand=False, center=None, fill=None):
+    def __init__(self,
+                 degrees,
+                 resample=False,
+                 expand=False,
+                 center=None,
+                 fill=None):
         super(MultipleRandomRotation, self).__init__(
             degrees, resample, expand, center, fill)
 
@@ -398,11 +404,12 @@ class BaselineDetector:
         if device is None:
             device = torch.device(
                 "cuda" if torch.cuda.is_available() else "cpu")
+        self.model.to(device)
         if optimizer is None:
             optimizer = optim.Adam(self.model.parameters(), lr=learning_rate)
         if criterion is None:
             criterion = nn.CrossEntropyLoss(
-                weight=torch.Tensor([1, 700]), reduction="none")
+                weight=torch.Tensor([1, 700]).to(device), reduction="none")
 
         optimizer.zero_grad()
 
@@ -426,9 +433,11 @@ class BaselineDetector:
             device = torch.device(
                 "cuda" if torch.cuda.is_available() else "cpu")
 
+        self.model.to(device)
+
         if criterion is None:
             criterion = nn.CrossEntropyLoss(
-                weight=torch.Tensor([1, 700]), reduction="none")
+                weight=torch.Tensor([1, 700]).to(device), reduction="none")
 
         x = x.to(device)
         y = y.to(device)
@@ -447,24 +456,50 @@ class BaselineDetector:
               criterion=None,
               device=None):
         for epoch in range(n_epochs):
+
+            if train_dl is None:
+                if self.train_dl is None:
+                    raise Exception("No training loaders found.")
+                else:
+                    train_dl = self.train_dl
+            if val_dl is None:
+                val_dl = self.val_dl
+
             self.model.train()
 
             total_loss = 0
+
+            # Progress bar
+            pbar = tqdm(total=len(train_dl))
+            pbar.set_description(f"Epoch: {epoch}. Traininig")
 
             for x, y in train_dl:
 
                 loss = self.train_step(x, y, optimizer, criterion, device)
                 total_loss += loss
 
-            # print avg train loss using tqdm
+                pbar.update()
+                pbar.set_postfix(loss=total_loss)
+
+            pbar.close()
 
             if val_dl is not None:
                 self.model.eval()
 
                 eval_loss = 0
 
+                # validation progress bar
+                pbar = tqdm(total=len(val_dl))
+                pbar.set_description(f"Epoch: {epoch}. Validating")
+
                 for x, y in val_dl:
                     loss = self.val_step(x, y, criterion, device)
                     eval_loss += loss
 
-                # print avg val loss using tqdm
+                    pbar.update(1)
+                    pbar.set_postfix(loss=eval_loss)
+
+    def predict(self, x):
+
+        self.model.eval()
+        return self.model(x)
