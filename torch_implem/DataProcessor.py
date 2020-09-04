@@ -498,6 +498,7 @@ class BaselineDetector:
 
                     pbar.update(1)
                     pbar.set_postfix(loss=eval_loss)
+                pbar.close()
 
     def predict(self, x):
 
