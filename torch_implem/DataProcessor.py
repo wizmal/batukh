@@ -444,6 +444,8 @@ class BaselineDetector:
 
         preds = self.model(x)
 
+        # remove mean, probably make a custom criterion
+        # do when internet resumes
         loss = criterion(preds, y).mean()
 
         return loss.item()
@@ -455,8 +457,8 @@ class BaselineDetector:
               optimizer=None,
               criterion=None,
               device=None):
-        for epoch in range(n_epochs):
 
+        for epoch in range(n_epochs):
             if train_dl is None:
                 if self.train_dl is None:
                     raise Exception("No training loaders found.")
@@ -466,7 +468,6 @@ class BaselineDetector:
                 val_dl = self.val_dl
 
             self.model.train()
-
             total_loss = 0
 
             # Progress bar
@@ -474,18 +475,15 @@ class BaselineDetector:
             pbar.set_description(f"Epoch: {epoch}. Traininig")
 
             for x, y in train_dl:
-
                 loss = self.train_step(x, y, optimizer, criterion, device)
                 total_loss += loss
 
                 pbar.update()
                 pbar.set_postfix(loss=total_loss)
-
             pbar.close()
 
             if val_dl is not None:
                 self.model.eval()
-
                 eval_loss = 0
 
                 # validation progress bar
@@ -499,8 +497,21 @@ class BaselineDetector:
                     pbar.update(1)
                     pbar.set_postfix(loss=eval_loss)
                 pbar.close()
+            self.save_checkpoint(checkpoint=None, path=None)
 
     def predict(self, x):
 
         self.model.eval()
         return self.model(x)
+
+    # finish this later
+    def save_checkpoint(self, checkpoint, path):
+        pass
+
+    def load_model(self, path):
+        print(self.model.load_state_dict(path))
+        print("Model Loaded!")
+
+    def save_model(self, path):
+        print(torch.save(self.model.state_dict(), path))
+        print("Model Saved!")
