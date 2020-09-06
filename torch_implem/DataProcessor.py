@@ -409,7 +409,7 @@ class BaselineDetector:
             optimizer = optim.Adam(self.model.parameters(), lr=learning_rate)
         if criterion is None:
             criterion = nn.CrossEntropyLoss(
-                weight=torch.Tensor([1, 700]).to(device), reduction="none")
+                weight=torch.Tensor([1, 700]).to(device), reduction="mean")
 
         optimizer.zero_grad()
 
@@ -417,7 +417,7 @@ class BaselineDetector:
         y = y.to(device)
 
         preds = self.model(x)
-        loss = criterion(preds, y).mean()
+        loss = criterion(preds, y)
         loss.backward()
         optimizer.step()
 
