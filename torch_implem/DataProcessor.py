@@ -444,7 +444,7 @@ class BaselineDetector:
 
         preds = self.model(x)
 
-        loss = criterion(preds, y).mean()
+        loss = criterion(preds, y)
 
         return loss.item()
 
