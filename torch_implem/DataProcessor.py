@@ -437,15 +437,13 @@ class BaselineDetector:
 
         if criterion is None:
             criterion = nn.CrossEntropyLoss(
-                weight=torch.Tensor([1, 700]).to(device), reduction="none")
+                weight=torch.Tensor([1, 700]).to(device), reduction="mean")
 
         x = x.to(device)
         y = y.to(device)
 
         preds = self.model(x)
 
-        # remove mean, probably make a custom criterion
-        # do when internet resumes
         loss = criterion(preds, y).mean()
 
         return loss.item()
