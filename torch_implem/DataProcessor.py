@@ -7,6 +7,8 @@ from torch import optim
 from tqdm import tqdm
 import os
 from os.path import join
+from time import localtime
+
 # Data Prep
 
 from torch.utils.data import Dataset, DataLoader
@@ -399,7 +401,7 @@ class BaselineDetector:
                    optimizer=None,
                    criterion=None,
                    device=None,
-                   learning_rate=0.01):
+                   learning_rate=0.0001):
 
         if device is None:
             device = torch.device(
@@ -454,6 +456,7 @@ class BaselineDetector:
               val_dl=None,
               optimizer=None,
               criterion=None,
+              learning_rate=0.0001,
               device=None,
               checkpoint_path="./"):
 
@@ -476,12 +479,13 @@ class BaselineDetector:
             pbar = tqdm(total=len(train_dl))
             pbar.set_description(f"Epoch: {epoch}. Traininig")
 
-            for x, y in train_dl:
-                loss = self.train_step(x, y, optimizer, criterion, device)
+            for i, (x, y) in enumerate(train_dl):
+                loss = self.train_step(x, y, optimizer, criterion,
+                                       learning_rate=learning_rate, device=device)
                 total_loss += loss
 
                 pbar.update()
-                pbar.set_postfix(loss=total_loss)
+                pbar.set_postfix(loss=total_loss/(i+1))
             pbar.close()
 
             if val_dl is not None:
@@ -492,12 +496,12 @@ class BaselineDetector:
                 pbar = tqdm(total=len(val_dl))
                 pbar.set_description(f"Epoch: {epoch}. Validating")
 
-                for x, y in val_dl:
+                for i, (x, y) in enumerate(val_dl):
                     loss = self.val_step(x, y, criterion, device)
                     eval_loss += loss
 
                     pbar.update(1)
-                    pbar.set_postfix(loss=eval_loss)
+                    pbar.set_postfix(loss=eval_loss/(i+1))
                 pbar.close()
             self.save_model(checkpoint_path, epoch)
 
@@ -516,5 +520,6 @@ class BaselineDetector:
         print("Model Loaded!")
 
     def save_model(self, path, postfix=0):
-        torch.save(self.model.state_dict(), join(path, str(postfix)+".pt"))
+        name = "{} {}-{}-{} {}.{}.{}.pt".format(postfix, *localtime()[:6])
+        torch.save(self.model.state_dict(), join(path, name))
         print("Model Saved!")
