@@ -5,14 +5,14 @@ import torch
 import torch.nn.functional as F
 from torch import optim
 from tqdm import tqdm
-
+import os
+from os.path import join
 # Data Prep
 
 from torch.utils.data import Dataset, DataLoader
 from torchvision import transforms
 import torchvision.transforms.functional as TF
 from PIL import Image
-import os
 import numpy as np
 
 
@@ -35,10 +35,10 @@ class MyDataset(Dataset):
     def __getitem__(self, idx):
         if torch.is_tensor(idx):
             idx = idx.tolist()
-        input_image = Image.open(os.path.join(
+        input_image = Image.open(join(
             self.input_dir, self.input_files[idx]))
         input_image = input_image.resize((1024, 1536))
-        label_image = Image.open(os.path.join(
+        label_image = Image.open(join(
             self.label_dir, self.label_files[idx]))
         label_image = label_image.resize((1024, 1536))
 
@@ -343,12 +343,12 @@ class BaselineDetector:
                  batch_size=2,
                  shuffle=True):
         """
-        `transforms`: `torchvision.transforms` to apply to the dataset. 
+        `transforms`: `torchvision.transforms` to apply to the dataset.
                        Set `None` for no transform.
 
-        `train_dir`: Path to the root directory of the train dataset. 
+        `train_dir`: Path to the root directory of the train dataset.
                      It should contain two subdirectories,
-                     named: "originals" and "labels". 
+                     named: "originals" and "labels".
                      If `None`, then you will have to pass a `DataLoader` \
                          object in the `train` function.
 
@@ -380,8 +380,8 @@ class BaselineDetector:
             if "originals" in os.listdir(directory) and\
                     "labels" in os.listdir(directory):
                 dataset = MyDataset(
-                    os.path.join(directory, "originals"),
-                    os.path.join(directory, "labels"),
+                    join(directory, "originals"),
+                    join(directory, "labels"),
                     transforms=self.transform
                 )
                 dataloader = DataLoader(
@@ -454,7 +454,11 @@ class BaselineDetector:
               val_dl=None,
               optimizer=None,
               criterion=None,
-              device=None):
+              device=None,
+              checkpoint_path="./"):
+
+        checkpoint_path = join(checkpoint_path, "checkpoints")
+        os.makedirs(checkpoint_path, exist_ok=True)
 
         for epoch in range(n_epochs):
             if train_dl is None:
@@ -495,21 +499,22 @@ class BaselineDetector:
                     pbar.update(1)
                     pbar.set_postfix(loss=eval_loss)
                 pbar.close()
-            self.save_checkpoint(checkpoint=None, path=None)
+            self.save_model(checkpoint_path, epoch)
 
     def predict(self, x):
 
         self.model.eval()
         return self.model(x)
 
-    # finish this later
     def save_checkpoint(self, checkpoint, path):
+        """To be used instead of `save_model` later on!"""
+        # TODO: code here
         pass
 
     def load_model(self, path):
         print(self.model.load_state_dict(path))
         print("Model Loaded!")
 
-    def save_model(self, path):
-        print(torch.save(self.model.state_dict(), path))
+    def save_model(self, path, postfix=0):
+        torch.save(self.model.state_dict(), join(path, str(postfix)+".pt"))
         print("Model Saved!")
