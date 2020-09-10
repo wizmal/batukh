@@ -84,10 +84,13 @@ class BaseProcessor:
               criterion=None,
               learning_rate=0.0001,
               device=None,
-              checkpoint_path="./"):
+              checkpoint_path="./",
+              save_every=None):
 
         checkpoint_path = join(checkpoint_path, "checkpoints")
         os.makedirs(checkpoint_path, exist_ok=True)
+        if save_every is None:
+            save_every = n_epochs//10+1
 
         for epoch in range(n_epochs):
             if train_dl is None:
@@ -129,7 +132,8 @@ class BaseProcessor:
                     pbar.update(1)
                     pbar.set_postfix(loss=eval_loss/(i+1))
                 pbar.close()
-            self.save_model(checkpoint_path, epoch)
+            if epoch % save_every == 0:
+                self.save_model(checkpoint_path, epoch)
 
     def predict(self, x):
 
