@@ -4,6 +4,7 @@ import torch.nn.functional as F
 from torchvision import transforms
 from torch.utils.data import DataLoader, Dataset
 from PIL import Image
+import os
 
 MAX_LENGTH = 20
 
@@ -22,7 +23,19 @@ class WordDataset(Dataset):
         with open(labels_path) as f:
             self.labels = f.readlines()
 
+        # add assertion for checking filenames and label numbers
         assert len(self.files) == len(self.labels)
+
+        print("Building Dictionary. . .")
+        self.SOS = 0
+        self.EOS = 1
+
+        self.labels = map(lambda x: x.split(":", 1)[-1].strip(), self.labels)
+
+        self.index2letter = dict(enumerate(set("".join(self.labels)), 2))
+        self.index2letter[self.SOS] = "<SOS>"
+        self.index2letter[self.EOS] = "<EOS>"
+        self.letter2index = {v: k for k, v in self.index2letter.items()}
 
     def __len__(self):
         return len(self.files)
@@ -35,17 +48,26 @@ class WordDataset(Dataset):
         label = self.labels[idx].split(":", 1)[-1].strip()
 
         image = self.transform(image)
+        label = self.transform_label(label)
 
         return image, label
+
+    def transform_label(self, label):
+        label = [self.letter2index[letter] for letter in label]
+        label.append(self.EOS)
+        return torch.tensor(label, dtype=torch.long).view(-1, 1)
 
 
 # The model architechture is organized into three modules:
 # 1. `ImgEncoder`: A convolutional network.
-# -  It will take input of an image of `[1, 60, x]` (channels, height, width) and produce the output of `[128, 12, x']`, which is then flattened out to `[1536, x']`.
+# -  It will take input of an image of `[3, 60, x]` (channels, height, width)
+# and produce the output of `[128, 12, x']`, which is then flattened out
+# to `[1536, x']`.
 
 # 2. `Encoder(input_size, hidden_size, n_layers)`:
 # - It has a linear layer followed by a GRU layer.
-# - It takes a vector of `[1, input_size]` and the linear converts into `[1, hidden_size]` vector.
+# - It takes a vector of `[1, input_size]` and the linear converts into
+# `[1, hidden_size]` vector.
 # - Then the `[1, hidden_size]` vector is passed via a GRU with `n_layers`.
 # - The hidden input to GRU is initialized as zeros.
 
@@ -96,16 +118,15 @@ class Encoder(nn.Module):
 
         self.fc1 = nn.Linear(input_size, hidden_size)
 
-
-#         self.em = nn.Embedding(input_size,hidden_size)
+        self.em = nn.Embedding(input_size, hidden_size)
         self.gru = nn.GRU(hidden_size, hidden_size, num_layers=n_layers)
 
     def forward(self, input, hidden):
 
         output = F.relu(self.fc1(input)).view(1, 1, -1)
 
-#         embedded = self.em(input).view(1,1,-1)
-#         output = embedded
+        embedded = self.em(input).view(1, 1, -1)
+        output = embedded
         output, hidden = self.gru(output, hidden)
 
         return output, hidden
@@ -118,7 +139,7 @@ class Encoder(nn.Module):
 class AttnDecoderRNN(nn.Module):
 
     # TODO: Check if we can dynamically create a linear layer in forward method
-    # to replace `self.attn` and eliminate the need for MAX_LENGTH
+    # to replace `self.attn` and eliminate the need for `MAX_LENGTH`
     def __init__(self, hidden_size, output_size, n_layers, dropout_p=0.1,
                  max_length=MAX_LENGTH, device=None):
         super(AttnDecoderRNN, self).__init__()
@@ -161,5 +182,55 @@ class AttnDecoderRNN(nn.Module):
 
     def initHidden(self):
         return torch.zeros(self.n_layers, 1, self.hidden_size, device=self.device)
+
+
+class WordDetector:
+    def __init__(self,
+                 encoder_input=1536,
+                 encoder_hidden=128,
+                 encoder_nlayers=2,
+                 decoder_hidden=128,
+                 decoder_nlayers=2,
+                 decoder_output=None,
+                 image_dir=None,
+                 label_path=None,
+                 transform=None,
+                 device=None):
+        """
+        params:
+        - `encoder_input`: Input size of each vector that goes into the encoder.
+           Default: 1536, based on the assumption that the input image is
+           `[3, 60, x]`.
+        - `encoder_hidden`: hidden size of the GRU layer. Default: 128.
+        - `decoder_output`: Size of the output vector. Should be the same as
+           the target vector. If `image_dir` and `label_path` is provided, then
+           it will be calculated, else, need to supply.
+        - `image_dir`: Path to directory containing images, The images should
+           be named as "1.png", "2.png", ...
+        - `label_path`: Path to the label file. Each label should be separated
+           by a newline. Each label should be like: "1: this label".
+        """
+
+        if image_dir is None or label_path is None:
+            print(
+                "No dataloader/dataset made, expect a dataloader in\
+                     the `train` method.")
+            self.dataset = None
+        else:
+            self.dataset = WordDataset(image_dir, label_path, transform)
+        if decoder_output is None:
+            decoder_output = len(self.dataset.letter2index)
+
+        self.model = nn.Sequential(ImgEncoder(),
+                                   Encoder(encoder_input, encoder_hidden,
+                                           encoder_nlayers, device),
+                                   AttnDecoderRNN(decoder_hidden,
+                                                  decoder_output,
+                                                  decoder_nlayers,
+                                                  device=device))
+
+    def train(self, n_epochs):
+        pass
+
 
 # TODO: Test each and every module of this file.
