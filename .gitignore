@@ -1,2 +1,2 @@
-torch_implem/.vscode
+*.vscode
 *__pycache__
