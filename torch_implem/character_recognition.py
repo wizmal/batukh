@@ -214,20 +214,35 @@ class WordDetector:
         if image_dir is None or label_path is None:
             print(
                 "No dataloader/dataset made, expect a dataloader in\
-                     the `train` method.")
+                    the `train` method.")
             self.dataset = None
         else:
             self.dataset = WordDataset(image_dir, label_path, transform)
         if decoder_output is None:
             decoder_output = len(self.dataset.letter2index)
 
-        self.model = nn.Sequential(ImgEncoder(),
-                                   Encoder(encoder_input, encoder_hidden,
-                                           encoder_nlayers, device),
-                                   AttnDecoderRNN(decoder_hidden,
-                                                  decoder_output,
-                                                  decoder_nlayers,
-                                                  device=device))
+        self.model = None  # cannot be sequential
+
+    def train_step(self,
+                   x,
+                   y,
+                   optimizer=None,
+                   criterion=None,
+                   device=None,
+                   learning_rate=1e-3):
+        if device is None:
+            device = torch.device(
+                "cuda" if torch.cuda.is_available() else "cpu")
+
+        self.model.to(device)
+
+        if optimizer is None:
+            optimizer = optim.Adam(self.model.parameters(), lr=learning_rate)
+        if criterion is None:
+            criterion = nn.NLLLoss()
+        optimizer.zero_grad()
+
+        # start training
 
     def train(self, n_epochs):
         pass
