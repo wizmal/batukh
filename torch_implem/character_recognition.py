@@ -313,8 +313,28 @@ class WordDetector:
 
         return loss.item()/target_len
 
+    def initOptimizers(self,
+                       imgenc_optimizer=None,
+                       enc_optimizer=None,
+                       dec_optimizer=None,
+                       learning_rate=0.001,):
+
+        if imgenc_optimizer is None:
+            imgenc_optimizer = optim.Adam(
+                self.img_encoder.parameters(), lr=learning_rate)
+        if enc_optimizer is None:
+            enc_optimizer = optim.Adam(
+                self.encoder.parameters(), lr=learning_rate)
+        if dec_optimizer is None:
+            dec_optimizer = optim.Adam(
+                self.decoder.parameters(), lr=learning_rate)
+        return imgenc_optimizer, enc_optimizer, dec_optimizer
+
     def train(self,
               n_epochs,
+              train_ds=None,
+              val_dl=None,  # change it later
+              batch_size=1,
               imgenc_optimizer=None,
               enc_optimizer=None,
               dec_optimizer=None,
@@ -329,18 +349,59 @@ class WordDetector:
         self.encoder.to(device)
         self.decoder.to(device)
 
-        if imgenc_optimizer is None:
-            imgenc_optimizer = optim.Adam(
-                self.img_encoder.parameters(), lr=learning_rate)
-        if enc_optimizer is None:
-            enc_optimizer = optim.Adam(
-                self.encoder.parameters(), lr=learning_rate)
-        if dec_optimizer is None:
-            dec_optimizer = optim.Adam(
-                self.decoder.parameters(), lr=learning_rate)
+        imgenc_optimizer, enc_optimizer, dec_optimizer = self.initOptimizers()
 
         if criterion is None:
             criterion = nn.CrossEntropyLoss()
+
+        checkpoint_path = join(checkpoint_path, "checkpoints")
+        os.makedirs(checkpoint_path, exist_ok=True)
+        if save_every is None:
+            save_every = n_epochs//10+1
+
+        for epoch in range(n_epochs):
+            if train_ds is None:
+                if self.dataset is None:
+                    raise Exception("No training dataset found.")
+                else:
+                    train_ds = self.dataset
+            # if val_dl is None:
+            #     val_dl = self.val_dl
+            train_dl = DataLoader(train_ds, batch_size, shuffle=True)
+
+            self.model.train()
+            total_loss = 0
+
+            # Progress bar
+            pbar = tqdm(total=len(train_dl))
+            pbar.set_description(f"Epoch: {epoch}. Traininig")
+
+            for i, (x, y) in enumerate(train_dl):
+                loss = self.train_step(x, y, optimizer, criterion,
+                                       learning_rate=learning_rate, device=device)
+                total_loss += loss
+
+                pbar.update()
+                pbar.set_postfix(loss=total_loss/(i+1))
+            pbar.close()
+
+            if val_dl is not None:
+                self.model.eval()
+                eval_loss = 0
+
+                # validation progress bar
+                pbar = tqdm(total=len(val_dl))
+                pbar.set_description(f"Epoch: {epoch}. Validating")
+
+                for i, (x, y) in enumerate(val_dl):
+                    loss = self.val_step(x, y, criterion, device)
+                    eval_loss += loss
+
+                    pbar.update(1)
+                    pbar.set_postfix(loss=eval_loss/(i+1))
+                pbar.close()
+            if epoch % save_every == 0:
+                self.save_model(checkpoint_path, epoch)
 
 
 # TODO: Test each and every module of this file.
