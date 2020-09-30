@@ -5,6 +5,7 @@ from torchvision import transforms
 from torch.utils.data import DataLoader, Dataset
 from PIL import Image
 import os
+import random
 
 MAX_LENGTH = 20
 
@@ -118,15 +119,15 @@ class Encoder(nn.Module):
 
         self.fc1 = nn.Linear(input_size, hidden_size)
 
-        self.em = nn.Embedding(input_size, hidden_size)
+        # self.em = nn.Embedding(input_size, hidden_size)
         self.gru = nn.GRU(hidden_size, hidden_size, num_layers=n_layers)
 
     def forward(self, input, hidden):
 
         output = F.relu(self.fc1(input)).view(1, 1, -1)
 
-        embedded = self.em(input).view(1, 1, -1)
-        output = embedded
+        # embedded = self.em(input).view(1, 1, -1)
+        # output = embedded
         output, hidden = self.gru(output, hidden)
 
         return output, hidden
@@ -177,7 +178,7 @@ class AttnDecoderRNN(nn.Module):
         output = F.relu(output)
         output, hidden = self.gru(output, hidden)
 
-        output = F.log_softmax(self.out(output[0]), dim=1)
+        output = self.out(output[0])
         return output, hidden, attn_weights
 
     def initHidden(self):
@@ -192,6 +193,8 @@ class WordDetector:
                  decoder_hidden=128,
                  decoder_nlayers=2,
                  decoder_output=None,
+                 dropout=0.1,
+                 max_length=MAX_LENGTH,
                  image_dir=None,
                  label_path=None,
                  transform=None,
@@ -221,31 +224,123 @@ class WordDetector:
         if decoder_output is None:
             decoder_output = len(self.dataset.letter2index)
 
-        self.model = None  # cannot be sequential
+        if device is None:
+            device = torch.device(
+                "cuda" if torch.cuda.is_available() else "cpu")
+        self.device = device
+        self.max_length = max_length
+
+        self.img_encoder = ImgEncoder()
+
+        self.encoder = Encoder(encoder_input,
+                               encoder_hidden,
+                               encoder_nlayers,
+                               device)
+        self.decoder = AttnDecoderRNN(decoder_hidden,
+                                      decoder_output,
+                                      decoder_nlayers,
+                                      dropout,
+                                      max_length,
+                                      device)
 
     def train_step(self,
                    x,
                    y,
-                   optimizer=None,
-                   criterion=None,
+                   imgenc_optimizer,
+                   enc_optimizer,
+                   dec_optimizer,
+                   criterion,
                    device=None,
-                   learning_rate=1e-3):
+                   teacher_forcing_ratio=0.1):
         if device is None:
             device = torch.device(
                 "cuda" if torch.cuda.is_available() else "cpu")
 
-        self.model.to(device)
-
-        if optimizer is None:
-            optimizer = optim.Adam(self.model.parameters(), lr=learning_rate)
-        if criterion is None:
-            criterion = nn.NLLLoss()
-        optimizer.zero_grad()
+        imgenc_optimizer.zero_grad()
+        enc_optimizer.zero_grad()
+        dec_optimizer.zero_grad()
 
         # start training
 
-    def train(self, n_epochs):
-        pass
+        loss = 0
+
+        out = self.img_encoder(x)
+        # conv_output shape will be [1,1536, x']
+
+        enc_hidden = self.encoder.initHidden()
+
+        # for attention
+        encoder_outputs = torch.zeros(
+            self.max_length, self.encoder.hidden_size, device=self.device)
+
+        # pass each of the [1, 1536] vectors to encoder
+        for idx in range(out.shape[2]):
+            enc_out, enc_hidden = self.encoder(out[:, :, idx], enc_hidden)
+            encoder_outputs[idx] = enc_out[0, 0]
+
+        decoder_input = torch.tensor(
+            [[[self.dataset.SOS]]], device=self.device)
+
+        dec_hidden = enc_hidden
+
+        use_teacher_forcing = random.random() < teacher_forcing_ratio
+
+        target_len = len(y)
+        y = y.to(device)
+        if use_teacher_forcing:
+            for di in range(target_len):
+                dec_out, dec_hidden, dec_attn = self.decoder(
+                    decoder_input, dec_hidden, encoder_outputs)
+                loss += criterion(dec_out, y[di])
+                decoder_input = y[di]  # teacher forcing
+        else:
+            for di in range(target_len):
+                dec_out, dec_hidden, dec_attn = self.decoder(
+                    decoder_input, dec_hidden, encoder_outputs)
+
+                topv, topi = dec_out.topk(1)
+                decoder_input = topi.squeeze().detach()
+
+                loss += criterion(dec_out, y[di])
+
+                if decoder_input.item() == self.dataset.EOS:
+                    break
+        loss.backward()
+
+        imgenc_optimizer.step()
+        enc_optimizer.step()
+        dec_optimizer.step()
+
+        return loss.item()/target_len
+
+    def train(self,
+              n_epochs,
+              imgenc_optimizer=None,
+              enc_optimizer=None,
+              dec_optimizer=None,
+              learning_rate=0.001,
+              criterion=None,
+              device=None):
+
+        if device is None:
+            device = self.device
+
+        self.img_encoder.to(device)
+        self.encoder.to(device)
+        self.decoder.to(device)
+
+        if imgenc_optimizer is None:
+            imgenc_optimizer = optim.Adam(
+                self.img_encoder.parameters(), lr=learning_rate)
+        if enc_optimizer is None:
+            enc_optimizer = optim.Adam(
+                self.encoder.parameters(), lr=learning_rate)
+        if dec_optimizer is None:
+            dec_optimizer = optim.Adam(
+                self.decoder.parameters(), lr=learning_rate)
+
+        if criterion is None:
+            criterion = nn.CrossEntropyLoss()
 
 
 # TODO: Test each and every module of this file.
