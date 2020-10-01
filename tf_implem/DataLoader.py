@@ -1,5 +1,6 @@
 import os
 import tensorflow as tf
+import numpy as np
 
 class DataLoader():
     def __init__(self,path,resize=(2048,1024),n_classes=2,batch_size=64,repeat=1):
@@ -44,10 +45,10 @@ class DataLoader():
         image = tf.io.read_file(image_filename)
         image = tf.io.decode_png(image, channels=3)
         image = tf.image.convert_image_dtype(image, tf.float32)
-        image = tf.image.resize(image,self.resize)
+        #image = tf.image.resize(image,self.resize)
         label = tf.io.read_file(label_filename)
         label = tf.io.decode_png(label, channels=3)
-        label = tf.image.resize(label,self.resize)
+        #label = tf.image.resize(label,self.resize)
         label = tf.cast((label[:,:,0]>100), tf.int32)
         label = tf.one_hot(label, self.n_classes)
         return image, label
@@ -73,6 +74,20 @@ def read_img_paths_and_labels(images_path, labels_path):
     label_path=[str(os.path.join(labels_path,i)) for i in label_path]
     
     return img_path, label_path
+
+class augmentation():
+    def __init__(self,ds,prob=0.02):
+        self.dataset=ds
+        self.prob=prob
+    def jitter(self,x,y):
+        if np.random.choice(np.linspace(start=0.0,stop=1.0,num=100))<=self.prob:
+            x=tf.image.adjust_brightness(x,np.random.choice(np.linspace(start=0.0,stop=1.0,num=100)))
+            x=tf.image.adjust_contrast(x,np.random.choice(np.linspace(start=0.0,stop=1.0,num=100)))
+            x=tf.image.adjust_hue(x,np.random.choice(np.linspace(start=0.0,stop=1.0,num=100)))
+            x=tf.image.adjust_saturation(x,np.random.choice(np.linspace(start=0.0,stop=1.0,num=100)))
+        return (x,y)
+    def __call__(self):
+        return self.dataset().map(self.jitter)
 
 
     
