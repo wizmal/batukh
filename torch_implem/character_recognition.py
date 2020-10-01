@@ -247,24 +247,15 @@ class WordDetector:
                                       max_length,
                                       device)
 
-    def train_step(self,
-                   x,
-                   y,
-                   imgenc_optimizer,
-                   enc_optimizer,
-                   dec_optimizer,
-                   criterion,
-                   device=None,
-                   teacher_forcing_ratio=0.1):
+    def forward_step(self,
+                     x,
+                     y,
+                     criterion,
+                     device=None,
+                     teacher_forcing_ratio=0.1):
         if device is None:
             device = torch.device(
                 "cuda" if torch.cuda.is_available() else "cpu")
-
-        imgenc_optimizer.zero_grad()
-        enc_optimizer.zero_grad()
-        dec_optimizer.zero_grad()
-
-        # start training
 
         loss = 0
 
@@ -309,13 +300,8 @@ class WordDetector:
 
                 if decoder_input.item() == self.dataset.EOS:
                     break
-        loss.backward()
 
-        imgenc_optimizer.step()
-        enc_optimizer.step()
-        dec_optimizer.step()
-
-        return loss.item()/target_len
+        return loss, target_len
 
     def initOptimizers(self,
                        imgenc_optimizer=None,
@@ -388,12 +374,21 @@ class WordDetector:
             pbar.set_description(f"Epoch: {epoch}. Traininig")
 
             for i, (x, y) in enumerate(train_dl):
-                # maybe add teacher_force_ratio control
-                loss = self.train_step(
-                    x, y, imgenc_optimizer, enc_optimizer, dec_optimizer,
-                    criterion, device)
 
-                total_loss += loss
+                imgenc_optimizer.zero_grad()
+                enc_optimizer.zero_grad()
+                dec_optimizer.zero_grad()
+                # maybe add teacher_force_ratio control
+                loss, target_len = self.forward_step(
+                    x, y, criterion, device)
+
+                loss.backward()
+
+                imgenc_optimizer.step()
+                enc_optimizer.step()
+                dec_optimizer.step()
+
+                total_loss = total_loss + (loss.item()/target_len)
 
                 pbar.update()
                 pbar.set_postfix(loss=total_loss/(i+1))
@@ -410,17 +405,16 @@ class WordDetector:
                 pbar.set_description(f"Epoch: {epoch}. Validating")
 
                 for i, (x, y) in enumerate(val_dl):
-                    loss = self.val_step(x, y, criterion, device)
-                    eval_loss += loss
+                    loss, target_len = self.forward_step(
+                        x, y, criterion, device)
+
+                    eval_loss = eval_loss + (loss.item()/target_len)
 
                     pbar.update(1)
                     pbar.set_postfix(loss=eval_loss/(i+1))
                 pbar.close()
             if epoch % save_every == 0:
                 self.save_model(checkpoint_path, epoch)
-
-    def val_step(self, *args):
-        pass
 
     def load_model(self, path):
         models = torch.load(path)
