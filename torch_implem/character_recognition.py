@@ -7,6 +7,10 @@ from PIL import Image
 import os
 import random
 
+from os.path import join
+from tqdm import tqdm
+from time import localtime
+
 MAX_LENGTH = 20
 
 
@@ -333,14 +337,16 @@ class WordDetector:
     def train(self,
               n_epochs,
               train_ds=None,
-              val_dl=None,  # change it later
+              val_ds=None,  # change it later
               batch_size=1,
               imgenc_optimizer=None,
               enc_optimizer=None,
               dec_optimizer=None,
               learning_rate=0.001,
               criterion=None,
-              device=None):
+              device=None,
+              checkpoint_path="./",
+              save_every=None):
 
         if device is None:
             device = self.device
@@ -365,11 +371,16 @@ class WordDetector:
                     raise Exception("No training dataset found.")
                 else:
                     train_ds = self.dataset
-            # if val_dl is None:
-            #     val_dl = self.val_dl
+            if val_ds is None:
+                val_dl = None
+            else:
+                val_dl = DataLoader(val_ds, batch_size, shuffle=True)
+
             train_dl = DataLoader(train_ds, batch_size, shuffle=True)
 
-            self.model.train()
+            self.img_encoder.train()
+            self.encoder.train()
+            self.decoder.train()
             total_loss = 0
 
             # Progress bar
@@ -386,7 +397,9 @@ class WordDetector:
             pbar.close()
 
             if val_dl is not None:
-                self.model.eval()
+                self.img_encoder.eval()
+                self.encoder.eval()
+                self.decoder.eval()
                 eval_loss = 0
 
                 # validation progress bar
