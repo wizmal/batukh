@@ -206,7 +206,7 @@ class BaselineDetector(BaseProcessor):
         pass
 
     def load_model(self, path):
-        print(self.model.load_state_dict(path))
+        print(self.model.load_state_dict(torch.load(path)))
         print("Model Loaded!")
 
     def save_model(self, path, postfix=0):

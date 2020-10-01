@@ -388,8 +388,11 @@ class WordDetector:
             pbar.set_description(f"Epoch: {epoch}. Traininig")
 
             for i, (x, y) in enumerate(train_dl):
-                loss = self.train_step(x, y, optimizer, criterion,
-                                       learning_rate=learning_rate, device=device)
+                # maybe add teacher_force_ratio control
+                loss = self.train_step(
+                    x, y, imgenc_optimizer, enc_optimizer, dec_optimizer,
+                    criterion, device)
+
                 total_loss += loss
 
                 pbar.update()
@@ -415,6 +418,24 @@ class WordDetector:
                 pbar.close()
             if epoch % save_every == 0:
                 self.save_model(checkpoint_path, epoch)
+
+    def val_step(self, *args):
+        pass
+
+    def load_model(self, path):
+        models = torch.load(path)
+        print(self.img_encoder.load_state_dict(models["img_encoder"]))
+        print(self.encoder.load_state_dict(models["encoder"]))
+        print(self.decoder.load_state_dict(models["decoder"]))
+        print("Models Loaded!")
+
+    def save_model(self, path, postfix=0):
+        name = "{} {}-{}-{} {}.{}.{}.pt".format(postfix, *localtime()[:6])
+        models = {"img_encoder": self.img_encoder.state_dict(),
+                  "encoder": self.encoder.state_dict(),
+                  "decoder": self.decoder.state_dict()}
+        torch.save(models, join(path, name))
+        print("Models Saved!")
 
 
 # TODO: Test each and every module of this file.
