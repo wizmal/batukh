@@ -159,8 +159,9 @@ class ResnetLayer(Model):
 class SegmentationModel(Model):
     def __init__(self, n_classes=2):
         super(SegmentationModel, self).__init__()
+        self.n_classes = n_classes
         self.resnet = ResnetLayer()
-        self.upsample = UpSample(n_classes)
+        self.upsample = UpSample(self.n_classes)
 
     def call(self, input_tensor):
         x, concat_tensors = self.resnet.call(input_tensor)

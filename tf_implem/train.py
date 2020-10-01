@@ -3,17 +3,18 @@ import time
 from tqdm import tqdm
 
 
-class train():
-    def __init__(self, model, criterion=None, weights=[1, 700], optimizer=None, checkpoint_path=None, max_to_keep=5):
+class Train():
+    def __init__(self, model, criterion=None, weights=None, optimizer=None, checkpoint_path=None, max_to_keep=5):
         self.model = model
         if optimizer == None:
             optimizer = tf.keras.optimizers.Adam(learning_rate=0.001)
         self.optimizer = optimizer
-        self.steps = 0
         self.val_logits = []
-        if criterion = None:
-            self.criterion = tf.nn.softmax_cross_entropy_with_logits
+        if criterion == None:
+            criterion = tf.nn.softmax_cross_entropy_with_logits
         self.criterion = criterion
+        if weights == None:
+            weights = [1]*self.model.n_classes
         self.weights = weights
 
         localtime = time.asctime()
@@ -46,7 +47,7 @@ class train():
             zip(grads, self.model.trainable_variables))
         return loss[0]
 
-    def _train_(self, ds, batch_size, epoch):
+    def _train(self, ds, batch_size, epoch):
         pbar = tqdm(total=len(ds))
         pbar.set_description(f"Epoch: {epoch}. Traininig")
 
@@ -67,7 +68,7 @@ class train():
         for epoch in range(1, epochs + 1):
 
             with self.train_summary_writer.as_default():
-                self._train_(train_ds, batch_size, epoch)
+                self._train(train_ds, batch_size, epoch)
             if epoch % checkpoint_freq == 0:
                 checkpoint_path = self.manager.save(self.optimizer.iterations)
                 print("Model saved to {}".format(checkpoint_path))
