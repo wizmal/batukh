@@ -22,12 +22,11 @@ class UpSampleUnit(Model):
 
 
 class BottleneckUnit(Model):
-    def __init__(self, out_filters, in_filters, stride=(1, 1),connect=True, is_first=False):
+    def __init__(self, out_filters, in_filters, stride=(1, 1), connect=True, is_first=False):
         super(BottleneckUnit, self).__init__()
-        
-        self.connect=connect
-        self.is_first=is_first
-        
+
+        self.connect = connect
+        self.is_first = is_first
 
         self.conv1 = layers.Conv2D(
             filters=in_filters, kernel_size=1, strides=(
@@ -61,9 +60,10 @@ class BottleneckUnit(Model):
             return x + input_tensor
         return x
 
+
 class UpSample(Model):
     def __init__(self, n_classes):
-        super(UpSample,self).__init__()
+        super(UpSample, self).__init__()
 
         self.upsample1 = UpSampleUnit(512, 512)
         self.upsample2 = UpSampleUnit(512, 256)
@@ -85,7 +85,6 @@ class UpSample(Model):
         return x
 
 
-
 class ResnetLayer(Model):
     def __init__(self):
         super(ResnetLayer, self).__init__()
@@ -97,7 +96,7 @@ class ResnetLayer(Model):
 
         self.bottleneck1 = BottleneckUnit(256, 64, is_first=True)
         self.bottleneck2 = BottleneckUnit(256, 64)
-        self.bottleneck3 = BottleneckUnit(256, 64, (2, 2), connect = False)
+        self.bottleneck3 = BottleneckUnit(256, 64, (2, 2), connect=False)
 
         self.bottleneck4 = BottleneckUnit(512, 128, is_first=True)
         self.bottleneck5 = BottleneckUnit(512, 128)
@@ -159,7 +158,7 @@ class ResnetLayer(Model):
 
 class SegmentationModel(Model):
     def __init__(self, n_classes=2):
-        super(SegmentationModel,self).__init__()
+        super(SegmentationModel, self).__init__()
         self.resnet = ResnetLayer()
         self.upsample = UpSample(n_classes)
 
@@ -167,4 +166,3 @@ class SegmentationModel(Model):
         x, concat_tensors = self.resnet.call(input_tensor)
         x = self.upsample.call(x, concat_tensors)
         return x
-
