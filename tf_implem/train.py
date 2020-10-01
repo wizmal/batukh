@@ -4,13 +4,17 @@ from tqdm import tqdm
 
 
 class train():
-    def __init__(self, model, optimizer=None, checkpoint_path=None, max_to_keep=5):
+    def __init__(self, model, criterion=None, weights=[1, 700], optimizer=None, checkpoint_path=None, max_to_keep=5):
         self.model = model
         if optimizer == None:
             optimizer = tf.keras.optimizers.Adam(learning_rate=0.001)
         self.optimizer = optimizer
         self.steps = 0
         self.val_logits = []
+        if criterion = None:
+            self.criterion = tf.nn.softmax_cross_entropy_with_logits
+        self.criterion = criterion
+        self.weights = weights
 
         localtime = time.asctime()
         if checkpoint_path == None:
@@ -33,12 +37,14 @@ class train():
     def train_one_step(self, x, y):
         with tf.GradientTape() as tape:
             logits = self.model(x, training=True)
-            loss = tf.nn.softmax_cross_entropy_with_logits(y, logits)
-            loss = tf.reduce_mean(loss)
-        grads = tape.gradient(loss, self.model.trainable_variables)
+            loss = self.criterion(y, logits)
+            loss, _ = tf.nn.weighted_moments(
+                loss, (1, 2), np.sum(y*self.weights, axis=3))
+
+        grads = tape.gradient(loss[0], self.model.trainable_variables)
         self.optimizer.apply_gradients(
             zip(grads, self.model.trainable_variables))
-        return loss
+        return loss[0]
 
     def _train_(self, ds, batch_size, epoch):
         pbar = tqdm(total=len(ds))
@@ -73,9 +79,11 @@ class train():
 
     def val_one_step(self, x, y):
         logits = self.model(x, training=False)
-        loss = tf.nn.softmax_cross_entropy_with_logits(y, logits)
-        loss = tf.reduce_mean(loss)
-        return loss, logits
+        loss = self.criterion(y, logits)
+        loss, _ = tf.nn.weighted_moments(
+            loss, (1, 2), np.sum(y*self.weights, axis=3))
+
+        return loss[0], logits
 
     def _val(self, ds, epoch, save_logits=False):
         pbar = tqdm(total=len(ds))
@@ -88,3 +96,7 @@ class train():
             pbar.update(1)
             pbar.set_postfix(loss=float(self.val_loss.result()))
         pbar.close()
+
+    def predict(self, x):
+        logits = self.model(x, training=False)
+        return logits
