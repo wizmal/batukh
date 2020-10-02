@@ -83,6 +83,8 @@ class BaseProcessor:
               optimizer=None,
               criterion=None,
               learning_rate=0.0001,
+              batch_size=1,
+              shuffle=True,
               device=None,
               checkpoint_path="./",
               save_every=None):
@@ -97,7 +99,7 @@ class BaseProcessor:
                 if self.train_dl is None:
                     raise Exception("No training loaders found.")
                 else:
-                    train_dl = self.train_dl
+                    train_dl = self.train_dl(batch_size, shuffle)
             if val_dl is None:
                 val_dl = self.val_dl
 
@@ -146,9 +148,7 @@ class BaselineDetector(BaseProcessor):
     def __init__(self,
                  transforms=transform,
                  train_dir=None,
-                 val_dir=None,
-                 batch_size=2,
-                 shuffle=True):
+                 val_dir=None):
         """
         `transforms`: `torchvision.transforms` to apply to the dataset.
                        Set `None` for no transform.
@@ -173,32 +173,26 @@ class BaselineDetector(BaseProcessor):
         self.model = SegmentationModel()
         self.transform = transform
 
-        self.train_dataset, self.train_dl = self.make_data(
-            train_dir, batch_size, shuffle)
+        self.train_dl = self.make_data(train_dir)
 
-        self.val_dataset, self.val_dl = self.make_data(
-            val_dir, batch_size, shuffle)
+        self.val_dl = self.make_data(val_dir)
 
     def make_data(self,
-                  directory,
-                  batch_size,
-                  shuffle):
+                  directory):
         if directory is not None:
             if "originals" in os.listdir(directory) and\
                     "labels" in os.listdir(directory):
-                dataset = SegmentationDataLoader(
+                dataloader = SegmentationDataLoader(
                     join(directory, "originals"),
                     join(directory, "labels"),
                     transforms=self.transform
                 )
-                dataloader = DataLoader(
-                    dataset, batch_size=batch_size, shuffle=shuffle)
             else:
                 raise Exception(f"The path: {directory} does not contain\
                     'originals' or 'labels' directories.")
 
-            return dataset, dataloader
-        return None, None
+            return dataloader
+        return None
 
     def save_checkpoint(self, checkpoint, path):
         """To be used instead of `save_model` later on!"""

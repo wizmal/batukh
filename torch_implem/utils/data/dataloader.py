@@ -1,4 +1,4 @@
-from torch.utils.data import Dataset
+from torch.utils.data import Dataset, DataLoader
 import os
 from os.path import join
 import torch
@@ -30,10 +30,10 @@ class SegmentationDataLoader(Dataset):
             idx = idx.tolist()
         input_image = Image.open(join(
             self.input_dir, self.input_files[idx]))
-        input_image = input_image.resize((1024, 1536))
+        # input_image = input_image.resize((1024, 1536))
         label_image = Image.open(join(
             self.label_dir, self.label_files[idx]))
-        label_image = label_image.resize((1024, 1536))
+        # label_image = label_image.resize((1024, 1536))
 
         if self.transforms is not None:
             input_image, label_image = self.transforms(
@@ -42,6 +42,9 @@ class SegmentationDataLoader(Dataset):
         label_image = (label_image[0, :, :] > (50/255))*1
 
         return input_image, label_image
+
+    def __call__(self, batch_size=1, shuffle=True):
+        return DataLoader(self, batch_size=batch_size, shuffle=shuffle)
 
 
 class OCRDataLoader(Dataset):
