@@ -1,6 +1,6 @@
-from utils import BaseModel, MultipleRandomRotation,\
-    MultipleColorJitter, MultipleToTensor,\
-    MyDataset
+from utils.models.segmentation_model import SegmentationModel
+from utils.data.augmentation import MultipleRandomRotation, MultipleColorJitter, MultipleToTensor
+from utils.data.dataloader import SegmentationDataLoader
 import torch
 import torch.nn as nn
 from torchvision import transforms
@@ -170,7 +170,7 @@ class BaselineDetector(BaseProcessor):
         `shuffle`: bool: whether to shuffle both datasets or not.
                    Only works if `train_dir` or `val_dir` is not `None`.
         """
-        self.model = BaseModel()
+        self.model = SegmentationModel()
         self.transform = transform
 
         self.train_dataset, self.train_dl = self.make_data(
@@ -186,7 +186,7 @@ class BaselineDetector(BaseProcessor):
         if directory is not None:
             if "originals" in os.listdir(directory) and\
                     "labels" in os.listdir(directory):
-                dataset = MyDataset(
+                dataset = SegmentationDataLoader(
                     join(directory, "originals"),
                     join(directory, "labels"),
                     transforms=self.transform

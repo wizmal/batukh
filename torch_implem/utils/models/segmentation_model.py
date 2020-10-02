@@ -8,96 +8,11 @@ from os.path import join
 
 # Data Prep
 
-from torch.utils.data import Dataset
-from torchvision import transforms
-import torchvision.transforms.functional as TF
-from PIL import Image
+
 import numpy as np
 
 
-class MyDataset(Dataset):
-
-    def __init__(self, input_dir, label_dir, transforms=None):
-
-        self.transforms = transforms
-        self.input_dir = input_dir
-        self.label_dir = label_dir
-
-        self.input_files = sorted(os.listdir(input_dir))
-        self.label_files = sorted(os.listdir(label_dir))
-
-        assert self.input_files == self.label_files
-
-    def __len__(self):
-        return len(self.input_files)
-
-    def __getitem__(self, idx):
-        if torch.is_tensor(idx):
-            idx = idx.tolist()
-        input_image = Image.open(join(
-            self.input_dir, self.input_files[idx]))
-        input_image = input_image.resize((1024, 1536))
-        label_image = Image.open(join(
-            self.label_dir, self.label_files[idx]))
-        label_image = label_image.resize((1024, 1536))
-
-        if self.transforms is not None:
-            input_image, label_image = self.transforms(
-                (input_image, label_image))
-
-        label_image = (label_image[0, :, :] > (50/255))*1
-
-        return input_image, label_image
-
-
 # Transforms
-
-
-class MultipleRandomRotation(transforms.RandomRotation):
-    def __init__(self,
-                 degrees,
-                 resample=False,
-                 expand=False,
-                 center=None,
-                 fill=None):
-        super(MultipleRandomRotation, self).__init__(
-            degrees, resample, expand, center, fill)
-
-    def __call__(self, images):
-
-        if self.fill is None:
-            self.fill = [None]*len(images)
-
-        angle = self.get_params(self.degrees)
-        return [TF.rotate(img, angle, self.resample, self.expand, self.center,
-                          self.fill[i]) for i, img in enumerate(images)]
-
-
-class MultipleColorJitter(transforms.ColorJitter):
-    def __init__(self, brightness=0, contrast=0, saturation=0, hue=0, n_max=None):
-        super(MultipleColorJitter, self).__init__(
-            brightness, contrast, saturation, hue)
-
-        self.n_max = n_max
-
-    def __call__(self, images):
-        transform = self.get_params(self.brightness, self.contrast,
-                                    self.saturation, self.hue)
-
-        if self.n_max is None:
-            self.n_max = len(images)
-
-        out = [transform(images[i]) for i in range(self.n_max)]
-        out.extend(images[self.n_max:])
-        return out
-
-
-class MultipleToTensor(transforms.ToTensor):
-    def __init__(self):
-        super(MultipleToTensor, self).__init__()
-
-    def __call__(self, images):
-        return [TF.to_tensor(img) for img in images]
 
 
 # Models
@@ -296,9 +211,9 @@ class UpScaler(nn.Module):
         return x
 
 
-class BaseModel(nn.Module):
+class SegmentationModel(nn.Module):
     def __init__(self):
-        super(BaseModel, self).__init__()
+        super(SegmentationModel, self).__init__()
 
         self.downsampler = MyResNet(ModifiedBottleneck, [3, 4, 6, 3],
                                     strides=[[1, 1, 2], [1, 1, 1, 2],
