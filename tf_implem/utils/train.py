@@ -47,7 +47,7 @@ class Train():
             zip(grads, self.model.trainable_variables))
         return loss[0]
 
-    def _train(self, ds, batch_size, epoch):
+    def _train(self, ds, epoch):
         pbar = tqdm(total=len(ds))
         pbar.set_description(f"Epoch: {epoch}. Traininig")
 
@@ -58,7 +58,7 @@ class Train():
             pbar.set_postfix(loss=float(self.train_loss.result()))
         pbar.close()
 
-    def train(self, train_ds, val_ds=None, batch_size=4, epochs=10, save_checkpoints=True, checkpoint_freq=5, save_logits=False):
+    def train(self, train_ds, val_ds=None, epochs=10, save_checkpoints=True, checkpoint_freq=5, save_logits=False):
         self.checkpoint.restore(self.manager.latest_checkpoint)
         if self.manager.latest_checkpoint:
             print("Restored from {}".format(self.manager.latest_checkpoint))
@@ -68,7 +68,7 @@ class Train():
         for epoch in range(1, epochs + 1):
 
             with self.train_summary_writer.as_default():
-                self._train(train_ds, batch_size, epoch)
+                self._train(train_ds, epoch)
             if epoch % checkpoint_freq == 0:
                 checkpoint_path = self.manager.save(self.optimizer.iterations)
                 print("Model saved to {}".format(checkpoint_path))

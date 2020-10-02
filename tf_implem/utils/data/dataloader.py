@@ -2,14 +2,15 @@ import os
 import tensorflow as tf
 import numpy as np
 
+# todo: add ocrdataloader
 
-class DataLoader():
-    def __init__(self, path, resize=(2048, 1024), n_classes=2, batch_size=64, repeat=1):
+
+class SegmentationDataLoader():
+    def __init__(self, path, n_classes=2, batch_size=64, repeat=1):
         """ Loads the tf.data.Dataset 
         Parameters:
             -path        : Path of the Folder containing , 
                             images and labels folder
-            -resize      : new size of images in a batch.
             -n_classes   : number of classes in labels.
             -batch_size  : Batch size 
             -repeat      : The number of times we want data to repeat. e.g if repeat 1 data is iterted once.
@@ -22,7 +23,6 @@ class DataLoader():
         img_paths, label_paths = read_img_paths_and_labels(
             images_path,
             labels_path)
-        self.resize = resize
         self.n_classes = n_classes
         self.batch_size = batch_size
         self.size = len(img_paths)
@@ -76,24 +76,3 @@ def read_img_paths_and_labels(images_path, labels_path):
     label_path = [str(os.path.join(labels_path, i)) for i in label_path]
 
     return img_path, label_path
-
-
-class Augmentation():
-    def __init__(self, ds, prob=0.02):
-        self.dataset = ds
-        self.prob = prob
-
-    def jitter(self, x, y):
-        if np.random.choice(np.linspace(start=0.0, stop=1.0, num=100)) <= self.prob:
-            x = tf.image.adjust_brightness(x, np.random.choice(
-                np.linspace(start=0.0, stop=1.0, num=100)))
-            x = tf.image.adjust_contrast(x, np.random.choice(
-                np.linspace(start=0.0, stop=1.0, num=100)))
-            x = tf.image.adjust_hue(x, np.random.choice(
-                np.linspace(start=0.0, stop=1.0, num=100)))
-            x = tf.image.adjust_saturation(x, np.random.choice(
-                np.linspace(start=0.0, stop=1.0, num=100)))
-        return (x, y)
-
-    def __call__(self):
-        return self.dataset().map(self.jitter)
