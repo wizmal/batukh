@@ -1,6 +1,7 @@
 import tensorflow as tf
 import time
 from tqdm import tqdm
+import numpy as np
 
 
 class Train():
@@ -47,18 +48,18 @@ class Train():
             zip(grads, self.model.trainable_variables))
         return loss[0]
 
-    def _train(self, ds, epoch):
+    def _train(self, ds, epoch, batch_size=64, repeat=1):
         pbar = tqdm(total=len(ds))
         pbar.set_description(f"Epoch: {epoch}. Traininig")
 
-        for (x, y) in enumerate(ds()):
+        for (x, y) in enumerate(ds(batch_size=64, repeat=1)):
             loss = self.train_one_step(x, y)
             self.train_loss.update_state(loss)
             pbar.update(1)
             pbar.set_postfix(loss=float(self.train_loss.result()))
         pbar.close()
 
-    def train(self, train_ds, val_ds=None, epochs=10, save_checkpoints=True, checkpoint_freq=5, save_logits=False):
+    def train(self, train_ds, val_ds=None, epochs=10, batch_size=64, repeat=1, save_checkpoints=True, checkpoint_freq=5, save_logits=False):
         self.checkpoint.restore(self.manager.latest_checkpoint)
         if self.manager.latest_checkpoint:
             print("Restored from {}".format(self.manager.latest_checkpoint))

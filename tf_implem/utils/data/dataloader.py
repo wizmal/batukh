@@ -6,7 +6,7 @@ import numpy as np
 
 
 class SegmentationDataLoader():
-    def __init__(self, path, n_classes=2, batch_size=64, repeat=1):
+    def __init__(self, path, n_classes=2):
         """ Loads the tf.data.Dataset 
         Parameters:
             -path        : Path of the Folder containing , 
@@ -24,14 +24,12 @@ class SegmentationDataLoader():
             images_path,
             labels_path)
         self.n_classes = n_classes
-        self.batch_size = batch_size
         self.size = len(img_paths)
 
         ds = tf.data.Dataset.from_tensor_slices((img_paths, label_paths))
         ds = ds.map(self._decode_and_resize)
         ds = ds.apply(tf.data.experimental.ignore_errors())
-        ds = ds.batch(batch_size).repeat(repeat)
-        ds = ds.prefetch(tf.data.experimental.AUTOTUNE)
+
         self.dataset = ds
 
     def _decode_and_resize(self, image_filename, label_filename):
@@ -53,8 +51,11 @@ class SegmentationDataLoader():
         label = tf.one_hot(label, self.n_classes)
         return image, label
 
-    def __call__(self):
+    def __call__(self, batch_size=64, repeat=1):
         """Return tf.data.Dataset."""
+        ds = self.dataset.batch(batch_size).repeat(repeat)
+        ds = ds.prefetch(tf.data.experimental.AUTOTUNE)
+        self.dataset = ds
         return self.dataset
 
     def __len__(self):
