@@ -5,13 +5,17 @@ import numpy as np
 
 
 class Train():
-    def __init__(self, model, criterion=None, weights=None, optimizer=None, checkpoint_path=None, max_to_keep=5):
+    def __init__(self, model, criterion=None, weights=None, optimizer=None, checkpoint_path=None, max_to_keep=5, is_ocr=False):
+
+        self.is_ocr = is_ocr
         self.model = model
         if optimizer == None:
             optimizer = tf.keras.optimizers.Adam(learning_rate=0.001)
         self.optimizer = optimizer
         self.val_logits = []
         if criterion == None:
+            if self.is_ocr:
+                criterion = tf.nn.ctc_loss
             criterion = tf.nn.softmax_cross_entropy_with_logits
         self.criterion = criterion
         if weights == None:
@@ -39,14 +43,22 @@ class Train():
     def train_one_step(self, x, y):
         with tf.GradientTape() as tape:
             logits = self.model(x, training=True)
-            loss = self.criterion(y, logits)
-            loss, _ = tf.nn.weighted_moments(
-                loss, (1, 2), np.sum(y*self.weights, axis=3))
+            if self.is_ocr:
+                logit_length = tf.fill(
+                    [tf.shape(logits)[0]], tf.shape(logits)[1])
+                loss = tf.nn.ctc_loss(labels=y, logits=logits, label_length=None,
+                                      logit_length=logit_length, logits_time_major=False, blank_index=0)
+                loss = tf.reduce_mean(loss)
+            else:
+                loss = self.criterion(y, logits)
+                loss, _ = tf.nn.weighted_moments(
+                    loss, (1, 2), np.sum(y*self.weights, axis=3))
+                loss = loss[0]
 
-        grads = tape.gradient(loss[0], self.model.trainable_variables)
+        grads = tape.gradient(loss, self.model.trainable_variables)
         self.optimizer.apply_gradients(
             zip(grads, self.model.trainable_variables))
-        return loss[0]
+        return loss
 
     def _train(self, ds, epoch, batch_size=64, repeat=1):
         pbar = tqdm(total=len(ds))

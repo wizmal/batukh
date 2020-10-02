@@ -39,7 +39,7 @@ class BLSTM(Model):
         return x
 
 
-class OCR(Model):
+class OCRModel(Model):
     def __init__(self, n_classes):
         self.n_classes = n_classes
         self.conv = ConvBlock()

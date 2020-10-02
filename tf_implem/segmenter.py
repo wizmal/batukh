@@ -12,14 +12,14 @@ class PageExtraction(Train):
         self.train_dl = None
         self.val_dl = None
 
-    def load_data(self, train_path, val_path=None, batch_size=4, repeat=1):
+    def load_data(self, train_path, val_path=None):
         self.train_dl = SegmentationDataLoader(
             train_path, self.model.n_classes)
         if val_path is not None:
             self.val_dl = SegmentationDataLoader(
                 val_path, self.model.n_classes)
 
-    def train(self, epochs=10, batch_size=64, repeat=1, save_checkpoints=True, checkpoint_freq=5, save_logits=False):
+    def train(self, epochs=10, batch_size=8, repeat=1, save_checkpoints=True, checkpoint_freq=5, save_logits=False):
         super().train(train_ds=self.train_dl, val_ds=self.val_dl, epochs=10, batch_size=64, repeat=1,
                       save_checkpoints=True, checkpoint_freq=5, save_logits=False)
 
@@ -38,7 +38,7 @@ class ImageExtraction(Train):
                 val_path, self.model.n_classes)
 
     def train(self, epochs=10, batch_size=64, repeat=1, save_checkpoints=True, checkpoint_freq=5, save_logits=False):
-        super().train(train_ds=self.train_dl, val_ds=self.val_dl, epochs=10, batch_size=64, repeat=1,
+        super().train(train_ds=self.train_dl, val_ds=self.val_dl, epochs=10, batch_size=8, repeat=1,
                       save_checkpoints=True, checkpoint_freq=5, save_logits=False)
 
 
@@ -56,7 +56,7 @@ class LayoutExtraction(Train):
                 val_path, self.model.n_classes)
 
     def train(self, epochs=10, batch_size=64, repeat=1, save_checkpoints=True, checkpoint_freq=5, save_logits=False):
-        super().train(train_ds=self.train_dl, val_ds=self.val_dl, epochs=10, batch_size=64, repeat=1,
+        super().train(train_ds=self.train_dl, val_ds=self.val_dl, epochs=10, batch_size=8, repeat=1,
                       save_checkpoints=True, checkpoint_freq=5, save_logits=False)
 
 
@@ -74,5 +74,5 @@ class BaselineDetection(Train):
                 val_path, self.model.n_classes)
 
     def train(self, epochs=10, batch_size=64, repeat=1, save_checkpoints=True, checkpoint_freq=5, save_logits=False):
-        super().train(train_ds=self.train_dl, val_ds=self.val_dl, epochs=10, batch_size=64, repeat=1,
+        super().train(train_ds=self.train_dl, val_ds=self.val_dl, epochs=10, batch_size=8, repeat=1,
                       save_checkpoints=True, checkpoint_freq=5, save_logits=False)
