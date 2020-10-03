@@ -51,6 +51,7 @@ class BottleneckUnit(Model):
                 1))
 
     def call(self, input_tensor):
+
         x = self.conv1(input_tensor)
         x = self.conv2(x)
         x = self.conv3(x)

@@ -1,6 +1,6 @@
-from utils.models.segmentation_model import SegmentationModel
-from utils.data.augmentation import MultipleRandomRotation, MultipleColorJitter, MultipleToTensor
-from utils.data.dataloader import SegmentationDataLoader
+from .utils.models.segmentation_model import SegmentationModel
+from .utils.data.augmentation import MultipleRandomRotation, MultipleColorJitter, MultipleToTensor
+from .utils.data.dataloader import SegmentationDataLoader
 import torch
 import torch.nn as nn
 from torchvision import transforms
@@ -12,11 +12,11 @@ from time import localtime
 from torch import optim
 
 
-transform = transforms.Compose([MultipleRandomRotation(10, fill=(255, 0)),
-                                MultipleColorJitter(
-                                    brightness=0.3, contrast=0.3, n_max=1),
-                                MultipleToTensor(),
-                                ])
+default_transform = transforms.Compose([MultipleRandomRotation(10, fill=(255, 0)),
+                                        MultipleColorJitter(
+    brightness=0.3, contrast=0.3, n_max=1),
+    MultipleToTensor(),
+])
 
 
 # General base class for Processors.
@@ -144,34 +144,30 @@ class BaseProcessor:
 
 
 class BaselineDetector(BaseProcessor):
+    r"""
+    This is the main decription.
+
+    Args:
+        * **transforms** (``torchvision.transforms`` `or None, optional`):  to apply to the dataset. Set ``None`` for no transform.
+        * **train_dir** (`str, optional`): Path to the root directory of the train dataset. It should contain two subdirectories, named: "originals" and "labels". If ``None``, then you will have to pass a ``DataLoader`` object in the ``train`` function.
+        * **val_dir** (`str, optional`): Path to the root directory of the validation dataset. It should contain two subdirectories, named: "originals" and "labels".
+        * **batch_size** (`int, optional`): size of a batch in data loaders(both train and val).
+          Default:2.
+          Only works if ``train_dir`` or ``val_dir`` is not ``None``.
+        * **shuffle** (`bool, optional`): whether to shuffle both datasets or not. Only works if ``train_dir`` or ``val_dir`` is not ``None``.
+
+    """
 
     def __init__(self,
-                 transforms=transform,
+                 transform='default',
                  train_dir=None,
                  val_dir=None):
-        """
-        `transforms`: `torchvision.transforms` to apply to the dataset.
-                       Set `None` for no transform.
 
-        `train_dir`: Path to the root directory of the train dataset.
-                     It should contain two subdirectories,
-                     named: "originals" and "labels".
-                     If `None`, then you will have to pass a `DataLoader` \
-                         object in the `train` function.
-
-        `val_dir`: Path to the root directory of the validation dataset.
-                   It should contain two subdirectories, named:\
-                        "originals" and "labels".
-
-        `batch_size`: size of a batch in data loaders(both train and val).
-                      Default:2;
-                      Only works if `train_dir` or `val_dir` is not `None`.
-
-        `shuffle`: bool: whether to shuffle both datasets or not.
-                   Only works if `train_dir` or `val_dir` is not `None`.
-        """
         self.model = SegmentationModel()
-        self.transform = transform
+        if transform == "default":
+            self.transform = default_transform
+        else:
+            self.transform = transform
 
         self.train_dl = self.make_data(train_dir)
 
@@ -200,6 +196,9 @@ class BaselineDetector(BaseProcessor):
         pass
 
     def load_model(self, path):
+        """
+        `path`: path to a .pth file.
+        """
         print(self.model.load_state_dict(torch.load(path)))
         print("Model Loaded!")
 

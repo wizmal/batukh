@@ -10,6 +10,7 @@ from torchvision import transforms
 
 
 class SegmentationDataLoader(Dataset):
+    """DATA"""
 
     def __init__(self, input_dir, label_dir, transforms=None):
 
@@ -48,6 +49,8 @@ class SegmentationDataLoader(Dataset):
 
 
 class OCRDataLoader(Dataset):
+    """OCR DL"""
+
     def __init__(self, image_dir, labels_path, transform=None):
 
         if transform is None:

@@ -11,7 +11,7 @@ class train():
         self.optimizer = optimizer
         self.steps = 0
         self.val_logits = []
-        if criterion = None:
+        if criterion is None:
             self.criterion = tf.nn.softmax_cross_entropy_with_logits
         self.criterion = criterion
         self.weights = weights

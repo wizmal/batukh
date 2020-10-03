@@ -15,6 +15,10 @@ MAX_LENGTH = 20
 
 
 class WordDetector:
+    """
+    OCR
+    """
+
     def __init__(self,
                  encoder_input=1536,
                  encoder_hidden=128,
