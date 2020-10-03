@@ -6,9 +6,8 @@ import numpy as np
 
 
 class SegmentationDataLoader():
-    def __init__(self, path, n_classes):
         """ Loads the `tf.data.Dataset` for `PageExtraction`,`ImageExtraction`,
-            `LayoutExtraction` and `BaselineDetection` classes.
+            `L  ayoutExtraction` and `BaselineDetection` classes.
 
         Args:
             path (str)       : Path of the folder containing images folder and labels folder to be loaded in dataset.
@@ -16,6 +15,9 @@ class SegmentationDataLoader():
             n_classes (int)  : number of classes in label images.
 
         """
+
+    def __init__(self, path, n_classes):
+
 
         images_path = os.path.join(path, "images")
         labels_path = os.path.join(path, "labels")
@@ -46,10 +48,10 @@ class SegmentationDataLoader():
         image = tf.io.read_file(image_filename)
         image = tf.io.decode_png(image, channels=3)
         image = tf.image.convert_image_dtype(image, tf.float32)
-        #image = tf.image.resize(image,self.resize)
+        # image = tf.image.resize(image,self.resize)
         label = tf.io.read_file(label_filename)
         label = tf.io.decode_png(label, channels=3)
-        #label = tf.image.resize(label,self.resize)
+        # label = tf.image.resize(label,self.resize)
         label = tf.cast((label[:, :, 0] > 100), tf.int32)
         label = tf.one_hot(label, self.n_classes)
         return image, label
@@ -71,7 +73,8 @@ class SegmentationDataLoader():
         return ds
 
     def __len__(self):
-        """Return:
+        """
+        Return:
             lenght of dataset
         """
         return self.size
@@ -100,13 +103,14 @@ class SegmentationDataLoader():
 
 
 class OCRDataLoader():
-    def __init__(self, path):
         """ Loads the `tf.data.Dataset` for `OCR` class.
 
         Args:
             path (srt)        :  Path of  folder containing images folder,labels.txt and table.txt to be loaded in dataset.
                                  Name of folders and files should be same as mentioned.
         """
+    def __init__(self, path):
+        
         images_path = os.path.join(path, "images")
         labels_path = os.path.join(path, "labels.txt")
         table_path = os.path.join(path, "table.txt")
@@ -134,31 +138,31 @@ class OCRDataLoader():
     def _decode_and_resize(self, filename, label):
         """ Reads image.
 
-            Args:
-                filename (str) : Name of file.
-                label    (str) : Label of  image.
+        Args:
+            filename (str) : Name of file.
+            label    (str) : Label of  image.
 
-            Returns:
-                image  (tf.Tensor) : Image Tensor
-                labels (tf.Tensor):  Label tensor
+        Returns:
+            image  (tf.Tensor) : Image Tensor
+            labels (tf.Tensor):  Label tensor
 
         """
         image = tf.io.read_file(self.path+"/"+filename)
         image = tf.io.decode_png(image, channels=1)
         image = 1.0-tf.image.convert_image_dtype(image, tf.float32)
-        #image = tf.image.resize(image, (64, self.image_width))
+        # image = tf.image.resize(image, (64, self.image_width))
         return image, label
 
     def _convert_label(self, image, label):
         """ Maps chars in label to integers  according to table.txt
 
-            Args:
-                image (tf.tensor) : Image tensor
-                label  (str)      : label
+        Args:
+            image (tf.tensor) : Image tensor
+            label  (str)      : label
 
-            Returns:
-                image (tf.Tensor) : Image tensor. 
-                label (tf.Tensor) : Label sparse tensor.
+        Returns:
+            image (tf.Tensor) : Image tensor. 
+            label (tf.Tensor) : Label sparse tensor.
         """
         chars = tf.strings.unicode_split(label, input_encoding="UTF-8")
         mapped_label = tf.ragged.map_flat_values(self.table.lookup, chars)
