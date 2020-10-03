@@ -10,12 +10,12 @@ class OCR(Train):
         self.train_dl = None
         self.val_dl = None
 
-    def load_data(self, train_path, val_path=None, image_width=32):
+    def load_data(self, train_path, val_path=None):
         self.train_dl = OCRDataLoader(
-            train_path, image_width)
+            train_path)
         if val_path is not None:
             self.val_dl = OCRDataLoader(
-                val_path, image_width)
+                val_path)
 
     def train(self, epochs=10, batch_size=8, repeat=1, save_checkpoints=True, checkpoint_freq=5, save_logits=False):
         super().train(train_ds=self.train_dl, val_ds=self.val_dl, epochs=10, batch_size=64, repeat=1,

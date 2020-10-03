@@ -6,12 +6,14 @@ import numpy as np
 
 
 class SegmentationDataLoader():
-    def __init__(self, path, n_classes=2):
-        """ Loads the tf.data.Dataset 
-        Parameters:
-            -path        : Path of the Folder containing , 
-                            images and labels folder
-            -n_classes   : number of classes in labels.
+    def __init__(self, path, n_classes):
+        """ Loads the `tf.data.Dataset` for `PageExtraction`,`ImageExtraction`,
+            `LayoutExtraction` and `BaselineDetection` classes.
+
+        Args:
+            path (str)       : Path of the folder containing images folder and labels folder to be loaded in dataset.
+                               Folder names must be as mentioned.
+            n_classes (int)  : number of classes in label images.
 
         """
 
@@ -31,12 +33,15 @@ class SegmentationDataLoader():
         self.dataset = ds
 
     def _decode_and_resize(self, image_filename, label_filename):
-        """ Reads and resize image (64,image_width)
-            Parameters:
-                -image_filename : Name of image file.
-                -label_filename : Name of label file.
+        """ Reads images. Reads and one hot encodes labels.
 
-            returns image tensor and label tensor.
+        Args:
+            image_filename (str) : Path of image file.
+            label_filename (str) : Path of label file.
+
+        Returns:
+            image (tf.Tensor)  : Image tensor.
+            label (tf.Tensor)  : Label tensor.         
         """
         image = tf.io.read_file(image_filename)
         image = tf.io.decode_png(image, channels=3)
@@ -49,21 +54,39 @@ class SegmentationDataLoader():
         label = tf.one_hot(label, self.n_classes)
         return image, label
 
-    def __call__(self, batch_size=64, repeat=1):
-        """Return tf.data.Dataset."""
-        ds = self.dataset.batch(batch_size).repeat(repeat)
+    def __call__(self, batch_size=1, repeat=1):
+        """
+
+        Args:
+            batch_size (int,optional) : Batchsize of `tf.data.datset`. Default value 1.
+            repeat (int, optional)    : Specifies the number of times the dataset can be iterated.Default value 1.
+
+
+        Return:
+            ds (tf.data.dataset)  : Dataloader.
+        """
+        ds = self.dataset
+        ds = ds.batch(batch_size).repeat(repeat)
         ds = ds.prefetch(tf.data.experimental.AUTOTUNE)
-        self.dataset = ds
-        return self.dataset
+        return ds
 
     def __len__(self):
+        """Return:
+            lenght of dataset
+        """
         return self.size
 
     def _read_img_paths_and_labels(self, images_path, labels_path):
-        """return image filenames  and respective label filenames.
-        Parameters:
-            -images_path : Path of the folder of images.
-            -labels_path : path of the folder of images.
+        """Reads paths of images and labels.
+
+
+        Args:
+            images_path (str) : Path of the folder of images.
+            labels_path (str) : Path of the folder of labels.
+
+        Returns:
+            img_path (list)   : List of image paths.
+            label_path (list) : List of label paths.
 
         """
         img_path = os.listdir(images_path)
@@ -77,12 +100,12 @@ class SegmentationDataLoader():
 
 
 class OCRDataLoader():
-    def __init__(self, path, image_width):
-        """ Loads the tf.data.Dataset 
-        Parameters:
-            -annotation_path :  Path of  folder containing images folder,labels.txt and table.txt to be loaded in dataset
-            -image_width : image width 
+    def __init__(self, path):
+        """ Loads the `tf.data.Dataset` for `OCR` class.
 
+        Args:
+            path (srt)        :  Path of  folder containing images folder,labels.txt and table.txt to be loaded in dataset.
+                                 Name of folders and files should be same as mentioned.
         """
         images_path = os.path.join(path, "images")
         labels_path = os.path.join(path, "labels.txt")
@@ -90,7 +113,6 @@ class OCRDataLoader():
         img_paths, labels = self._read_img_paths_and_labels(
             images_path,
             labels_path)
-        self.image_width = image_width
         self.size = len(img_paths)
         self.path = path
 
@@ -110,70 +132,85 @@ class OCRDataLoader():
         self.dataset = ds
 
     def _decode_and_resize(self, filename, label):
-        """ Reads and resize image (64,image_width)
-            Parameters:
-                -filename : Name of file.
-                -label   : label of that image.
+        """ Reads image.
 
-            returns image tensor and label.
+            Args:
+                filename (str) : Name of file.
+                label    (str) : Label of  image.
+
+            Returns:
+                image  (tf.Tensor) : Image Tensor
+                labels (tf.Tensor):  Label tensor
+
         """
-        image = tf.io.read_file(os.path.join(self.path, filename))
+        image = tf.io.read_file(self.path+"/"+filename)
         image = tf.io.decode_png(image, channels=1)
         image = 1.0-tf.image.convert_image_dtype(image, tf.float32)
-        image = tf.image.resize(image, (64, self.image_width))
+        #image = tf.image.resize(image, (64, self.image_width))
         return image, label
 
     def _convert_label(self, image, label):
-        """ maps chars in label to integers  according to table.txt
+        """ Maps chars in label to integers  according to table.txt
 
-            Parameters:
-                -image; Image tensor
-                -label: label
+            Args:
+                image (tf.tensor) : Image tensor
+                label  (str)      : label
 
-            returns image tensor and label sparse tensor
+            Returns:
+                image (tf.Tensor) : Image tensor. 
+                label (tf.Tensor) : Label sparse tensor.
         """
         chars = tf.strings.unicode_split(label, input_encoding="UTF-8")
         mapped_label = tf.ragged.map_flat_values(self.table.lookup, chars)
         sparse_label = mapped_label.to_sparse()
-        sparse_label = tf.cast(sparse_label, tf.int32)
-        return image, sparse_label
+        label = tf.cast(sparse_label, tf.int32)
+        return image, label
 
     def __len__(self):
         return self.size
 
     def __call__(self, batch_size=8, repeat=1):
-        """Return tf.data.Dataset."""
-        ds = self.dataset.batch(batch_size).map(
+        """
+        Returns:
+            ds (tf.data.dataset) : Dataloader.
+            """
+        ds = self.dataset
+        ds = ds.batch(batch_size).map(
             self._convert_label).repeat(repeat)
         ds = ds.prefetch(tf.data.experimental.AUTOTUNE)
-        self.dataset = ds
-        return self.dataset
+        return ds
 
-    def _read_img_paths_and_labels(self, data_path, labels_path):
-        """return image filenames  and respective labels.
-        Parameters:
-            -data_path : Path of the folder of images.
-            -labels_path : path of label.txt
+    def _read_img_paths_and_labels(self, images_path, labels_path):
+        """reads filenames and respective labels.
 
+        Args:
+            imgages_path (str)  : Path of image folder.
+            labels_path (str)  : path of label.txt
+        Returns:
+            img_path (list)   : List of  images filenames.
+            label (list)      : List of labels.
         """
-        img_path = os.listdir(data_path)
-        label = open(labels_path, 'r')
-        labels = label.readlines()
-        labels = [labels[i].split(":")[1].strip() for i in range(len(labels))]
-        labels_ = []
+        img_path = os.listdir(images_path)
+        label_ = open(labels_path, 'r')
+        labels_ = label_.readlines()
+        labels_ = [labels_[i].split(":")[1].strip()
+                   for i in range(len(labels_))]
+        labels = []
         for i in img_path:
-            labels_.append(labels[int(i.split(".")[0])])
-        return img_path, labels_
+            labels.append(labels_[int(i.split(".")[0])])
+        return img_path, labels
 
     def map_to_chars(self, inputs, table, blank_index=0, merge_repeated=False):
-        """Maps Integers to characters 
-        Parameters:
-            -input : sparse tensor to be converted.
-            -table : tf.lookup.StaticHashTable acoording to which mapping is done.
-            -blank_index : index saved for space default 0
-            -merge_repeated : bollean indicated weather repeated integers are to merged or not.
+        """Maps Integers to characters.
 
-            return list of strings
+        Args:
+            input (tf.SparseTensor)           : Sparse tensor to be converted into word.
+            table (tf.lookup.StaticHashTable) : Table acoording to which mapping is done.
+            blank_index   (int,optional)      : index saved for space default value 0.
+            merge_repeated (bollean,optional) : Specifies weather repeated integers are to merged or not.default value `False`.
+
+        Returns:
+            lines (list) : List of words.
             """
 
         inputs = tf.sparse.to_dense(inputs, default_value=blank_index).numpy()
