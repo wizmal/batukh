@@ -6,12 +6,10 @@ import numpy as np
 
 
 class SegmentationDataLoader():
-        """ Loads the `tf.data.Dataset` for `PageExtraction`,`ImageExtraction`,
-            `L  ayoutExtraction` and `BaselineDetection` classes.
+        """ Loads the ``tf.data.Dataset`` for ``PageExtraction``,``ImageExtraction``,``LayoutExtraction`` and ``BaselineDetection`` classes.
 
         Args:
-            path (str)       : Path of the folder containing images folder and labels folder to be loaded in dataset.
-                               Folder names must be as mentioned.
+            path (str)       : Path of the folder containing images folder and labels folder to be loaded in dataset.Folder names must be as mentioned.
             n_classes (int)  : number of classes in label images.
 
         """
@@ -60,7 +58,7 @@ class SegmentationDataLoader():
         """
 
         Args:
-            batch_size (int,optional) : Batchsize of `tf.data.datset`. Default value 1.
+            batch_size (int,optional) : Batchsize of ``tf.data.datset``. Default value 1.
             repeat (int, optional)    : Specifies the number of times the dataset can be iterated.Default value 1.
 
 
@@ -103,11 +101,10 @@ class SegmentationDataLoader():
 
 
 class OCRDataLoader():
-        """ Loads the `tf.data.Dataset` for `OCR` class.
+        """ Loads the ``tf.data.Dataset`` for ``OCR`` class.
 
         Args:
-            path (srt)        :  Path of  folder containing images folder,labels.txt and table.txt to be loaded in dataset.
-                                 Name of folders and files should be same as mentioned.
+            path (strs)        :  Path of  folder containing images folder,labels.txt and table.txt to be loaded in dataset.Name of folders and files should be same as mentioned.
         """
     def __init__(self, path):
         
@@ -211,7 +208,7 @@ class OCRDataLoader():
             input (tf.SparseTensor)           : Sparse tensor to be converted into word.
             table (tf.lookup.StaticHashTable) : Table acoording to which mapping is done.
             blank_index   (int,optional)      : index saved for space default value 0.
-            merge_repeated (bollean,optional) : Specifies weather repeated integers are to merged or not.default value `False`.
+            merge_repeated (bollean,optional) : Specifies weather repeated integers are to merged or not.default value ``False``.
 
         Returns:
             lines (list) : List of words.

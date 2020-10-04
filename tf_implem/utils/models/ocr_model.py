@@ -3,6 +3,12 @@ from tensorflow.keras import layers, Model
 
 
 class ConvBlock(Model):
+        """ This block consists of five ``layers.Conv2D`` convolution layers and a ``layers.MaxPool2D`` maxpool layer.
+        Convolution layers is of  kernel size 3,same padding and relu activation, and filters 8,16,32,64 and 128 respectively.
+        Maxpool layer is of pool size (2,2), strides (2,2) ans same padding.
+
+
+        """
 
     def __init__(self):
         self.conv1 = layers.Conv2D(
@@ -19,6 +25,13 @@ class ConvBlock(Model):
             2, 2), strides=(2, 2), padding='same')
 
     def call(self, input_tensor):
+        """
+        Args:
+            input_tensor (tf.Tensor) : Input image tensor.
+
+        Returns:
+            x (tf.Tensor) : Output image tensor.
+        """
         x = self.conv1(input_tensor)
         x = self.conv2(x)
         x = self.conv3(x)
@@ -29,17 +42,33 @@ class ConvBlock(Model):
 
 
 class BLSTM(Model):
+        """Consists of a ``layers.Bidirectional`` layer with 256 units.
+
+        """
     def __init__(self):
+        
         self.layer1 = layers.Bidirectional(
             layers.LSTM(units=256, return_sequences=True))
 
     def call(self, input_tensor):
+        """
+        Args:
+            input_tensor (tf.Tensor): Input tensor.
+
+        Returns:
+            x (tf.Tensor) : Output tensor.
+        """
         x = self.layer1(input_tensor)
         x = self.layer1(x)
         return x
 
 
 class OCRModel(Model):
+        """Consistis of ``ConvBlock`` block,``BLSTM`` block and ``layers.dense`` layer.
+
+        Args:
+            n_classes (int)  : Specifies number of output classes in ``layers.dense`` layer.
+        """
     def __init__(self, n_classes):
         self.n_classes = n_classes
         self.conv = ConvBlock()
@@ -47,6 +76,11 @@ class OCRModel(Model):
         self.dense = layers.Dense(units=self.n_classes)
 
     def call(self, input_tensor):
+        """
+        Args:
+            input_tensor (tf.Tensor) : Input image tensor.
+        Returns:
+            x (tf.Tensor) : Output Tensor."""
         x = self.conv.call(input_tensor)
         x = tf.transpose(x, (0, 2, 1, 3))
         x = layers.Reshape((-1, 16*128))(x)
