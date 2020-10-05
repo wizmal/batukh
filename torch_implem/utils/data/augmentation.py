@@ -5,7 +5,15 @@ from PIL import Image
 
 class MultipleRandomRotation(transforms.RandomRotation):
     """
-    This is a rotation class.
+    Randomly rotates a list of images by the same degrees.
+
+    Args:
+        degrees (tuple(int, int) or int) : The range from whuch a random
+            orientation is chosen. If ``int``, then range is ``(-degrees, degrees)``.
+        resample (bool, optional): Whether or not to resample the images. Default: ``False``.
+        expand (bool, optional): Whether or not to expand the images. Default: ``Flase``.
+        center(): 
+        fill (tuple(int, int, int) or int, optional): The color value to be filled at new places. 
     """
 
     def __init__(self,
@@ -28,6 +36,15 @@ class MultipleRandomRotation(transforms.RandomRotation):
 
 
 class MultipleColorJitter(transforms.ColorJitter):
+    """
+    Randomly jitter a list of images.
+
+    Args:
+        n_max (int, optional): If set then first ``n_max`` images in the list 
+            will be applied the same jitter. Others will remain unchanged.
+            Default: ``len(images)``
+    """
+
     def __init__(self, brightness=0, contrast=0, saturation=0, hue=0, n_max=None):
         super(MultipleColorJitter, self).__init__(
             brightness, contrast, saturation, hue)

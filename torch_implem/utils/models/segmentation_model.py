@@ -8,7 +8,7 @@ from os.path import join
 
 # Data Prep
 
-
+# Remove this??
 import numpy as np
 
 
@@ -19,8 +19,6 @@ import numpy as np
 
 
 class Identity(nn.Module):
-    """just to delete some layers in pretrained models"""
-
     def __init__(self):
         super(Identity, self).__init__()
 

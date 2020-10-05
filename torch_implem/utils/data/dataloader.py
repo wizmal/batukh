@@ -58,14 +58,22 @@ class SegmentationDataLoader(Dataset):
             batch_size (int, optional): size of the each batch for every iteration.
                 Default: 1
             shuffle (bool, optional): Whether to shuffle the dataset or not. Default ``True``.
+
         Returns:
-            A :class:`~torch.utils.data.DataLoader` instance with current dataset.
+            :class:`~torch.utils.data.DataLoader` : Instance
         """
         return DataLoader(self, batch_size=batch_size, shuffle=shuffle)
 
 
 class OCRDataLoader(Dataset):
-    """OCR DL"""
+    r"""
+    Args:
+        image_dir (str): Path to the directory containing images with names like `1.png, 2.png`.
+        labels_path (str): Path to a file containing labels like "`1. label_1\\n2. label_2`".
+        transform (:class:`torchvision.transforms`, optional): A transform 
+           (or a composition of multiple transforms) to be applied on the input images.
+
+    """
 
     def __init__(self, image_dir, labels_path, transform=None):
 
@@ -108,8 +116,19 @@ class OCRDataLoader(Dataset):
         label = self.transform_label(label)
 
         return image, label
+# TODO: Add a __call__ method to return a DataLoader as done for SegmenterDataLoader.
 
     def transform_label(self, label):
+        """
+        Encodes a label into its vector given the dictionary. Also adds the
+        `End of Sentence` value to it.
+
+        Args:
+            label (str): A string to be encoded to a vector.
+
+        Returns:
+            :class:`~torch.tensor`: Encoded vector.
+        """
         label = [self.letter2index[letter] for letter in label]
         label.append(self.EOS)
         return torch.tensor(label, dtype=torch.long).view(-1, 1)
