@@ -148,14 +148,13 @@ class BaselineDetector(BaseProcessor):
     This is the main decription.
 
     Args:
-        * **transforms** (``torchvision.transforms`` `or None, optional`):  to apply to the dataset. Set ``None`` for no transform.
-        * **train_dir** (`str, optional`): Path to the root directory of the train dataset. It should contain two subdirectories, named: "originals" and "labels". If ``None``, then you will have to pass a ``DataLoader`` object in the ``train`` function.
-        * **val_dir** (`str, optional`): Path to the root directory of the validation dataset. It should contain two subdirectories, named: "originals" and "labels".
-        * **batch_size** (`int, optional`): size of a batch in data loaders(both train and val).
-          Default:2.
-          Only works if ``train_dir`` or ``val_dir`` is not ``None``.
-        * **shuffle** (`bool, optional`): whether to shuffle both datasets or not. Only works if ``train_dir`` or ``val_dir`` is not ``None``.
-
+        transforms (transforms or None, optional):  to apply to the dataset. Set ``None`` for no transform.
+        train_dir (str, optional): Path to the root directory of the train dataset. It should contain two subdirectories, named: "originals" and "labels". If ``None``, then you will have to pass a ``DataLoader`` object in the ``train`` function.
+        val_dir (str, optional): Path to the root directory of the validation dataset. It should contain two subdirectories, named: "originals" and "labels".
+        batch_size (int, optional): size of a batch in data loaders(both train and val).
+            Default:2.
+            Only works if ``train_dir`` or ``val_dir`` is not ``None``.
+        shuffle (bool, optional): whether to shuffle both datasets or not. Only works if ``train_dir`` or ``val_dir`` is not ``None``.
     """
 
     def __init__(self,
@@ -197,7 +196,9 @@ class BaselineDetector(BaseProcessor):
 
     def load_model(self, path):
         """
-        `path`: path to a .pth file.
+        Loads the model parameters for ``self.model``.
+        Args:
+            path (str): path to a .pth(or .pt) file.
         """
         print(self.model.load_state_dict(torch.load(path)))
         print("Model Loaded!")

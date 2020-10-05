@@ -1,7 +1,7 @@
-from utils.train import Train
-from utils.data.dataloader import OCRDataLoader
-from utils.data.augmentation import MultipleColorJitter
-from utils.models.ocr_model import OCRModel
+from .utils.train import Train
+from .utils.data.dataloader import OCRDataLoader
+from .utils.data.augmentation import MultipleColorJitter
+from .utils.models.ocr_model import OCRModel
 
 
 class OCR(Train):

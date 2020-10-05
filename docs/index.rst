@@ -1,8 +1,8 @@
-Welcome to KoshurRecognition's documentation!
+KoshurRecognition
 =============================================
 
 .. toctree::
-   :maxdepth: 7
+   :maxdepth: 2
    :caption: Contents:
 
    KoshurRecognition

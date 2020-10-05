@@ -6,11 +6,19 @@ from PIL import Image
 from torchvision import transforms
 
 
-# TODO make it return a complete dataloader, add batch_size as well.
-
-
 class SegmentationDataLoader(Dataset):
-    """DATA"""
+    """
+    Makes a :class:`~torch.utils.data.Dataset` and a :class:`~torch.utils.data.DataLoader` 
+    on call which can be iterated with
+    a given batch size.
+
+    Args:
+        input_dir (str): path to the directory containing the input images.
+        label_dir (str): path to the directory containing the labelled images.
+        transforms (transforms or None, optional): transforms that act on a 
+            tuple of images and return a tuple of transformed images.
+            For some examples, see :class:`~KoshurRecognition.torch_implem.data.augmentation.MultipleRandomRotation`  
+    """
 
     def __init__(self, input_dir, label_dir, transforms=None):
 
@@ -45,6 +53,14 @@ class SegmentationDataLoader(Dataset):
         return input_image, label_image
 
     def __call__(self, batch_size=1, shuffle=True):
+        """
+        Args:
+            batch_size (int, optional): size of the each batch for every iteration.
+                Default: 1
+            shuffle (bool, optional): Whether to shuffle the dataset or not. Default ``True``.
+        Returns:
+            A :class:`~torch.utils.data.DataLoader` instance with current dataset.
+        """
         return DataLoader(self, batch_size=batch_size, shuffle=shuffle)
 
 

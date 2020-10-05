@@ -1,7 +1,7 @@
-from utils.models.segementation_model import SegmentationModel
-from utils.train import Train
-from utils.data.dataloader import SegmentationDataLoader
-from utils.data.augmentation import MultipleColorJitter
+from .utils.models.segementation_model import SegmentationModel
+from .utils.train import Train
+from .utils.data.dataloader import SegmentationDataLoader
+from .utils.data.augmentation import MultipleColorJitter
 
 # todo: modelLoad ,model save,apply augmentation
 

@@ -4,6 +4,10 @@ from PIL import Image
 
 
 class MultipleRandomRotation(transforms.RandomRotation):
+    """
+    This is a rotation class.
+    """
+
     def __init__(self,
                  degrees,
                  resample=False,
