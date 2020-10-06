@@ -1,9 +1,9 @@
-tf.utils
+torch.utils
 ====================================
 
 .. toctree::
    :maxdepth: 2
 
-   tf.utils.data
-   tf.utils.models
+   torch.utils.data
+   torch.utils.models
 
