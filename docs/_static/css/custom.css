@@ -109,7 +109,7 @@ article.pytorch-article .class em.property {
 /* change footer logo */
 
 .footer-logo {
-    background-image: url("../img/footer-logo.svg");
+    background-image: url("../img/none");
     background-position: center;
     background-repeat: no-repeat;
     background-size: 20px 24px;
