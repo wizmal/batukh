@@ -9,7 +9,7 @@ MAX_LENGTH = 20
 # 1. `ImgEncoder`: A convolutional network.
 # -  It will take input of an image of `[3, 60, x]` (channels, height, width)
 # and produce the output of `[128, 12, x']`, which is then flattened out
-# to `[1536, x']`.
+# to `[1536, x']`. Minimum height of image, x = 16.
 
 # 2. `Encoder(input_size, hidden_size, n_layers)`:
 # - It has a linear layer followed by a GRU layer.

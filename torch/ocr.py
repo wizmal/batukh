@@ -36,7 +36,7 @@ class WordDetector:
         params:
         - `encoder_input`: Input size of each vector that goes into the encoder.
            Default: 1536, based on the assumption that the input image is
-           `[3, 60, x]`.
+           `[batch_size, 3, 60, x]`.
         - `encoder_hidden`: hidden size of the GRU layer. Default: 128.
         - `decoder_output`: Size of the output vector. Should be the same as
            the target vector. If `image_dir` and `label_path` is provided, then
