@@ -21,6 +21,40 @@ default_transform = transforms.Compose([MultipleRandomRotation(10, fill=(255, 0)
 
 # General base class for Processors.
 class BaseProcessor:
+    def __init__(self):
+        self.model = SegmentationModel()
+
+    def load_data(self,
+                  train_path,
+                  val_path=None,
+                  transform="default"):
+
+        if transform == "default":
+            transform = default_transform
+        else:
+            transform = transform
+
+        self.train_dl = self._make_data(train_path, transform)
+        self.val_dl = self._make_data(val_path, transform)
+
+    def _make_data(self,
+                   directory,
+                   transform):
+        if directory is not None:
+            if "originals" in os.listdir(directory) and\
+                    "labels" in os.listdir(directory):
+                dataloader = SegmentationDataLoader(
+                    join(directory, "originals"),
+                    join(directory, "labels"),
+                    transforms=self.transform
+                )
+            else:
+                raise Exception(f"The path: {directory} does not contain\
+                    'originals' or 'labels' directories.")
+
+            return dataloader
+        return None
+
     def train_step(self,
                    x,
                    y,
@@ -33,11 +67,6 @@ class BaseProcessor:
             device = torch.device(
                 "cuda" if torch.cuda.is_available() else "cpu")
         self.model.to(device)
-        if optimizer is None:
-            optimizer = optim.Adam(self.model.parameters(), lr=learning_rate)
-        if criterion is None:
-            criterion = nn.CrossEntropyLoss(
-                weight=torch.Tensor([1, 700]).to(device), reduction="mean")
 
         optimizer.zero_grad()
 
@@ -80,28 +109,35 @@ class BaseProcessor:
               n_epochs,
               train_dl=None,
               val_dl=None,
-              optimizer=None,
-              criterion=None,
-              learning_rate=0.0001,
               batch_size=1,
               shuffle=True,
+              criterion=None,
+              optimizer=None,
+              learning_rate=0.0001,
+              save_checkpoints=True,
+              checkpoint_freq=None,
+              checkpoint_path="./",  # Change to None
+              max_to_keep=5,
               device=None,
-              checkpoint_path="./",
-              save_every=None):
+              ):
 
         checkpoint_path = join(checkpoint_path, "checkpoints")
         os.makedirs(checkpoint_path, exist_ok=True)
-        if save_every is None:
-            save_every = n_epochs//10+1
+        if checkpoint_freq is None:
+            checkpoint_freq = n_epochs//10+1
 
         for epoch in range(n_epochs):
             if train_dl is None:
-                if self.train_dl is None:
-                    raise Exception("No training loaders found.")
-                else:
-                    train_dl = self.train_dl(batch_size, shuffle)
+
+                # TEST IT
+                if getattr(self, "train_dl") is None:
+                    raise Exception(
+                        "No DataLoader found. Either pass one in train or use load_data method.")
+                ######
+                train_dl = self.train_dl(batch_size, shuffle)
             if val_dl is None:
-                val_dl = self.val_dl
+                if self.val_dl is not None:
+                val_dl = self.val_dl(batch_size, shuffle)
 
             self.model.train()
             total_loss = 0
@@ -134,60 +170,8 @@ class BaseProcessor:
                     pbar.update(1)
                     pbar.set_postfix(loss=eval_loss/(i+1))
                 pbar.close()
-            if epoch % save_every == 0:
+            if epoch % checkpoint_freq == 0:
                 self.save_model(checkpoint_path, epoch)
-
-    def predict(self, x):
-
-        self.model.eval()
-        return self.model(x)
-
-
-class BaselineDetector(BaseProcessor):
-    r"""
-    This is the main decription.
-
-    Args:
-        transforms (transforms or None, optional):  to apply to the dataset. Set ``None`` for no transform.
-        train_dir (str, optional): Path to the root directory of the train dataset. It should contain two subdirectories, named: "originals" and "labels". If ``None``, then you will have to pass a ``DataLoader`` object in the ``train`` function.
-        val_dir (str, optional): Path to the root directory of the validation dataset. It should contain two subdirectories, named: "originals" and "labels".
-        batch_size (int, optional): size of a batch in data loaders(both train and val).
-            Default:2.
-            Only works if ``train_dir`` or ``val_dir`` is not ``None``.
-        shuffle (bool, optional): whether to shuffle both datasets or not. Only works if ``train_dir`` or ``val_dir`` is not ``None``.
-    """
-
-    def __init__(self,
-                 transform='default',
-                 train_dir=None,
-                 val_dir=None):
-
-        self.model = SegmentationModel()
-        if transform == "default":
-            self.transform = default_transform
-        else:
-            self.transform = transform
-
-        self.train_dl = self.make_data(train_dir)
-
-        self.val_dl = self.make_data(val_dir)
-
-    def make_data(self,
-                  directory):
-        if directory is not None:
-            if "originals" in os.listdir(directory) and\
-                    "labels" in os.listdir(directory):
-                dataloader = SegmentationDataLoader(
-                    join(directory, "originals"),
-                    join(directory, "labels"),
-                    transforms=self.transform
-                )
-            else:
-                raise Exception(f"The path: {directory} does not contain\
-                    'originals' or 'labels' directories.")
-
-            return dataloader
-        return None
 
     def save_checkpoint(self, checkpoint, path):
         """To be used instead of `save_model` later on!"""
@@ -207,3 +191,37 @@ class BaselineDetector(BaseProcessor):
         name = "{} {}-{}-{} {}.{}.{}.pt".format(postfix, *localtime()[:6])
         torch.save(self.model.state_dict(), join(path, name))
         print("Model Saved!")
+
+    def predict(self, x):
+        # TODO: add dataloader option
+
+        self.model.eval()
+        return self.model(x)
+
+
+class BaselineDetector(BaseProcessor):
+    # TODO: Add documentation
+
+    def train(self,
+              n_epochs,
+              train_dl=None,
+              val_dl=None,
+              batch_size=1,
+              shuffle=True,
+              criterion=None,
+              optimizer=None,
+              learning_rate=0.0001,
+              save_checkpoints=True,
+              checkpoint_freq=None,
+              checkpoint_path="./",
+              max_to_keep=5,
+              device=None):
+        # TODO: Add documentation
+
+        if optimizer is None:
+            optimizer = optim.Adam(self.model.parameters(), lr=learning_rate)
+        if criterion is None:
+            criterion = nn.CrossEntropyLoss(
+                weight=torch.Tensor([1, 700]).to(device), reduction="mean")
+        super().train(n_epochs, train_dl, val_dl, batch_size, shuffle, criterion, optimizer,
+                      learning_rate, save_checkpoints, checkpoint_freq, checkpoint_path, max_to_keep, device)

@@ -2,3 +2,4 @@
 *__pycache__
 docs/_build
 test/.pytest_cache
+torch/notebooks
