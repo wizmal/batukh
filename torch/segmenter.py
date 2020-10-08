@@ -46,7 +46,7 @@ class BaseProcessor:
                 dataloader = SegmentationDataLoader(
                     join(directory, "originals"),
                     join(directory, "labels"),
-                    transforms=self.transform
+                    transforms=transform
                 )
             else:
                 raise Exception(f"The path: {directory} does not contain\
@@ -137,7 +137,7 @@ class BaseProcessor:
                 train_dl = self.train_dl(batch_size, shuffle)
             if val_dl is None:
                 if self.val_dl is not None:
-                val_dl = self.val_dl(batch_size, shuffle)
+                    val_dl = self.val_dl(batch_size, shuffle)
 
             self.model.train()
             total_loss = 0

@@ -72,7 +72,6 @@ class OCRDataLoader(Dataset):
         labels_path (str): Path to a file containing labels like "`1. label_1\\n2. label_2`".
         transform (:class:`torchvision.transforms`, optional): A transform 
            (or a composition of multiple transforms) to be applied on the input images.
-
     """
 
     def __init__(self, image_dir, labels_path, transform=None):
