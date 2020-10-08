@@ -174,13 +174,14 @@ class BaseProcessor:
                 self.save_model(checkpoint_path, epoch)
 
     def save_checkpoint(self, checkpoint, path):
-        """To be used instead of `save_model` later on!"""
+        # To be used instead of `save_model` later on!
         # TODO: code here
         pass
 
     def load_model(self, path):
         """
         Loads the model parameters for ``self.model``.
+
         Args:
             path (str): path to a .pth(or .pt) file.
         """
@@ -198,9 +199,13 @@ class BaseProcessor:
         self.model.eval()
         return self.model(x)
 
+# TODO: Add types to args
+
 
 class BaselineDetector(BaseProcessor):
-    # TODO: Add documentation
+    """
+    This class is used to detect baselines in an image of a document. 
+    """
 
     def train(self,
               n_epochs,
@@ -216,7 +221,56 @@ class BaselineDetector(BaseProcessor):
               checkpoint_path="./",
               max_to_keep=5,
               device=None):
-        # TODO: Add documentation
+        r"""
+        Training method to detect baselines. 
+
+        The label images should be:
+
+        - the same name as the their original images.
+        - the same size as their original images.
+        - black background with red lines of about 5px width representing baselines.
+
+        :attr:`train_dl` and :attr:`val_dl` should be provided if custom dataloaders
+        are required. Although, most of the times, :meth:`~BaselineDetector.load_data`
+        will do the job. 
+
+        Note:
+
+            If :attr:`train_dl` and/or :attr:`val_dl` are provided, then any already made
+            dataloader using  :meth:`~BaselineDetector.load_data` will not be used.
+
+        Args:
+            n_epochs (int): number of epochs.
+            train_dl (:class:`~torch.utils.data.DataLoader`, optional): data loader to train on.
+                Default: None.
+            val_dl (:class:`~torch.utils.data.DataLoader`, optional): data loader to validate on.
+                Default: None.
+            batch_size (int, optional): batch size of the data loader created by :meth:`~BaselineDetector.load_data`.
+                Default: 1.
+            shuffle (bool, optional): whether to shuffle the data loader 
+                created by :meth:`~BaselineDetector.load_data`.
+            criterion (:class:`~torch.nn.module.loss._Loss` or :class:`~torch.nn.module.loss._WeightedLoss`, optional): 
+                The loss function to use.
+                Default: ``CrossEntropyLoss(weight=Tensor[1, 700]), reduction="mean")``
+            optimizer (:class:`~torch.optim.Optimizer`, optional): The optimizer
+                to be used to update the parameters.
+                Default: ``Adam(model.parameters(), lr=learning_rate)``
+            learning_rate (float, optional): Learning rate to be used for the 
+                default optimizer.
+                Default: 0.0001.
+            save_checkpoints (bool, optional): Whether to save training checkpoints.
+                Default: ``True``.
+            checkpoint_freq (int, optional): The saving frequency. After each 
+                these many epochs, a checkpoint will be saved.
+                Default: :math:`\left \lfloor\frac{\text{n_epochs}}{10}\right \rfloor + 1`.
+            checkpoint_path (str, optional): Path of the checkpoint folder.
+                Default: "./"
+            max_to_keep (int or None, optional): The maximum number of latest 
+                checkpoints to be saved. ``None`` to save all. 
+                Default: 5.
+            device (str, optional): The device to do computations on.
+                Default: GPU, if GPU is available, else CPU. 
+        """
 
         if optimizer is None:
             optimizer = optim.Adam(self.model.parameters(), lr=learning_rate)

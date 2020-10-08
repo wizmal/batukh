@@ -15,8 +15,19 @@ MAX_LENGTH = 20
 
 
 class WordDetector:
-    """
-    OCR
+    r"""
+    Args:
+        encoder_input (int, optional): Input size of vector that goes into the encoder.
+            Default: 1536, based on the assumption that the input shape is
+            `[batch_size, 3, 60, x]`.
+        encoder_hidden (int, optional): hidden size of the GRU layer. Default: 128.
+        decoder_output (int, optional): Size of the output vector. Should be the same as
+            the target vector. If `image_dir` and `label_path` is provided, then
+            it will be calculated, else, need to supply.
+        image_dir (str, optional): Path to directory containing images, The images should
+            be named as "1.png", "2.png", ...
+        label_path (str, optional): Path to the label file. Each label should be separated
+            by a newline. Each label should be like: "1: label_1".
     """
 
     def __init__(self,
@@ -32,20 +43,6 @@ class WordDetector:
                  label_path=None,
                  transform=None,
                  device=None):
-        """
-        params:
-        - `encoder_input`: Input size of each vector that goes into the encoder.
-           Default: 1536, based on the assumption that the input image is
-           `[batch_size, 3, 60, x]`.
-        - `encoder_hidden`: hidden size of the GRU layer. Default: 128.
-        - `decoder_output`: Size of the output vector. Should be the same as
-           the target vector. If `image_dir` and `label_path` is provided, then
-           it will be calculated, else, need to supply.
-        - `image_dir`: Path to directory containing images, The images should
-           be named as "1.png", "2.png", ...
-        - `label_path`: Path to the label file. Each label should be separated
-           by a newline. Each label should be like: "1: this label".
-        """
 
         if image_dir is None or label_path is None:
             print(

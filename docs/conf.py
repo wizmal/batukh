@@ -57,8 +57,9 @@ extensions = [
     'sphinx.ext.coverage',
     'sphinx.ext.napoleon',
     'sphinx.ext.viewcode',
-    'sphinxcontrib.katex',
+    # 'sphinxcontrib.katex',  # some error with it.
     'sphinx.ext.autosectionlabel',
+
 ]
 
 # build the templated autosummary files
