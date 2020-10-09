@@ -168,12 +168,16 @@ class MyResNet(nn.Module):
 class UpScalerUnit(nn.Module):
     def __init__(self, n_current, n_output, n_copy):
         super(UpScalerUnit, self).__init__()
-        self.upsample = nn.UpsamplingNearest2d(scale_factor=2)
+        # self.upsample = nn.UpsamplingNearest2d(scale_factor=2)
         self.conv = nn.Conv2d(n_current+n_copy, n_output,
                               kernel_size=(3, 3), padding=1, bias=False)
 
     def forward(self, x, copy):
+        # print(x.shape, copy.shape)
 
+        # Dynamically created a layer to match the size
+        self.upsample = nn.UpsamplingNearest2d(
+            size=(copy.shape[-2], copy.shape[-1]))
         x = self.upsample(x)
         x = torch.cat((copy, x), dim=1)
         x = self.conv(x)

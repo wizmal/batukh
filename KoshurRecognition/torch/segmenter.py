@@ -130,7 +130,8 @@ class BaseProcessor:
             if train_dl is None:
 
                 # TEST IT
-                if getattr(self, "train_dl") is None:
+
+                if getattr(self, "train_dl", None) is None:
                     raise Exception(
                         "No DataLoader found. Either pass one in train or use load_data method.")
                 ######
