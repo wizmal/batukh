@@ -1,2 +1,7 @@
 *.vscode
 *__pycache__
+docs/_build
+test/.pytest_cache
+KoshurRecognition/torch/notebooks
+build
+dist

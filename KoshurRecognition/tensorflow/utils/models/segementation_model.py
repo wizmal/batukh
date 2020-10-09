@@ -2,25 +2,6 @@ import tensorflow as tf
 from tensorflow.keras import layers, Model
 
 
-class UpSampleUnit(Model):
-    def __init__(self, in_filters, out_filters):
-        super(UpSampleUnit, self).__init__()
-
-        self.convT = layers.Conv2DTranspose(
-            in_filters, kernel_size=1, strides=(2, 2))
-        self.conv = layers.Conv2D(
-            out_filters,
-            kernel_size=3,
-            padding='same',
-            activation='relu')
-
-    def call(self, input_tensor, concat_tensor):
-        x = self.convT(input_tensor)
-        x = tf.concat([concat_tensor, x], 3)
-        x = self.conv(x)
-        return x
-
-
 class BottleneckUnit(Model):
     def __init__(self, out_filters, in_filters, stride=(1, 1), connect=True, is_first=False):
         super(BottleneckUnit, self).__init__()
@@ -51,6 +32,7 @@ class BottleneckUnit(Model):
                 1))
 
     def call(self, input_tensor):
+
         x = self.conv1(input_tensor)
         x = self.conv2(x)
         x = self.conv3(x)
@@ -58,30 +40,6 @@ class BottleneckUnit(Model):
             if self.is_first:
                 input_tensor = self.conv4(input_tensor)
             return x + input_tensor
-        return x
-
-
-class UpSample(Model):
-    def __init__(self, n_classes):
-        super(UpSample, self).__init__()
-
-        self.upsample1 = UpSampleUnit(512, 512)
-        self.upsample2 = UpSampleUnit(512, 256)
-        self.upsample3 = UpSampleUnit(256, 128)
-        self.upsample4 = UpSampleUnit(128, 64)
-        self.upsample5 = UpSampleUnit(64, 32)
-        self.conv = layers.Conv2D(
-            filters=n_classes,
-            kernel_size=1,
-            padding='same')
-
-    def call(self, input_tensor, concat_tensors):
-        x = self.upsample1.call(input_tensor, concat_tensors.pop(-1))
-        x = self.upsample2.call(x, concat_tensors.pop(-1))
-        x = self.upsample3.call(x, concat_tensors.pop(-1))
-        x = self.upsample4.call(x, concat_tensors.pop(-1))
-        x = self.upsample5.call(x, concat_tensors.pop(-1))
-        x = self.conv(x)
         return x
 
 
@@ -156,13 +114,57 @@ class ResnetLayer(Model):
         return x, concat_tensors
 
 
+class UpScalerUnit(Model):
+    def __init__(self, in_filters, out_filters):
+        super(UpScalerUnit, self).__init__()
+
+        self.convT = layers.Conv2DTranspose(
+            in_filters, kernel_size=1, strides=(2, 2))
+        self.conv = layers.Conv2D(
+            out_filters,
+            kernel_size=3,
+            padding='same',
+            activation='relu')
+
+    def call(self, input_tensor, concat_tensor):
+        x = self.convT(input_tensor)
+        x = tf.concat([concat_tensor, x], 3)
+        x = self.conv(x)
+        return x
+
+
+class UpScaler(Model):
+    def __init__(self, n_classes):
+        super(UpScaler, self).__init__()
+
+        self.upScaler1 = UpScalerUnit(512, 512)
+        self.upScaler2 = UpScalerUnit(512, 256)
+        self.upScaler3 = UpScalerUnit(256, 128)
+        self.upScaler4 = UpScalerUnit(128, 64)
+        self.upScaler5 = UpScalerUnit(64, 32)
+        self.conv = layers.Conv2D(
+            filters=n_classes,
+            kernel_size=1,
+            padding='same')
+
+    def call(self, input_tensor, concat_tensors):
+        x = self.upScaler1.call(input_tensor, concat_tensors.pop(-1))
+        x = self.upScaler2.call(x, concat_tensors.pop(-1))
+        x = self.upScaler3.call(x, concat_tensors.pop(-1))
+        x = self.upScaler4.call(x, concat_tensors.pop(-1))
+        x = self.upScaler5.call(x, concat_tensors.pop(-1))
+        x = self.conv(x)
+        return x
+
+
 class SegmentationModel(Model):
     def __init__(self, n_classes=2):
         super(SegmentationModel, self).__init__()
+        self.n_classes = n_classes
         self.resnet = ResnetLayer()
-        self.upsample = UpSample(n_classes)
+        self.upScaler = UpScaler(self.n_classes)
 
     def call(self, input_tensor):
         x, concat_tensors = self.resnet.call(input_tensor)
-        x = self.upsample.call(x, concat_tensors)
+        x = self.upScaler.call(x, concat_tensors)
         return x
