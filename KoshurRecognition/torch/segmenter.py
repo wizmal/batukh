@@ -53,6 +53,9 @@ class BaseProcessor:
             return dataloader
         return None
 
+
+# TODO: move self.model.to(device) from `train_step` and `val_step` to `train`
+
     def train_step(self,
                    x,
                    y,
@@ -89,10 +92,6 @@ class BaseProcessor:
                 "cuda" if torch.cuda.is_available() else "cpu")
 
         self.model.to(device)
-
-        if criterion is None:
-            criterion = nn.CrossEntropyLoss(
-                weight=torch.Tensor([1, 700]).to(device), reduction="mean")
 
         x = x.to(device)
         y = y.to(device)
@@ -132,12 +131,14 @@ class BaseProcessor:
                 if getattr(self, "train_dl", None) is None:
                     raise Exception(
                         "No DataLoader found. Either pass one in train or use load_data method.")
-                ######
+
                 train_dl = self.train_dl(batch_size, shuffle)
             if val_dl is None:
-                if self.val_dl is not None:
+                if getattr(self, "val_dl", None) is None:
+                    val_dl = None
+                else:
                     val_dl = self.val_dl(batch_size, shuffle)
-
+                ######
             self.model.train()
             total_loss = 0
 
