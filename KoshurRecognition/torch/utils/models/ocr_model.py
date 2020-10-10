@@ -102,12 +102,14 @@ class AttnDecoderRNN(nn.Module):
         self.max_length = max_length
         self.n_layers = n_layers
 
-        self.embedding = nn.Embedding(self.output_size, self.hidden_size)
+        if self.output_size is not None:
+            self.embedding = nn.Embedding(self.output_size, self.hidden_size)
         self.attn = nn.Linear(self.hidden_size * 2, self.max_length)
         self.attn_combine = nn.Linear(self.hidden_size * 2, self.hidden_size)
         self.dropout = nn.Dropout(self.dropout_p)
         self.gru = nn.GRU(self.hidden_size, self.hidden_size)
-        self.out = nn.Linear(self.hidden_size, self.output_size)
+        if self.output_size is not None:
+            self.out = nn.Linear(self.hidden_size, self.output_size)
 
     def forward(self, input, hidden, encoder_outputs):
         embedded = self.embedding(input).view(1, 1, -1)

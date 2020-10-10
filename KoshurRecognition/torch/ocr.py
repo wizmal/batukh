@@ -1,13 +1,12 @@
 import torch
 from torch import nn, optim
-import torch.nn.functional as F
 from torchvision import transforms
-from torch.utils.data import DataLoader, Dataset
-from PIL import Image
 import os
 import random
 
 from .utils.data.dataloader import OCRDataLoader
+
+from .utils.models.ocr_model import ImgEncoder, Encoder, AttnDecoderRNN
 
 from os.path import join
 from tqdm import tqdm
@@ -43,33 +42,21 @@ class WordDetector:
                  max_length=MAX_LENGTH,
                  ):
 
-        if image_dir is None or label_path is None:
-            print(
-                "No dataloader/dataset made, expect a dataloader in the `train` method.")
-            self.dataset = None
-        else:
-            self.dataset = WordDataset(image_dir, label_path, transform)
-        if decoder_output is None:
-            decoder_output = len(self.dataset.letter2index)
+        # if providing decoder_output as None, they need to use load_data
+        # Only provide decoder_output, if using custom data loaders.
 
-        if device is None:
-            device = torch.device(
-                "cuda" if torch.cuda.is_available() else "cpu")
-        self.device = device
         self.max_length = max_length
 
         self.img_encoder = ImgEncoder()
 
         self.encoder = Encoder(encoder_input,
                                encoder_hidden,
-                               encoder_nlayers,
-                               device)
+                               encoder_nlayers)
         self.decoder = AttnDecoderRNN(decoder_hidden,
                                       decoder_output,
                                       decoder_nlayers,
                                       dropout,
-                                      max_length,
-                                      device)
+                                      max_length)
 
     def load_data(self,
                   train_dir,
@@ -79,6 +66,14 @@ class WordDetector:
                   transform=None):
 
         self.train_dl = OCRDataLoader(train_dir, train_label_path, transform)
+
+        # if loading data, then make decoder_output
+        decoder_output = len(self.train_dl.letter2index)
+        self.decoder.embedding = nn.Embedding(
+            decoder_output, self.decoder.hidden_size)
+        self.decoder.out = nn.Linear(self.decoder.hidden_size, decoder_output)
+        self.decoder.output_size = decoder_output
+
         if val_dir is None or val_label_path is None:
             self.val_dl = None
         else:
