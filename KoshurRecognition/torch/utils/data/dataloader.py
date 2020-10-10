@@ -101,6 +101,9 @@ class OCRDataLoader(Dataset):
         self.index2letter[self.EOS] = "<EOS>"
         self.letter2index = {v: k for k, v in self.index2letter.items()}
 
+    def __call__(self, batch_size=1, shuffle=True):
+        return DataLoader(self, batch_size=batch_size, shuffle=shuffle)
+
     def __len__(self):
         return len(self.files)
 
@@ -115,7 +118,6 @@ class OCRDataLoader(Dataset):
         label = self.transform_label(label)
 
         return image, label
-# TODO: Add a __call__ method to return a DataLoader as done for SegmenterDataLoader.
 
     def transform_label(self, label):
         """
