@@ -6,7 +6,7 @@ Using Pip
 
 `pip install ...`
 
-After all the dependencies have been installed, you can run any model.
+After all the dependencies have been installed, you can train any model.
 
 For Baseline Detection:
 

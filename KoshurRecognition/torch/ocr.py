@@ -7,6 +7,8 @@ from PIL import Image
 import os
 import random
 
+from .utils.data.dataloader import OCRDataLoader
+
 from os.path import join
 from tqdm import tqdm
 from time import localtime
@@ -39,15 +41,11 @@ class WordDetector:
                  decoder_output=None,
                  dropout=0.1,
                  max_length=MAX_LENGTH,
-                 image_dir=None,
-                 label_path=None,
-                 transform=None,
-                 device=None):
+                 ):
 
         if image_dir is None or label_path is None:
             print(
-                "No dataloader/dataset made, expect a dataloader in\
-                    the `train` method.")
+                "No dataloader/dataset made, expect a dataloader in the `train` method.")
             self.dataset = None
         else:
             self.dataset = WordDataset(image_dir, label_path, transform)
@@ -72,6 +70,19 @@ class WordDetector:
                                       dropout,
                                       max_length,
                                       device)
+
+    def load_data(self,
+                  train_dir,
+                  train_label_path,
+                  val_dir=None,
+                  val_label_path=None,
+                  transform=None):
+
+        self.train_dl = OCRDataLoader(train_dir, train_label_path, transform)
+        if val_dir is None or val_label_path is None:
+            self.val_dl = None
+        else:
+            self.val_dl = OCRDataLoader(val_dir, val_label_path, transform)
 
     def forward_step(self,
                      x,
@@ -129,6 +140,7 @@ class WordDetector:
 
         return loss, target_len
 
+# TODO: before creating optimizers make sure they do not already exist
     def initOptimizers(self,
                        imgenc_optimizer=None,
                        enc_optimizer=None,
@@ -148,20 +160,25 @@ class WordDetector:
 
     def train(self,
               n_epochs,
-              train_ds=None,
-              val_ds=None,  # change it later
+              train_dl=None,
+              val_dl=None,
               batch_size=1,
+              shuffle=True,
+              criterion=None,
               imgenc_optimizer=None,
               enc_optimizer=None,
               dec_optimizer=None,
               learning_rate=0.001,
-              criterion=None,
+              save_checkpoints=True,
+              checkpoint_freq=None,
+              checkpoint_path="./",  # Change to None
+              max_to_keep=5,
               device=None,
-              checkpoint_path="./",
-              save_every=None):
+              ):
 
         if device is None:
-            device = self.device
+            device = torch.device(
+                "cuda" if torch.cuda.is_available() else "cpu")
 
         self.img_encoder.to(device)
         self.encoder.to(device)
@@ -174,21 +191,21 @@ class WordDetector:
 
         checkpoint_path = join(checkpoint_path, "checkpoints")
         os.makedirs(checkpoint_path, exist_ok=True)
-        if save_every is None:
-            save_every = n_epochs//10+1
+        if checkpoint_freq is None:
+            checkpoint_freq = n_epochs//10+1
 
         for epoch in range(n_epochs):
-            if train_ds is None:
-                if self.dataset is None:
-                    raise Exception("No training dataset found.")
+            if train_dl is None:
+                if getattr(self, "train_dl", None) is None:
+                    raise Exception(
+                        "No DataLoader found. Either pass one in train or use load_data method.")
                 else:
-                    train_ds = self.dataset
-            if val_ds is None:
-                val_dl = None
-            else:
-                val_dl = DataLoader(val_ds, batch_size, shuffle=True)
-
-            train_dl = DataLoader(train_ds, batch_size, shuffle=True)
+                    train_dl = self.train_dl(batch_size, shuffle)
+            if val_dl is None:
+                if getattr(self, "val_dl", None) is None:
+                    val_dl = None
+                else:
+                    val_dl = self.val_dl(batch_size, shuffle)
 
             self.img_encoder.train()
             self.encoder.train()
@@ -239,7 +256,7 @@ class WordDetector:
                     pbar.update(1)
                     pbar.set_postfix(loss=eval_loss/(i+1))
                 pbar.close()
-            if epoch % save_every == 0:
+            if epoch % checkpoint_freq == 0:
                 self.save_model(checkpoint_path, epoch)
 
     def load_model(self, path):
