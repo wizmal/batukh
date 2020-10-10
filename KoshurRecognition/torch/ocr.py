@@ -98,7 +98,7 @@ class WordDetector:
 
         # for attention
         encoder_outputs = torch.zeros(
-            self.max_length, self.encoder.hidden_size, device=self.device)
+            self.max_length, self.encoder.hidden_size, device=device)
 
         # pass each of the [1, 1536] vectors to encoder
         for idx in range(out.shape[2]):
@@ -106,14 +106,14 @@ class WordDetector:
             encoder_outputs[idx] = enc_out[0, 0]
 
         decoder_input = torch.tensor(
-            [[[self.dataset.SOS]]], device=self.device)
+            [[[self.train_dl.SOS]]], device=device)
 
         dec_hidden = enc_hidden
 
         use_teacher_forcing = random.random() < teacher_forcing_ratio
 
         target_len = len(y)
-        y = y.to(device)
+
         if use_teacher_forcing:
             for di in range(target_len):
                 dec_out, dec_hidden, dec_attn = self.decoder(
@@ -130,7 +130,7 @@ class WordDetector:
 
                 loss += criterion(dec_out, y[di])
 
-                if decoder_input.item() == self.dataset.EOS:
+                if decoder_input.item() == self.train_dl.EOS:
                     break
 
         return loss, target_len
@@ -213,10 +213,17 @@ class WordDetector:
 
             for i, (x, y) in enumerate(train_dl):
 
+                if x.shape[3] < 16:
+                    continue
+
                 imgenc_optimizer.zero_grad()
                 enc_optimizer.zero_grad()
                 dec_optimizer.zero_grad()
                 # maybe add teacher_force_ratio control
+                x = x.to(device)
+                y = y.to(device)
+                y = y[0]  # only for batch_size=1, look into it
+
                 loss, target_len = self.forward_step(
                     x, y, criterion, device)
 
