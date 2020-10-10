@@ -94,7 +94,8 @@ class OCRDataLoader(Dataset):
         self.SOS = 0
         self.EOS = 1
 
-        self.labels = map(lambda x: x.split(":", 1)[-1].strip(), self.labels)
+        self.labels = list(
+            map(lambda x: x.split(":", 1)[-1].strip(), self.labels))
 
         self.index2letter = dict(enumerate(set("".join(self.labels)), 2))
         self.index2letter[self.SOS] = "<SOS>"
@@ -112,7 +113,7 @@ class OCRDataLoader(Dataset):
             idx = idx.tolist()
 
         image = Image.open(os.path.join(self.image_dir, self.files[idx]))
-        label = self.labels[idx].split(":", 1)[-1].strip()
+        label = self.labels[idx]
 
         image = self.transform(image)
         label = self.transform_label(label)
