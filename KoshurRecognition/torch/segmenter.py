@@ -31,8 +31,6 @@ class BaseProcessor:
 
         if transform == "default":
             transform = default_transform
-        else:
-            transform = transform
 
         self.train_dl = self._make_data(train_path, transform)
         self.val_dl = self._make_data(val_path, transform)
