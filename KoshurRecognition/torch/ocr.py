@@ -214,6 +214,7 @@ class WordDetector:
             for i, (x, y) in enumerate(train_dl):
 
                 if x.shape[3] < 16:
+                    pbar.update(1)
                     continue
 
                 imgenc_optimizer.zero_grad()
@@ -250,6 +251,10 @@ class WordDetector:
                 pbar.set_description(f"Epoch: {epoch}. Validating")
 
                 for i, (x, y) in enumerate(val_dl):
+                    if x.shape[3] < 16:
+                        pbar.update(1)
+                        continue
+
                     loss, target_len = self.forward_step(
                         x, y, criterion, device)
 
