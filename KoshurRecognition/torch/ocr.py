@@ -255,6 +255,10 @@ class WordDetector:
                         pbar.update(1)
                         continue
 
+                    x = x.to(device)
+                    y = y.to(device)
+                    y = y[0]  # only
+
                     loss, target_len = self.forward_step(
                         x, y, criterion, device)
 
