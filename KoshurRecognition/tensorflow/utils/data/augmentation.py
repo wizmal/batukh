@@ -6,19 +6,25 @@ class MultipleColorJitter():
         self.dataset = ds
         self.prob = prob
         self.n_max = n_max
+        self.brightness = brightness
+        self.contrast = contrast
+        self.saturation = saturation
+        self.hue = hue
 
-    def jitter(self, x, y):
-        if tf.random.uniform([], 0, 1).numpy() <= self.prob:
-            x = tf.image.adjust_brightness(x,)
-            x = tf.image.adjust_contrast(x, np.random.choice(
-                np.linspace(start=0.0, stop=1.0, num=100)))
-            x = tf.image.adjust_hue(x, np.random.choice(
-                np.linspace(start=0.0, stop=1.0, num=100)))
-            x = tf.image.adjust_saturation(x, np.random.choice(
-                np.linspace(start=0.0, stop=1.0, num=100)))
-        return (x, y)
+    def jitter(self, batch):
+        if tf.random.uniform([], 0, 1) <= self.prob:
+            for i in range(self.n_max):
+
+                batch[i] = tf.image.adjust_brightness(
+                    batch[i], tf.random.uniform([], -1*self.brightness, self.brightness))
+                batch[i] = tf.image.adjust_contrast(
+                    batch[i], tf.random.uniform([], -1*self.contrast, self.contrast))
+                batch[i] = tf.image.adjust_hue(
+                    batch[i], tf.random.uniform([], -1*self.hue, self.hue))
+                batch[i] = tf.image.adjust_saturation(
+                    batch[i], tf.random.uniform([], -1*self.saturation, self.saturation))
+        return batch
 
     def __call__(self):
         return self.dataset().map(self.jitter)
-
     # todo:list nmax,arguments add
