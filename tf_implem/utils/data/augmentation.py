@@ -1,16 +1,15 @@
 import tensorflow as tf
-import numpy as np
 
 
 class MultipleColorJitter():
-    def __init__(self, ds, prob=0.02):
+    def __init__(self, ds, brightness=0, contrast=0, saturation=0, hue=0, n_max=None, prob=0.2):
         self.dataset = ds
         self.prob = prob
+        self.n_max = n_max
 
     def jitter(self, x, y):
-        if np.random.choice(np.linspace(start=0.0, stop=1.0, num=100)) <= self.prob:
-            x = tf.image.adjust_brightness(x, np.random.choice(
-                np.linspace(start=0.0, stop=1.0, num=100)))
+        if tf.random.uniform([], 0, 1).numpy() <= self.prob:
+            x = tf.image.adjust_brightness(x,)
             x = tf.image.adjust_contrast(x, np.random.choice(
                 np.linspace(start=0.0, stop=1.0, num=100)))
             x = tf.image.adjust_hue(x, np.random.choice(

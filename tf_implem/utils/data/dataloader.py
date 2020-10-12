@@ -6,16 +6,15 @@ import numpy as np
 
 
 class SegmentationDataLoader():
-        """ Loads the ``tf.data.Dataset`` for ``PageExtraction``,``ImageExtraction``,``LayoutExtraction`` and ``BaselineDetection`` classes.
+    """ Loads the ``tf.data.Dataset`` for ``PageExtraction``,``ImageExtraction``,``LayoutExtraction`` and ``BaselineDetection`` classes.
 
-        Args:
-            path (str)       : Path of the folder containing images folder and labels folder to be loaded in dataset.Folder names must be as mentioned.
-            n_classes (int)  : number of classes in label images.
+    Args:
+        path (str)       : Path of the folder containing images folder and labels folder to be loaded in dataset.Folder names must be as mentioned.
+        n_classes (int)  : number of classes in label images.
 
-        """
+    """
 
     def __init__(self, path, n_classes):
-
 
         images_path = os.path.join(path, "images")
         labels_path = os.path.join(path, "labels")
@@ -41,15 +40,15 @@ class SegmentationDataLoader():
 
         Returns:
             image (tf.Tensor)  : Image tensor.
-            label (tf.Tensor)  : Label tensor.         
+            label (tf.Tensor)  : Label tensor.
         """
         image = tf.io.read_file(image_filename)
         image = tf.io.decode_png(image, channels=3)
         image = tf.image.convert_image_dtype(image, tf.float32)
-        # image = tf.image.resize(image,self.resize)
+        image = tf.image.resize(image, (2048, 1024))
         label = tf.io.read_file(label_filename)
         label = tf.io.decode_png(label, channels=3)
-        # label = tf.image.resize(label,self.resize)
+        label = tf.image.resize(label, (2048, 1024))
         label = tf.cast((label[:, :, 0] > 100), tf.int32)
         label = tf.one_hot(label, self.n_classes)
         return image, label
@@ -101,13 +100,14 @@ class SegmentationDataLoader():
 
 
 class OCRDataLoader():
-        """ Loads the ``tf.data.Dataset`` for ``OCR`` class.
+    """ Loads the ``tf.data.Dataset`` for ``OCR`` class.
 
-        Args:
-            path (strs)        :  Path of  folder containing images folder,labels.txt and table.txt to be loaded in dataset.Name of folders and files should be same as mentioned.
-        """
+    Args:
+        path (strs)        :  Path of  folder containing images folder,labels.txt and table.txt to be loaded in dataset.Name of folders and files should be same as mentioned.
+    """
+
     def __init__(self, path):
-        
+
         images_path = os.path.join(path, "images")
         labels_path = os.path.join(path, "labels.txt")
         table_path = os.path.join(path, "table.txt")
