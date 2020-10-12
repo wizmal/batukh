@@ -7,5 +7,5 @@ tensorflow.utils.models
 .. automodule:: KoshurRecognition.tensorflow.utils.models.ocr_model
    :members:
 
-.. automodule:: KoshurRecognition.tensorflow.utils.models.segementation_model
+.. automodule:: KoshurRecognition.tensorflow.utils.models.segmentation_model
    :members:
