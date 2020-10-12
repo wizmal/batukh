@@ -9,7 +9,7 @@ class OCR(Train):
 
     Args:
         n_classes (int) : number of outputs nodes of ocr model.
-        """
+    """
 
     def __init__(self, n_classes):
 
