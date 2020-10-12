@@ -68,6 +68,8 @@ class ImageExtraction(Train):
 
 
 class LayoutExtraction(Train):
+    r"""This class is used to extract diffrent layouts from a image."""
+
     def __init__(self, train_path, val_path, batch_size, repeat,  n_layouts):
         super().__init__(model=SegmentationModel(n_layouts))
         self.train_dl = None
@@ -96,6 +98,7 @@ class LayoutExtraction(Train):
 
 
 class BaselineDetection(Train):
+    r"""This class is used to detect baseline."""
 
     def __init__(self, train_path, val_path, batch_size, repeat):
         super().__init__(model=SegmentationModel(2))

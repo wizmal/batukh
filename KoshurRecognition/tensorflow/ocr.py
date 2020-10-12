@@ -5,12 +5,24 @@ from .utils.models.ocr_model import OCRModel
 
 
 class OCR(Train):
+    r"""This class is used for octical character recognition.
+
+    Args:
+        n_classes (int) : number of outputs nodes of ocr model.
+        """
+
     def __init__(self, n_classes):
+
         super().__init__(model=OCRModel(n_classes), is_ocr=True)
         self.train_dl = None
         self.val_dl = None
 
     def load_data(self, train_path, val_path=None):
+        r"""Loads Train and Validation datset.
+        Args:
+            train_path (str)        : path of the folder contaings images folder,labels.txt and table.txt for train dataset.
+            val_path (str,optional) : path of the folder contaings images folder ,labels.txt and table.txt  for validation dataset.
+            """
         self.train_dl = OCRDataLoader(
             train_path)
         if val_path is not None:
