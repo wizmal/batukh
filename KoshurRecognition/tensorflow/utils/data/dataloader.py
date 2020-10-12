@@ -6,16 +6,16 @@ import numpy as np
 
 
 class SegmentationDataLoader():
-    r""" Loads the ``tf.data.Dataset`` for ``PageExtraction``,``ImageExtraction``,
-    ``LayoutExtraction`` and ``BaselineDetection`` classes.
+    r""" Loads the ``tf.data.Dataset`` for ``PageExtraction``,``ImageExtraction``,``LayoutExtraction`` and ``BaselineDetection`` classes.
 
     Args:
-        path (str)       : Path of the folder containing images folder and labels folder to be loaded in dataset.
-            Folder names must be as mentioned.
+        path (str)       : Path of the folder containing images folder and labels folder to be loaded in dataset.Folder names must be as mentioned.
         n_classes (int)  : number of classes in label images.
+
     """
 
     def __init__(self, path, n_classes):
+
         images_path = os.path.join(path, "images")
         labels_path = os.path.join(path, "labels")
 
@@ -32,7 +32,7 @@ class SegmentationDataLoader():
         self.dataset = ds
 
     def _decode_and_resize(self, image_filename, label_filename):
-        """ Reads images. Reads and one hot encodes labels.
+        r""" Reads images. Reads and one hot encodes labels.
 
         Args:
             image_filename (str) : Path of image file.
@@ -45,19 +45,19 @@ class SegmentationDataLoader():
         image = tf.io.read_file(image_filename)
         image = tf.io.decode_png(image, channels=3)
         image = tf.image.convert_image_dtype(image, tf.float32)
-        # image = tf.image.resize(image,self.resize)
+        image = tf.image.resize(image, (2048, 1024))
         label = tf.io.read_file(label_filename)
         label = tf.io.decode_png(label, channels=3)
-        # label = tf.image.resize(label,self.resize)
+        label = tf.image.resize(label, (2048, 1024))
         label = tf.cast((label[:, :, 0] > 100), tf.int32)
         label = tf.one_hot(label, self.n_classes)
         return image, label
 
     def __call__(self, batch_size=1, repeat=1):
-        """
+        r"""
 
         Args:
-            batch_size (int,optional) : Batchsize of `tf.data.datset`. Default value 1.
+            batch_size (int,optional) : Batchsize of ``tf.data.datset``. Default value 1.
             repeat (int, optional)    : Specifies the number of times the dataset can be iterated.Default value 1.
 
 
@@ -70,14 +70,14 @@ class SegmentationDataLoader():
         return ds
 
     def __len__(self):
-        """
+        r"""
         Return:
             lenght of dataset
         """
         return self.size
 
     def _read_img_paths_and_labels(self, images_path, labels_path):
-        """Reads paths of images and labels.
+        r"""Reads paths of images and labels.
 
 
         Args:
@@ -100,11 +100,10 @@ class SegmentationDataLoader():
 
 
 class OCRDataLoader():
-    """ Loads the :class:`~tf.data.Dataset` for :class:`~KoshurRecognition.tf_implem.ocr.OCR` class.
+    r""" Loads the ``tf.data.Dataset`` for ``OCR`` class.
 
     Args:
-        path (str)        :  Path of  folder containing images folder, labels.txt and table.txt to be loaded in dataset.
-            Name of folders and files should be same as mentioned.
+        path (strs)        :  Path of  folder containing images folder,labels.txt and table.txt to be loaded in dataset.Name of folders and files should be same as mentioned.
     """
 
     def __init__(self, path):
@@ -134,7 +133,7 @@ class OCRDataLoader():
         self.dataset = ds
 
     def _decode_and_resize(self, filename, label):
-        """ Reads image.
+        r""" Reads image.
 
         Args:
             filename (str) : Name of file.
@@ -152,7 +151,7 @@ class OCRDataLoader():
         return image, label
 
     def _convert_label(self, image, label):
-        """ Maps chars in label to integers  according to table.txt
+        r""" Maps chars in label to integers  according to table.txt
 
         Args:
             image (tf.tensor) : Image tensor
@@ -172,10 +171,10 @@ class OCRDataLoader():
         return self.size
 
     def __call__(self, batch_size=8, repeat=1):
-        """
+        r"""
         Returns:
             ds (tf.data.dataset) : Dataloader.
-        """
+            """
         ds = self.dataset
         ds = ds.batch(batch_size).map(
             self._convert_label).repeat(repeat)
@@ -183,7 +182,7 @@ class OCRDataLoader():
         return ds
 
     def _read_img_paths_and_labels(self, images_path, labels_path):
-        """reads filenames and respective labels.
+        r"""reads filenames and respective labels.
 
         Args:
             imgages_path (str)  : Path of image folder.
@@ -203,16 +202,16 @@ class OCRDataLoader():
         return img_path, labels
 
     def map_to_chars(self, inputs, table, blank_index=0, merge_repeated=False):
-        """Maps Integers to characters.
+        r"""Maps Integers to characters.
 
         Args:
-            input (:class:`~tf.SparseTensor`)           : Sparse tensor to be converted into word.
-            table (:class:`~tf.lookup.StaticHashTable`) : Table acoording to which mapping is done.
+            input (tf.SparseTensor)           : Sparse tensor to be converted into word.
+            table (tf.lookup.StaticHashTable) : Table acoording to which mapping is done.
             blank_index   (int,optional)      : index saved for space default value 0.
-            merge_repeated (bollean,optional) : Specifies weather repeated integers are to merged or not.default value `False`.
+            merge_repeated (bollean,optional) : Specifies weather repeated integers are to merged or not.default value ``False``.
 
         Returns:
-            list : List of words.
+            lines (list) : List of words.
             """
 
         inputs = tf.sparse.to_dense(inputs, default_value=blank_index).numpy()

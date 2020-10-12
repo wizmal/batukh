@@ -3,6 +3,18 @@ from tensorflow.keras import layers, Model
 
 
 class BottleneckUnit(Model):
+    r"""Consists of three ``layers.Conv2D`` convolution layers with same padding,relu activation and kernel size 1,3,1 respectively.
+
+        Args:
+            out_filters (int)         : Specifies filters of third convulution layer.
+            in_filters (int)          : Specifies fliters of first and second convulution layer.
+            strides (tuple,optional)  : Specifies strides of convulution layers.
+            connect (bolean,optional) : Specifies if the layer will be used for horizantal connection in upscaler.default ``True``.
+            is_first (bolean,optional): Specifies if the bottleneck unit is first of the bollteneck block.default ``False``.
+
+
+    """
+
     def __init__(self, out_filters, in_filters, stride=(1, 1), connect=True, is_first=False):
         super(BottleneckUnit, self).__init__()
 
@@ -13,26 +25,20 @@ class BottleneckUnit(Model):
             filters=in_filters, kernel_size=1, strides=(
                 1, 1), activation='relu')
         self.conv2 = layers.Conv2D(
-            filters=in_filters,
-            kernel_size=3,
-            strides=stride,
-            padding="same",
-            activation='relu')
+            filters=in_filters, kernel_size=3, strides=stride, padding="same", activation='relu')
         self.conv3 = layers.Conv2D(
-            filters=out_filters,
-            kernel_size=1,
-            strides=(
-                1,
-                1))
+            filters=out_filters, kernel_size=1, strides=(1, 1))
         self.conv4 = layers.Conv2D(
-            filters=out_filters,
-            kernel_size=1,
-            strides=(
-                1,
-                1))
+            filters=out_filters, kernel_size=1, strides=(1, 1))
 
     def call(self, input_tensor):
+        r"""
+        Args:
+            input_tensor (tf.Tensor) : Input image tensor.
 
+        Returns:
+            x (tf.Tensor) : Output image tensor.
+        """
         x = self.conv1(input_tensor)
         x = self.conv2(x)
         x = self.conv3(x)
@@ -44,6 +50,10 @@ class BottleneckUnit(Model):
 
 
 class ResnetLayer(Model):
+    r"""Consists of three ``layers.conv2D`` convolution layer,``layers.MaxPool2D`` maxpoll layer and 16 ``BottleNeckUnit`` units.
+
+    """
+
     def __init__(self):
         super(ResnetLayer, self).__init__()
 
@@ -54,7 +64,8 @@ class ResnetLayer(Model):
 
         self.bottleneck1 = BottleneckUnit(256, 64, is_first=True)
         self.bottleneck2 = BottleneckUnit(256, 64)
-        self.bottleneck3 = BottleneckUnit(256, 64, (2, 2), connect=False)
+        self.bottleneck3 = BottleneckUnit(
+            256, 64, stride=(2, 2), connect=False)
 
         self.bottleneck4 = BottleneckUnit(512, 128, is_first=True)
         self.bottleneck5 = BottleneckUnit(512, 128)
@@ -80,6 +91,14 @@ class ResnetLayer(Model):
                 1, 1), padding="same")
 
     def call(self, input_tensor):
+        r"""
+        Args:
+            input_tensor (tf.Tensor) : Input image tensor.
+
+        Returns:
+            x (tf.Tensor)         : Output image tensor.
+            concat_tensors (list) : List of image tensor used in horizantal connections of upscaller.
+        """
         concat_tensors = []
         concat_tensors.append(input_tensor)
         x = self.conv1(input_tensor)
@@ -115,6 +134,14 @@ class ResnetLayer(Model):
 
 
 class UpScalerUnit(Model):
+    r"""Consists of ``layers.Conv2DT`` convolution transpose layer and ``layers.Conv2D`` convolution layer.
+
+        Args:
+            in_filters (int)  : Specifies the filters of convolution transpose layer.
+            out_filters (int) : Specifies the filters of convolution layer.
+
+    """
+
     def __init__(self, in_filters, out_filters):
         super(UpScalerUnit, self).__init__()
 
@@ -127,6 +154,14 @@ class UpScalerUnit(Model):
             activation='relu')
 
     def call(self, input_tensor, concat_tensor):
+        r"""
+        Args:
+            input_tensor (tf.Tensor) : Input image tensor.
+            concat_tensor (tf.Tensor): Image tensor used to concat with the input tensor.
+
+        Returns:
+            x (tf.Tensor) : Output image tensor.
+        """
         x = self.convT(input_tensor)
         x = tf.concat([concat_tensor, x], 3)
         x = self.conv(x)
@@ -134,6 +169,12 @@ class UpScalerUnit(Model):
 
 
 class UpScaler(Model):
+    r"""Consists of ``layers.Conv2D`` convolution layer and five ``UpScalerUnits``.
+
+    Args:
+        n_classes (int) : Specifies the number of classes or channels in output image.
+    """
+
     def __init__(self, n_classes):
         super(UpScaler, self).__init__()
 
@@ -148,6 +189,14 @@ class UpScaler(Model):
             padding='same')
 
     def call(self, input_tensor, concat_tensors):
+        r"""
+        Args:
+            input_tensor (tf.Tensor) : Input image tensor.
+            concat_tensors (list)    : List of concat tensors used for horizantal connections.
+
+        Returns:
+            x (tf.Tssssensor) : Output image tensor with channels equal to n_classes.
+            """
         x = self.upScaler1.call(input_tensor, concat_tensors.pop(-1))
         x = self.upScaler2.call(x, concat_tensors.pop(-1))
         x = self.upScaler3.call(x, concat_tensors.pop(-1))
@@ -158,6 +207,13 @@ class UpScaler(Model):
 
 
 class SegmentationModel(Model):
+    r""" Consists of ``ResnetLayer`` and ``UpScaller``.
+
+    Args:
+        n_classes (int) : Specifies number of classes or channels in output image tensor.
+
+    """
+
     def __init__(self, n_classes=2):
         super(SegmentationModel, self).__init__()
         self.n_classes = n_classes
@@ -165,6 +221,13 @@ class SegmentationModel(Model):
         self.upScaler = UpScaler(self.n_classes)
 
     def call(self, input_tensor):
+        r"""
+        Args:
+            input_tensor (tf.Tensor) : Input image tensor.
+
+        Returns:
+            x (tf.Tensor) : Output image tensor with channels equal to n_classes.
+        """
         x, concat_tensors = self.resnet.call(input_tensor)
         x = self.upScaler.call(x, concat_tensors)
         return x
