@@ -1,9 +1,7 @@
-from utils.models.segmentation_model import SegmentationModel
-from utils.train import Train
-from utils.data.dataloader import SegmentationDataLoader
-from utils.data.augmentation import MultipleColorJitter
-import time
-import tensorflow as tf
+from .utils.models.segmentation_model import SegmentationModel
+from .utils.train import Train
+from .utils.data.dataloader import SegmentationDataLoader
+from .utils.data.augmentation import MultipleColorJitter
 
 
 # todo:apply augmentation
