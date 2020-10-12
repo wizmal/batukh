@@ -56,6 +56,7 @@ class BaseProcessor:
 
 # TODO: move self.model.to(device) from `train_step` and `val_step` to `train`
 
+
     def train_step(self,
                    x,
                    y,
@@ -204,7 +205,7 @@ class BaseProcessor:
 
 class BaselineDetector(BaseProcessor):
     """
-    This class is used to detect baselines in an image of a document. 
+    This class is used to detect baselines in an image of a document.
     """
 
     def train(self,

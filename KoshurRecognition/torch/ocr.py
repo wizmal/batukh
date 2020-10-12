@@ -12,23 +12,39 @@ from os.path import join
 from tqdm import tqdm
 from time import localtime
 
-MAX_LENGTH = 20
+MAX_LENGTH = 50
 
 
 class WordDetector:
     r"""
+    A basic CRNN which detects the characters in an image.
+
+    Note:
+        The :attr:`encoder_input` has been set to 1536 as default. This has
+        been done by keeping in mind that the height of each image is 60px. If
+        your images have a different height, say, :math:`h`, then encoder_input
+        should be 
+        :math:`\left \lfloor \frac{\left \lfloor \frac{h-4}{2} \right \rfloor -4}{2} \right \rfloor \times 128`.
+
     Args:
         encoder_input (int, optional): Input size of vector that goes into the encoder.
             Default: 1536, based on the assumption that the input shape is
             `[batch_size, 3, 60, x]`.
-        encoder_hidden (int, optional): hidden size of the GRU layer. Default: 128.
-        decoder_output (int, optional): Size of the output vector. Should be the same as
-            the target vector. If `image_dir` and `label_path` is provided, then
-            it will be calculated, else, need to supply.
-        image_dir (str, optional): Path to directory containing images, The images should
-            be named as "1.png", "2.png", ...
-        label_path (str, optional): Path to the label file. Each label should be separated
-            by a newline. Each label should be like: "1: label_1".
+        encoder_hidden (int, optional): hidden size of the GRU layer of encoder. 
+            Default: 128.
+        encoder_nlayers (int, optional): number of layers in the GRU layer of encoder.
+            Default: 2.
+        decoder_hidden (int, optional): hidden size of the GRU layer of decoder.
+            Default: 128.
+        decoder_nlayers (int, optional): number of layers in the GRU layer of decoder.
+            Default: 2.
+        decoder_output (int, optional): Size of the output vector
+            (i.e the number of total characters in your language, including EOS and SOS).
+            Default: ``None``.
+        dropout (float, optional): The probability of the dropout layers.
+            Default: 0.1.
+        max_length (int, optional): The maximum number of characters that can occur in an image.
+            Default: 50.
     """
 
     def __init__(self,
@@ -64,6 +80,17 @@ class WordDetector:
                   val_dir=None,
                   val_label_path=None,
                   transform=None):
+        """
+        Args:
+            train_dir (str): directory containing training images.
+            train_label_path (str): path to a file with training labels.
+            val_dir (str, optional): directory containing validation images.
+                Default: None
+            val_label_path (str, optional): path to a file with training labels.
+                Default: None
+            transform (:class:`~torchvision.transforms`, optional): transforms to be applied on images.
+                Default: None       
+        """
 
         self.train_dl = OCRDataLoader(train_dir, train_label_path, transform)
 

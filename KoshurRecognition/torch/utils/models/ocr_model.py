@@ -2,8 +2,6 @@ import torch
 from torch import nn
 import torch.nn.functional as F
 
-MAX_LENGTH = 20
-
 
 # The model architechture is organized into three modules:
 # 1. `ImgEncoder`: A convolutional network.
@@ -87,8 +85,8 @@ class AttnDecoderRNN(nn.Module):
 
     # TODO: Check if we can dynamically create a linear layer in forward method
     # to replace `self.attn` and eliminate the need for `MAX_LENGTH`
-    def __init__(self, hidden_size, output_size, n_layers, dropout_p=0.1,
-                 max_length=MAX_LENGTH, device=None):
+    def __init__(self, hidden_size, output_size, n_layers, dropout_p,
+                 max_length, device=None):
         super(AttnDecoderRNN, self).__init__()
 
         if device is None:
