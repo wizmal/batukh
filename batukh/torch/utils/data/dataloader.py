@@ -17,7 +17,7 @@ class SegmentationDataLoader(Dataset):
         label_dir (str): path to the directory containing the labelled images.
         transforms (transforms or None, optional): transforms that act on a 
             tuple of images and return a tuple of transformed images.
-            For some examples, see :class:`~KoshurRecognition.torch_implem.data.augmentation.MultipleRandomRotation`  
+            For some examples, see :class:`~batukh.torch_implem.data.augmentation.MultipleRandomRotation`  
     """
 
     def __init__(self, input_dir, label_dir, transforms=None):
