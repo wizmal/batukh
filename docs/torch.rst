@@ -6,10 +6,10 @@ torch
 
    torch.utils
 
-.. automodule:: KoshurRecognition.torch.segmenter
+.. automodule:: batukh.torch.segmenter
    :members:
 
-.. automodule:: KoshurRecognition.torch.ocr
+.. automodule:: batukh.torch.ocr
    :members:
 
 

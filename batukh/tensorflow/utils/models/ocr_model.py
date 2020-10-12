@@ -3,12 +3,12 @@ from tensorflow.keras import layers, Model
 
 
 class ConvBlock(Model):
-        r""" This block consists of five ``layers.Conv2D`` convolution layers and a ``layers.MaxPool2D`` maxpool layer.
+    r""" This block consists of five ``layers.Conv2D`` convolution layers and a ``layers.MaxPool2D`` maxpool layer.
         Convolution layers is of  kernel size 3,same padding and relu activation, and filters 8,16,32,64 and 128 respectively.
         Maxpool layer is of pool size (2,2), strides (2,2) ans same padding.
 
 
-        """
+    """
 
     def __init__(self):
         self.conv1 = layers.Conv2D(
@@ -42,11 +42,12 @@ class ConvBlock(Model):
 
 
 class BLSTM(Model):
-        r"""Consists of a ``layers.Bidirectional`` layer with 256 units.
+    r"""Consists of a ``layers.Bidirectional`` layer with 256 units.
 
-        """
+    """
+
     def __init__(self):
-        
+
         self.layer1 = layers.Bidirectional(
             layers.LSTM(units=256, return_sequences=True))
 
@@ -64,11 +65,12 @@ class BLSTM(Model):
 
 
 class OCRModel(Model):
-        r"""Consistis of ``ConvBlock`` block,``BLSTM`` block and ``layers.dense`` layer.
+    r"""Consistis of ``ConvBlock`` block,``BLSTM`` block and ``layers.dense`` layer.
 
-        Args:
-            n_classes (int)  : Specifies number of output classes in ``layers.dense`` layer.
-        """
+    Args:
+        n_classes (int)  : Specifies number of output classes in ``layers.dense`` layer.
+    """
+
     def __init__(self, n_classes):
         self.n_classes = n_classes
         self.conv = ConvBlock()
