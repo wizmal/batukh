@@ -3,7 +3,7 @@ from tensorflow.keras import layers, Model
 
 
 class ConvBlock(Model):
-        """ This block consists of five ``layers.Conv2D`` convolution layers and a ``layers.MaxPool2D`` maxpool layer.
+        r""" This block consists of five ``layers.Conv2D`` convolution layers and a ``layers.MaxPool2D`` maxpool layer.
         Convolution layers is of  kernel size 3,same padding and relu activation, and filters 8,16,32,64 and 128 respectively.
         Maxpool layer is of pool size (2,2), strides (2,2) ans same padding.
 
@@ -25,7 +25,7 @@ class ConvBlock(Model):
             2, 2), strides=(2, 2), padding='same')
 
     def call(self, input_tensor):
-        """
+        r"""
         Args:
             input_tensor (tf.Tensor) : Input image tensor.
 
@@ -42,7 +42,7 @@ class ConvBlock(Model):
 
 
 class BLSTM(Model):
-        """Consists of a ``layers.Bidirectional`` layer with 256 units.
+        r"""Consists of a ``layers.Bidirectional`` layer with 256 units.
 
         """
     def __init__(self):
@@ -51,7 +51,7 @@ class BLSTM(Model):
             layers.LSTM(units=256, return_sequences=True))
 
     def call(self, input_tensor):
-        """
+        r"""
         Args:
             input_tensor (tf.Tensor): Input tensor.
 
@@ -64,7 +64,7 @@ class BLSTM(Model):
 
 
 class OCRModel(Model):
-        """Consistis of ``ConvBlock`` block,``BLSTM`` block and ``layers.dense`` layer.
+        r"""Consistis of ``ConvBlock`` block,``BLSTM`` block and ``layers.dense`` layer.
 
         Args:
             n_classes (int)  : Specifies number of output classes in ``layers.dense`` layer.
@@ -76,7 +76,7 @@ class OCRModel(Model):
         self.dense = layers.Dense(units=self.n_classes)
 
     def call(self, input_tensor):
-        """
+        r"""
         Args:
             input_tensor (tf.Tensor) : Input image tensor.
         Returns:

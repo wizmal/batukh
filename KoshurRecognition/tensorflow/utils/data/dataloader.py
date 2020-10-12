@@ -6,7 +6,7 @@ import numpy as np
 
 
 class SegmentationDataLoader():
-    """ Loads the ``tf.data.Dataset`` for ``PageExtraction``,``ImageExtraction``,``LayoutExtraction`` and ``BaselineDetection`` classes.
+    r""" Loads the ``tf.data.Dataset`` for ``PageExtraction``,``ImageExtraction``,``LayoutExtraction`` and ``BaselineDetection`` classes.
 
     Args:
         path (str)       : Path of the folder containing images folder and labels folder to be loaded in dataset.Folder names must be as mentioned.
@@ -32,7 +32,7 @@ class SegmentationDataLoader():
         self.dataset = ds
 
     def _decode_and_resize(self, image_filename, label_filename):
-        """ Reads images. Reads and one hot encodes labels.
+        r""" Reads images. Reads and one hot encodes labels.
 
         Args:
             image_filename (str) : Path of image file.
@@ -54,7 +54,7 @@ class SegmentationDataLoader():
         return image, label
 
     def __call__(self, batch_size=1, repeat=1):
-        """
+        r"""
 
         Args:
             batch_size (int,optional) : Batchsize of ``tf.data.datset``. Default value 1.
@@ -70,14 +70,14 @@ class SegmentationDataLoader():
         return ds
 
     def __len__(self):
-        """
+        r"""
         Return:
             lenght of dataset
         """
         return self.size
 
     def _read_img_paths_and_labels(self, images_path, labels_path):
-        """Reads paths of images and labels.
+        r"""Reads paths of images and labels.
 
 
         Args:
@@ -100,7 +100,7 @@ class SegmentationDataLoader():
 
 
 class OCRDataLoader():
-    """ Loads the ``tf.data.Dataset`` for ``OCR`` class.
+    r""" Loads the ``tf.data.Dataset`` for ``OCR`` class.
 
     Args:
         path (strs)        :  Path of  folder containing images folder,labels.txt and table.txt to be loaded in dataset.Name of folders and files should be same as mentioned.
@@ -133,7 +133,7 @@ class OCRDataLoader():
         self.dataset = ds
 
     def _decode_and_resize(self, filename, label):
-        """ Reads image.
+        r""" Reads image.
 
         Args:
             filename (str) : Name of file.
@@ -151,7 +151,7 @@ class OCRDataLoader():
         return image, label
 
     def _convert_label(self, image, label):
-        """ Maps chars in label to integers  according to table.txt
+        r""" Maps chars in label to integers  according to table.txt
 
         Args:
             image (tf.tensor) : Image tensor
@@ -171,7 +171,7 @@ class OCRDataLoader():
         return self.size
 
     def __call__(self, batch_size=8, repeat=1):
-        """
+        r"""
         Returns:
             ds (tf.data.dataset) : Dataloader.
             """
@@ -182,7 +182,7 @@ class OCRDataLoader():
         return ds
 
     def _read_img_paths_and_labels(self, images_path, labels_path):
-        """reads filenames and respective labels.
+        r"""reads filenames and respective labels.
 
         Args:
             imgages_path (str)  : Path of image folder.
@@ -202,7 +202,7 @@ class OCRDataLoader():
         return img_path, labels
 
     def map_to_chars(self, inputs, table, blank_index=0, merge_repeated=False):
-        """Maps Integers to characters.
+        r"""Maps Integers to characters.
 
         Args:
             input (tf.SparseTensor)           : Sparse tensor to be converted into word.

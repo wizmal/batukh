@@ -3,7 +3,7 @@ from tensorflow.keras import layers, Model
 
 
 class BottleneckUnit(Model):
-    """Consists of three ``layers.Conv2D`` convolution layers with same padding,relu activation and kernel size 1,3,1 respectively.
+    r"""Consists of three ``layers.Conv2D`` convolution layers with same padding,relu activation and kernel size 1,3,1 respectively.
 
         Args:
             out_filters (int)         : Specifies filters of third convulution layer.
@@ -32,7 +32,7 @@ class BottleneckUnit(Model):
             filters=out_filters, kernel_size=1, strides=(1, 1))
 
     def call(self, input_tensor):
-        """
+        r"""
         Args:
             input_tensor (tf.Tensor) : Input image tensor.
 
@@ -50,7 +50,7 @@ class BottleneckUnit(Model):
 
 
 class ResnetLayer(Model):
-    """Consists of three ``layers.conv2D`` convolution layer,``layers.MaxPool2D`` maxpoll layer and 16 ``BottleNeckUnit`` units.
+    r"""Consists of three ``layers.conv2D`` convolution layer,``layers.MaxPool2D`` maxpoll layer and 16 ``BottleNeckUnit`` units.
 
     """
 
@@ -91,7 +91,7 @@ class ResnetLayer(Model):
                 1, 1), padding="same")
 
     def call(self, input_tensor):
-        """
+        r"""
         Args:
             input_tensor (tf.Tensor) : Input image tensor.
 
@@ -134,7 +134,7 @@ class ResnetLayer(Model):
 
 
 class UpScalerUnit(Model):
-    """Consists of ``layers.Conv2DT`` convolution transpose layer and ``layers.Conv2D`` convolution layer.
+    r"""Consists of ``layers.Conv2DT`` convolution transpose layer and ``layers.Conv2D`` convolution layer.
 
         Args:
             in_filters (int)  : Specifies the filters of convolution transpose layer.
@@ -154,7 +154,7 @@ class UpScalerUnit(Model):
             activation='relu')
 
     def call(self, input_tensor, concat_tensor):
-        """
+        r"""
         Args:
             input_tensor (tf.Tensor) : Input image tensor.
             concat_tensor (tf.Tensor): Image tensor used to concat with the input tensor.
@@ -169,7 +169,7 @@ class UpScalerUnit(Model):
 
 
 class UpScaler(Model):
-    """Consists of ``layers.Conv2D`` convolution layer and five ``UpScalerUnits``.
+    r"""Consists of ``layers.Conv2D`` convolution layer and five ``UpScalerUnits``.
 
     Args:
         n_classes (int) : Specifies the number of classes or channels in output image.
@@ -189,7 +189,7 @@ class UpScaler(Model):
             padding='same')
 
     def call(self, input_tensor, concat_tensors):
-        """
+        r"""
         Args:
             input_tensor (tf.Tensor) : Input image tensor.
             concat_tensors (list)    : List of concat tensors used for horizantal connections.
@@ -207,7 +207,7 @@ class UpScaler(Model):
 
 
 class SegmentationModel(Model):
-    """ Consists of ``ResnetLayer`` and ``UpScaller``.
+    r""" Consists of ``ResnetLayer`` and ``UpScaller``.
 
     Args:
         n_classes (int) : Specifies number of classes or channels in output image tensor.
@@ -221,7 +221,7 @@ class SegmentationModel(Model):
         self.upScaler = UpScaler(self.n_classes)
 
     def call(self, input_tensor):
-        """
+        r"""
         Args:
             input_tensor (tf.Tensor) : Input image tensor.
 

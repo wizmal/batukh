@@ -5,7 +5,7 @@ import numpy as np
 
 
 class Train():
-    """Contains methods to train a model and get predictions.
+    r"""Contains methods to train a model and get predictions.
 
     Args:
         model           : Model to be trained.
@@ -26,7 +26,7 @@ class Train():
         self.val_loss = tf.keras.metrics.Mean(name="loss", dtype=tf.float32)
 
     def _train_one_step(self, x, y):
-        """Trains one image or batch of image.
+        r"""Trains one image or batch of image.
 
         Args:
             x (tf.Tensor) : Input image tensor or batch of image tensor.
@@ -56,7 +56,7 @@ class Train():
         return loss
 
     def _train(self, ds, epoch, batch_size, repeat):
-        """
+        r"""
         Args:
             ds (Dataloader)  : Dataloader object.
             epoch (int)      : Number of epochs in training loop.
@@ -152,7 +152,7 @@ class Train():
         return logits
 
     def save_model(self, path, name):
-        """Saves model in .h5 format
+        r"""Saves model in .h5 format
 
         Args:
             path (str)          : path of the folder where model is to be saved.
@@ -166,7 +166,7 @@ class Train():
         print("Model saved at "+path + " as " + name+'.h5')
 
     def load_model(self, path):
-        """Loads presaved model of .h5 format.
+        r"""Loads presaved model of .h5 format.
 
         Args:
             path (str) : path of the model to be loaded.

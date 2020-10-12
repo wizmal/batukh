@@ -8,7 +8,7 @@ from .utils.data.augmentation import MultipleColorJitter
 
 
 class PageExtraction(Train):
-    """This class used to extract pages (removing borders and blank spaces around pages) from the images."""
+    r"""This class used to extract pages (removing borders and blank spaces around pages) from the images."""
 
     def __init__(self):
         super().__init__(model=SegmentationModel(2))
@@ -16,7 +16,7 @@ class PageExtraction(Train):
         self.val_dl = None
 
     def load_data(self, train_path, val_path=None):
-        """Loads Train and Validation datset.
+        r"""Loads Train and Validation datset.
 
         Note:
             Respective images and labels should be of same size with same filename.
@@ -38,7 +38,7 @@ class PageExtraction(Train):
 
 
 class ImageExtraction(Train):
-    """The class used to extract images."""
+    r"""The class used to extract images."""
 
     def __init__(self):
         super().__init__(model=SegmentationModel(2))
@@ -46,7 +46,7 @@ class ImageExtraction(Train):
         self.val_dl = None
 
     def load_data(self, train_path, val_path=None):
-        """Loads Train and Validation datset.
+        r"""Loads Train and Validation datset.
 
         Note:
             Respective images and labels should be of same size with same filename.
@@ -74,7 +74,7 @@ class LayoutExtraction(Train):
         self.val_dl = None
 
     def load_data(self, train_path, val_path=None):
-        """Loads Train and Validation datset.
+        r"""Loads Train and Validation datset.
 
         Note:
             Respective images and labels should be of same size with same filename.
@@ -103,7 +103,7 @@ class BaselineDetection(Train):
         self.val_dl = None
 
     def load_data(self, train_path, val_path=None):
-        """Loads Train and Validation datset.
+        r"""Loads Train and Validation datset.
 
         Note:
             Respective images and labels should be of same size with same filename.
