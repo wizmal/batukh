@@ -1,5 +1,5 @@
 import pytest
-from KoshurRecognition.torch.utils.models.ocr_model import ImgEncoder, Encoder, AttnDecoderRNN
+from batukh.torch.utils.models.ocr_model import ImgEncoder, Encoder, AttnDecoderRNN
 import torch
 import random
 import numpy as np

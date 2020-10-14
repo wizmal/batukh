@@ -1,11 +1,11 @@
-KoshurRecognition
+batukh
 =============================================
 
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
 
-   KoshurRecognition
+   batukh
 
 
 

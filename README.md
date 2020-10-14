@@ -1,4 +1,4 @@
-# KoshurRecognition
+# batukh
 
 Detection of Koshur Language using CRNN.
 
@@ -11,7 +11,7 @@ After all the dependencies have been installed, you can train any model.
 For Baseline Detection:
 
 ```python
->>> from KoshurRecognition.torch.segmenter import BaselineDetector
+>>> from batukh.torch.segmenter import BaselineDetector
 >>> m = BaselineDetector()
 <All keys matched successfully>
 >>> m.load_data("temp")
@@ -21,7 +21,7 @@ For Baseline Detection:
 For Word Detection:
 
 ```python
->>> from KoshurRecognition.torch.ocr import WordDetector
+>>> from batukh.torch.ocr import WordDetector
 >>> m = WordDetector()
 >>> m.load_data("/path/to/train_dir", "/path/to/train_labels", "/path/to/val_dir", "/path/to/val_labels")
 Building Dictionary. . .

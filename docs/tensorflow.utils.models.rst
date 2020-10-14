@@ -4,8 +4,8 @@ tensorflow.utils.models
 .. toctree::
    :maxdepth: 2
 
-.. automodule:: KoshurRecognition.tensorflow.utils.models.ocr_model
+.. automodule:: batukh.tensorflow.utils.models.ocr_model
    :members:
 
-.. automodule:: KoshurRecognition.tensorflow.utils.models.segementation_model
+.. automodule:: batukh.tensorflow.utils.models.segmentation_model
    :members:

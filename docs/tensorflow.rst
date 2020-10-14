@@ -6,10 +6,10 @@ tensorflow
 
    tensorflow.utils
 
-.. automodule:: KoshurRecognition.tensorflow.segmenter
+.. automodule:: batukh.tensorflow.segmenter
    :members:
 
-.. automodule:: KoshurRecognition.tensorflow.ocr
+.. automodule:: batukh.tensorflow.ocr
    :members:
 
 

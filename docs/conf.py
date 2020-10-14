@@ -152,7 +152,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = 'Koshurrecognition'
+project = 'batukh'
 copyright = '2020'
 author = 'murtaza, wajid'
 
