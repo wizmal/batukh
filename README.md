@@ -14,7 +14,7 @@ For Baseline Detection:
 >>> from batukh.torch.segmenter import BaselineDetector
 >>> m = BaselineDetector()
 <All keys matched successfully>
->>> m.load_data("temp")
+>>> m.load_data("/path/to/data")
 >>> m.train(n_epochs=10, device="cpu")
 ```
 
@@ -23,7 +23,8 @@ For Word Detection:
 ```python
 >>> from batukh.torch.ocr import WordDetector
 >>> m = WordDetector()
->>> m.load_data("/path/to/train_dir", "/path/to/train_labels", "/path/to/val_dir", "/path/to/val_labels")
+>>> m.load_data("/path/to/train_dir", "/path/to/train_labels", 
+"/path/to/val_dir", "/path/to/val_labels")
 Building Dictionary. . .
 Building Dictionary. . .
 >>> m.train(5)       
