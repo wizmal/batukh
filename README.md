@@ -2,9 +2,9 @@
 
 Detection of Koshur Language using CRNN.
 
-Using Pip
+Using [pip](http://pypi.org)
 
-`pip install ...`
+`pip install batukh`
 
 After all the dependencies have been installed, you can train any model.
 
