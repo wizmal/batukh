@@ -111,7 +111,7 @@ class OCRDataLoader():
         path (strs)        :  Path of  folder containing images folder,labels.txt and table.txt to be loaded in dataset.Name of folders and files should be same as mentioned.
     """
 
-    def __init__(self, path):
+    def __init__(self, path, height):
 
         images_path = os.path.join(path, "images")
         labels_path = os.path.join(path, "labels.txt")
@@ -121,6 +121,7 @@ class OCRDataLoader():
             labels_path)
         self.size = len(img_paths)
         self.path = path
+        self.height = height
 
         with open(table_path) as f:
             self.inv_table = [char.strip() for char in f]
@@ -152,7 +153,7 @@ class OCRDataLoader():
         image = tf.io.read_file(self.path+"/"+filename)
         image = tf.io.decode_png(image, channels=1)
         image = 1.0-tf.image.convert_image_dtype(image, tf.float32)
-        # image = tf.image.resize(image, (64, self.image_width))
+        image = tf.image.resize(image, (64, self.height))
         return image, label
 
     def _convert_label(self, image, label):
