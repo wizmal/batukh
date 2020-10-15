@@ -45,11 +45,7 @@ class SegmentationDataLoader():
         image = tf.io.read_file(image_filename)
         image = tf.io.decode_png(image, channels=3)
         image = tf.image.convert_image_dtype(image, tf.float32)
-        if (image.shape[0] >= 32 and image.shape[1] >= 32):
-            resize = ((image.shape[0]//32)*32, (image.shape[1]//32)*32)
-        else:
-            resize = (32, 32)
-
+        resize = (tf.shape(image[:, :, 0])//32)*32
         image = tf.image.resize(image, resize)
         label = tf.io.read_file(label_filename)
         label = tf.io.decode_png(label, channels=3)
@@ -150,10 +146,10 @@ class OCRDataLoader():
             labels (tf.Tensor):  Label tensor
 
         """
-        image = tf.io.read_file(self.path+"/"+filename)
+        image = tf.io.read_file(filename)
         image = tf.io.decode_png(image, channels=1)
         image = 1.0-tf.image.convert_image_dtype(image, tf.float32)
-        image = tf.image.resize(image, (64, self.height))
+        image = tf.image.resize(image, (self.height, tf.shape(image)[-2]))
         return image, label
 
     def _convert_label(self, image, label):
@@ -197,14 +193,16 @@ class OCRDataLoader():
             img_path (list)   : List of  images filenames.
             label (list)      : List of labels.
         """
-        img_path = os.listdir(images_path)
+        img_path_ = os.listdir(images_path)
+        img_path = [os.path.join(images_path, i) for i in img_path_]
+
         label_ = open(labels_path, 'r')
         labels_ = label_.readlines()
         labels_ = [labels_[i].split(":")[1].strip()
                    for i in range(len(labels_))]
         labels = []
         for i in img_path:
-            labels.append(labels_[int(i.split(".")[0])])
+            labels.append(labels_[int(i.split(".")[0].split("/")[-1])])
         return img_path, labels
 
     def map_to_chars(self, inputs, table, blank_index=0, merge_repeated=False):
