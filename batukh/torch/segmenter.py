@@ -56,7 +56,6 @@ class BaseProcessor:
 
 # TODO: move self.model.to(device) from `train_step` and `val_step` to `train`
 
-
     def train_step(self,
                    x,
                    y,
@@ -109,6 +108,8 @@ class BaseProcessor:
               val_dl=None,
               batch_size=1,
               shuffle=True,
+              num_workers=4,
+              pin_memory=True,
               criterion=None,
               optimizer=None,
               learning_rate=0.0001,
@@ -214,6 +215,8 @@ class BaselineDetector(BaseProcessor):
               val_dl=None,
               batch_size=1,
               shuffle=True,
+              num_workers=4,
+              pin_memory=True,
               criterion=None,
               optimizer=None,
               learning_rate=0.0001,
@@ -250,6 +253,10 @@ class BaselineDetector(BaseProcessor):
                 Default: 1.
             shuffle (bool, optional): whether to shuffle the data loader 
                 created by :meth:`~BaselineDetector.load_data`.
+            num_workers (int, optional): number of processes to load data.
+                Default: 4
+            pin_memory (bool, optional): whether to pin memory while loading data.
+                Default: ``True``.
             criterion (:class:`~torch.nn.module.loss._Loss` or :class:`~torch.nn.module.loss._WeightedLoss`, optional): 
                 The loss function to use.
                 Default: ``CrossEntropyLoss(weight=Tensor[1, 700]), reduction="mean")``
@@ -273,10 +280,14 @@ class BaselineDetector(BaseProcessor):
                 Default: GPU, if GPU is available, else CPU. 
         """
 
+        # TODO: create device
         if optimizer is None:
             optimizer = optim.Adam(self.model.parameters(), lr=learning_rate)
         if criterion is None:
             criterion = nn.CrossEntropyLoss(
                 weight=torch.Tensor([1, 700]).to(device), reduction="mean")
-        super().train(n_epochs, train_dl, val_dl, batch_size, shuffle, criterion, optimizer,
-                      learning_rate, save_checkpoints, checkpoint_freq, checkpoint_path, max_to_keep, device)
+
+        super().train(n_epochs, train_dl, val_dl, batch_size, shuffle,
+                      num_workers, pin_memory, criterion, optimizer,
+                      learning_rate, save_checkpoints, checkpoint_freq,
+                      checkpoint_path, max_to_keep, device)
