@@ -11,6 +11,7 @@ class ConvBlock(Model):
     """
 
     def __init__(self):
+        super(ConvBlock, self).__init__()
         self.conv1 = layers.Conv2D(
             filters=8, kernel_size=3, padding='same', activation='relu')
         self.conv2 = layers.Conv2D(
@@ -47,6 +48,7 @@ class BLSTM(Model):
     """
 
     def __init__(self):
+        super(BLSTM, self).__init__()
 
         self.layer1 = layers.Bidirectional(
             layers.LSTM(units=256, return_sequences=True))
@@ -72,6 +74,7 @@ class OCRModel(Model):
     """
 
     def __init__(self, n_classes):
+        super(OCRModel, self).__init__()
         self.n_classes = n_classes
         self.conv = ConvBlock()
         self.blstm = BLSTM()
@@ -85,7 +88,7 @@ class OCRModel(Model):
             x (tf.Tensor) : Output Tensor."""
         x = self.conv.call(input_tensor)
         x = tf.transpose(x, (0, 2, 1, 3))
-        x = layers.Reshape((-1, 16*128))(x)
+        x = layers.Reshape((-1, x.shape[-3]*128))(x)
         x = self.blstm.call(x)
         x = self.dense(x)
         return x
