@@ -149,7 +149,8 @@ class OCRDataLoader():
         image = tf.io.read_file(filename)
         image = tf.io.decode_png(image, channels=1)
         image = 1.0-tf.image.convert_image_dtype(image, tf.float32)
-        image = tf.image.resize(image, (self.height, tf.shape(image)[-2]))
+        image = tf.image.resize(
+            image, (self.height, tf.shape(image)[-2]), preserve_aspect_ratio=True)
         return image, label
 
     def _convert_label(self, image, label):

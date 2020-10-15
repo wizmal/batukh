@@ -88,7 +88,7 @@ class OCRModel(Model):
             x (tf.Tensor) : Output Tensor."""
         x = self.conv.call(input_tensor)
         x = tf.transpose(x, (0, 2, 1, 3))
-        x = layers.Reshape((-1, x.shape[-3]*128))(x)
+        x = layers.Reshape((-1, x.shape[-2]*128))(x)
         x = self.blstm.call(x)
         x = self.dense(x)
         return x

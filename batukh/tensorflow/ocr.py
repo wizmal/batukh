@@ -17,7 +17,7 @@ class OCR(Train):
         self.train_dl = None
         self.val_dl = None
 
-    def load_data(self, train_path, val_path=None, height):
+    def load_data(self, train_path, val_path=None, height=64):
         r"""Loads Train and Validation datset.
 
         Args:
