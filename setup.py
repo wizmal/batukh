@@ -7,7 +7,7 @@ setuptools.setup(
     name="batukh",
     version="0.0.1",
     author="Murtaza, Wajid, Naveed",
-    # author_email="myemail@example.com",
+    author_email="batukhorg@gmail.com",
     description="An OCR for multiple languages.",
     long_description=long_description,
     long_description_content_type="text/markdown",
