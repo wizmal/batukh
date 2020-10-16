@@ -45,10 +45,11 @@ class SegmentationDataLoader():
         image = tf.io.read_file(image_filename)
         image = tf.io.decode_png(image, channels=3)
         image = tf.image.convert_image_dtype(image, tf.float32)
-        image = tf.image.resize(image, (2048, 1024))
+        resize = (tf.shape(image[:, :, 0])//32)*32
+        image = tf.image.resize(image, resize)
         label = tf.io.read_file(label_filename)
         label = tf.io.decode_png(label, channels=3)
-        label = tf.image.resize(label, (2048, 1024))
+        label = tf.image.resize(label, resize)
         label = tf.cast((label[:, :, 0] > 100), tf.int32)
         label = tf.one_hot(label, self.n_classes)
         return image, label
@@ -106,7 +107,7 @@ class OCRDataLoader():
         path (strs)        :  Path of  folder containing images folder,labels.txt and table.txt to be loaded in dataset.Name of folders and files should be same as mentioned.
     """
 
-    def __init__(self, path):
+    def __init__(self, path, height):
 
         images_path = os.path.join(path, "images")
         labels_path = os.path.join(path, "labels.txt")
@@ -116,6 +117,7 @@ class OCRDataLoader():
             labels_path)
         self.size = len(img_paths)
         self.path = path
+        self.height = height
 
         with open(table_path) as f:
             self.inv_table = [char.strip() for char in f]
@@ -144,10 +146,11 @@ class OCRDataLoader():
             labels (tf.Tensor):  Label tensor
 
         """
-        image = tf.io.read_file(self.path+"/"+filename)
+        image = tf.io.read_file(filename)
         image = tf.io.decode_png(image, channels=1)
         image = 1.0-tf.image.convert_image_dtype(image, tf.float32)
-        # image = tf.image.resize(image, (64, self.image_width))
+        image = tf.image.resize(
+            image, (self.height, tf.shape(image)[-2]), preserve_aspect_ratio=True)
         return image, label
 
     def _convert_label(self, image, label):
@@ -191,41 +194,41 @@ class OCRDataLoader():
             img_path (list)   : List of  images filenames.
             label (list)      : List of labels.
         """
-        img_path = os.listdir(images_path)
+        img_path_ = os.listdir(images_path)
+        img_path = [os.path.join(images_path, i) for i in img_path_]
+
         label_ = open(labels_path, 'r')
         labels_ = label_.readlines()
         labels_ = [labels_[i].split(":")[1].strip()
                    for i in range(len(labels_))]
         labels = []
         for i in img_path:
-            labels.append(labels_[int(i.split(".")[0])])
+            labels.append(labels_[int(i.split(".")[0].split("/")[-1])])
         return img_path, labels
 
-    def map_to_chars(self, inputs, table, blank_index=0, merge_repeated=False):
-        r"""Maps Integers to characters.
+    def map2string(self, inputs):
+        strings = []
+        for i in inputs:
+            text = [self.inv_table[char_index] for char_index in i
+                    if char_index != self.blank_index]
+            strings.append(''.join(text))
+        return strings
 
-        Args:
-            input (tf.SparseTensor)           : Sparse tensor to be converted into word.
-            table (tf.lookup.StaticHashTable) : Table acoording to which mapping is done.
-            blank_index   (int,optional)      : index saved for space default value 0.
-            merge_repeated (bollean,optional) : Specifies weather repeated integers are to merged or not.default value ``False``.
-
-        Returns:
-            lines (list) : List of words.
-            """
-
-        inputs = tf.sparse.to_dense(inputs, default_value=blank_index).numpy()
-        lines = []
-        for line in inputs:
-            text = ""
-            previous_char = -1
-            for char_index in line:
-                if merge_repeated:
-                    if char_index == previous_char:
-                        continue
-                previous_char = char_index
-                if char_index == blank_index:
-                    continue
-                text += table[char_index]
-            lines.append(text)
-        return lines
+    def decode(self, inputs, from_pred=True, method='beam_search', merge_repeated=True):
+        self.merge_repeated = merge_repeated
+        if from_pred:
+            logit_length = tf.fill([tf.shape(inputs)[0]], tf.shape(inputs)[1])
+            if method == 'greedy':
+                decoded, _ = tf.nn.ctc_greedy_decoder(
+                    inputs=tf.transpose(inputs, perm=[1, 0, 2]),
+                    sequence_length=logit_length,
+                    merge_repeated=self.merge_repeated)
+            elif method == 'beam_search':
+                decoded, _ = tf.nn.ctc_beam_search_decoder(
+                    inputs=tf.transpose(inputs, perm=[1, 0, 2]),
+                    sequence_length=logit_length)
+            inputs = decoded[0]
+        decoded = tf.sparse.to_dense(inputs,
+                                     default_value=self.blank_index).numpy()
+        decoded = self.map2string(decoded)
+        return decoded

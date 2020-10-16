@@ -109,6 +109,8 @@ class BaseProcessor:
               val_dl=None,
               batch_size=1,
               shuffle=True,
+              num_workers=4,
+              pin_memory=True,
               criterion=None,
               optimizer=None,
               learning_rate=0.0001,
@@ -133,12 +135,14 @@ class BaseProcessor:
                     raise Exception(
                         "No DataLoader found. Either pass one in train or use load_data method.")
 
-                train_dl = self.train_dl(batch_size, shuffle)
+                train_dl = self.train_dl(
+                    batch_size, shuffle, num_workers, pin_memory)
             if val_dl is None:
                 if getattr(self, "val_dl", None) is None:
                     val_dl = None
                 else:
-                    val_dl = self.val_dl(batch_size, shuffle)
+                    val_dl = self.val_dl(
+                        batch_size, shuffle, num_workers, pin_memory)
                 ######
             self.model.train()
             total_loss = 0
@@ -214,6 +218,8 @@ class BaselineDetector(BaseProcessor):
               val_dl=None,
               batch_size=1,
               shuffle=True,
+              num_workers=4,
+              pin_memory=True,
               criterion=None,
               optimizer=None,
               learning_rate=0.0001,
@@ -250,6 +256,10 @@ class BaselineDetector(BaseProcessor):
                 Default: 1.
             shuffle (bool, optional): whether to shuffle the data loader 
                 created by :meth:`~BaselineDetector.load_data`.
+            num_workers (int, optional): number of processes to load data.
+                Default: 4
+            pin_memory (bool, optional): whether to pin memory while loading data.
+                Default: ``True``.
             criterion (:class:`~torch.nn.module.loss._Loss` or :class:`~torch.nn.module.loss._WeightedLoss`, optional): 
                 The loss function to use.
                 Default: ``CrossEntropyLoss(weight=Tensor[1, 700]), reduction="mean")``
@@ -273,10 +283,16 @@ class BaselineDetector(BaseProcessor):
                 Default: GPU, if GPU is available, else CPU. 
         """
 
+        if device is None:
+            device = torch.device(
+                "cuda" if torch.cuda.is_available() else "cpu")
         if optimizer is None:
             optimizer = optim.Adam(self.model.parameters(), lr=learning_rate)
         if criterion is None:
             criterion = nn.CrossEntropyLoss(
                 weight=torch.Tensor([1, 700]).to(device), reduction="mean")
-        super().train(n_epochs, train_dl, val_dl, batch_size, shuffle, criterion, optimizer,
-                      learning_rate, save_checkpoints, checkpoint_freq, checkpoint_path, max_to_keep, device)
+
+        super().train(n_epochs, train_dl, val_dl, batch_size, shuffle,
+                      num_workers, pin_memory, criterion, optimizer,
+                      learning_rate, save_checkpoints, checkpoint_freq,
+                      checkpoint_path, max_to_keep, device)
