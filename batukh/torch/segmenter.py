@@ -56,6 +56,7 @@ class BaseProcessor:
 
 # TODO: move self.model.to(device) from `train_step` and `val_step` to `train`
 
+
     def train_step(self,
                    x,
                    y,
@@ -134,12 +135,14 @@ class BaseProcessor:
                     raise Exception(
                         "No DataLoader found. Either pass one in train or use load_data method.")
 
-                train_dl = self.train_dl(batch_size, shuffle)
+                train_dl = self.train_dl(
+                    batch_size, shuffle, num_workers, pin_memory)
             if val_dl is None:
                 if getattr(self, "val_dl", None) is None:
                     val_dl = None
                 else:
-                    val_dl = self.val_dl(batch_size, shuffle)
+                    val_dl = self.val_dl(
+                        batch_size, shuffle, num_workers, pin_memory)
                 ######
             self.model.train()
             total_loss = 0
