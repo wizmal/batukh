@@ -4,18 +4,18 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="Koshur-Recog-wajid",  # Replace with your own username
+    name="batukh",
     version="0.0.1",
-    author="Murtaza, Wajid",
-    author_email="wajid.manzoor.1999@gmail.com",
-    description="A small example package",
+    author="Murtaza, Wajid, Naveed",
+    author_email="batukhorg@gmail.com",
+    description="Document recognizer for multiple languages",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/KoshurNizam/batukh",
     packages=setuptools.find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",
-        "License ::  GPL-3.0 License",
+        "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
         "Operating System :: OS Independent",
     ],
     python_requires='>=3.6',
