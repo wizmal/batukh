@@ -64,7 +64,7 @@ class Train():
             repeat (int)     : Number of times dataloader will be itterated.
 
         """
-        pbar = tqdm(total=len(ds))
+        pbar = tqdm(total=len(ds)*repeat)
         pbar.set_description(f"Epoch: {epoch}. Traininig")
 
         for x, y in ds(batch_size, repeat):
@@ -138,7 +138,7 @@ class Train():
         return loss, logits
 
     def _val(self, ds,  batch_size, repeat, epoch):
-        pbar = tqdm(total=len(ds))
+        pbar = tqdm(total=len(ds)*repeat)
         pbar.set_description(f"Epoch: {epoch}. validation")
         for x, y in ds(batch_size, repeat):
             loss, _ = self._val_one_step(x, y)
@@ -152,7 +152,7 @@ class Train():
         return logits
 
     def save_model(self, path, name):
-        r"""Saves model in .h5 format
+        r"""Saves model
 
         Args:
             path (str)          : path of the folder where model is to be saved.
@@ -160,9 +160,9 @@ class Train():
             """
         if name is None:
             name = ""
-        name = time.localtime()+name
+        name = time.asctime()+name
 
-        self.model.save(path+name+".h5")
+        self.model.save_weights(path+name+".h5")
         print("Model saved at "+path + " as " + name+'.h5')
 
     def load_model(self, path):

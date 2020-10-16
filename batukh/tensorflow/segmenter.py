@@ -70,7 +70,7 @@ class ImageExtraction(Train):
 class LayoutExtraction(Train):
     r"""This class is used to extract diffrent layouts from a image."""
 
-    def __init__(self, train_path, val_path, batch_size, repeat,  n_layouts):
+    def __init__(self, n_layouts):
         super().__init__(model=SegmentationModel(n_layouts))
         self.train_dl = None
         self.val_dl = None
@@ -79,7 +79,7 @@ class LayoutExtraction(Train):
         r"""Loads Train and Validation datset.
 
         Note:
-            Respective images and labels should be of same size with same filename.
+            Respective images and labels should bepython of same size with same filename.
             label images should be of black background with  pixels corresponding to diffrent areas colored diffrently.
 
         Args:
@@ -100,7 +100,7 @@ class LayoutExtraction(Train):
 class BaselineDetection(Train):
     r"""This class is used to detect baseline."""
 
-    def __init__(self, train_path, val_path, batch_size, repeat):
+    def __init__(self):
         super().__init__(model=SegmentationModel(2))
         self.train_dl = None
         self.val_dl = None

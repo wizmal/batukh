@@ -1,6 +1,6 @@
 # batukh
 
-Detection of Koshur Language using CRNN.
+Detection of Language using CRNN.
 
 Using [pip](http://pypi.org)
 
@@ -8,7 +8,7 @@ Using [pip](http://pypi.org)
 
 After all the dependencies have been installed, you can train any model.
 
-For Baseline Detection:
+For Page Extraction:
 
 ```python
 >>> from batukh.torch.segmenter import BaselineDetector
@@ -18,7 +18,7 @@ For Baseline Detection:
 >>> m.train(n_epochs=10, device="cpu")
 ```
 
-For Word Detection:
+For OCR:
 
 ```python
 >>> from batukh.torch.ocr import WordDetector
