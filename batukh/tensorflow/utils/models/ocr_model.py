@@ -52,6 +52,8 @@ class BLSTM(Model):
 
         self.layer1 = layers.Bidirectional(
             layers.LSTM(units=256, return_sequences=True))
+        self.layer2 = layers.Bidirectional(
+            layers.LSTM(units=256, return_sequences=True))
 
     def call(self, input_tensor):
         r"""
@@ -62,7 +64,7 @@ class BLSTM(Model):
             x (tf.Tensor) : Output tensor.
         """
         x = self.layer1(input_tensor)
-        x = self.layer1(x)
+        x = self.layer2(x)
         return x
 
 

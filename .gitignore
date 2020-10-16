@@ -2,7 +2,7 @@
 *__pycache__
 docs/_build
 *pytest_cache
-KoshurRecognition/torch/notebooks
+batukh/torch/notebooks
 build
 dist
 *logs

@@ -152,7 +152,7 @@ class Train():
         return logits
 
     def save_model(self, path, name):
-        r"""Saves model in .h5 format
+        r"""Saves model
 
         Args:
             path (str)          : path of the folder where model is to be saved.
@@ -160,9 +160,9 @@ class Train():
             """
         if name is None:
             name = ""
-        name = time.localtime()+name
+        name = time.asctime()+name
 
-        self.model.save(path+name+".h5")
+        self.model.save_weights(path+name+".h5")
         print("Model saved at "+path + " as " + name+'.h5')
 
     def load_model(self, path):

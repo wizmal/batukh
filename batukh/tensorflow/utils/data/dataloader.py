@@ -206,31 +206,29 @@ class OCRDataLoader():
             labels.append(labels_[int(i.split(".")[0].split("/")[-1])])
         return img_path, labels
 
-    def map_to_chars(self, inputs, table, blank_index=0, merge_repeated=False):
-        r"""Maps Integers to characters.
+    def map2string(self, inputs):
+        strings = []
+        for i in inputs:
+            text = [self.inv_table[char_index] for char_index in i
+                    if char_index != self.blank_index]
+            strings.append(''.join(text))
+        return strings
 
-        Args:
-            input (tf.SparseTensor)           : Sparse tensor to be converted into word.
-            table (tf.lookup.StaticHashTable) : Table acoording to which mapping is done.
-            blank_index   (int,optional)      : index saved for space default value 0.
-            merge_repeated (bollean,optional) : Specifies weather repeated integers are to merged or not.default value ``False``.
-
-        Returns:
-            lines (list) : List of words.
-            """
-
-        inputs = tf.sparse.to_dense(inputs, default_value=blank_index).numpy()
-        lines = []
-        for line in inputs:
-            text = ""
-            previous_char = -1
-            for char_index in line:
-                if merge_repeated:
-                    if char_index == previous_char:
-                        continue
-                previous_char = char_index
-                if char_index == blank_index:
-                    continue
-                text += table[char_index]
-            lines.append(text)
-        return lines
+    def decode(self, inputs, from_pred=True, method='beam_search', merge_repeated=True):
+        self.merge_repeated = merge_repeated
+        if from_pred:
+            logit_length = tf.fill([tf.shape(inputs)[0]], tf.shape(inputs)[1])
+            if method == 'greedy':
+                decoded, _ = tf.nn.ctc_greedy_decoder(
+                    inputs=tf.transpose(inputs, perm=[1, 0, 2]),
+                    sequence_length=logit_length,
+                    merge_repeated=self.merge_repeated)
+            elif method == 'beam_search':
+                decoded, _ = tf.nn.ctc_beam_search_decoder(
+                    inputs=tf.transpose(inputs, perm=[1, 0, 2]),
+                    sequence_length=logit_length)
+            inputs = decoded[0]
+        decoded = tf.sparse.to_dense(inputs,
+                                     default_value=self.blank_index).numpy()
+        decoded = self.map2string(decoded)
+        return decoded
