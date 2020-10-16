@@ -8,7 +8,7 @@ setuptools.setup(
     version="0.0.1",
     author="Murtaza, Wajid, Naveed",
     author_email="batukhorg@gmail.com",
-    description="An OCR for multiple languages.",
+    description="Document recognizer for multiple languages.",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/KoshurNizam/batukh",

@@ -283,7 +283,9 @@ class BaselineDetector(BaseProcessor):
                 Default: GPU, if GPU is available, else CPU. 
         """
 
-        # TODO: create device
+        if device is None:
+            device = torch.device(
+                "cuda" if torch.cuda.is_available() else "cpu")
         if optimizer is None:
             optimizer = optim.Adam(self.model.parameters(), lr=learning_rate)
         if criterion is None:
