@@ -14,7 +14,7 @@ For Page Extraction(tensorflow):
 >>> from batukh.tensorflow.segmenter import PageExtraction
 >>> page_extacter=PageExtraction()
 >>> page_extracter.load_data("temp")
->>> page_extarcter.train(n_epochs=10, batch_size=1,repeat=1)
+>>> page_extracter.train(n_epochs=10, batch_size=1,repeat=1)
 Initializing from scratch
 
 Epoch: 1. Traininig: 100%|██████████| 70/70 [00:02<00:00, 23.95it/s, loss=0.0708]
