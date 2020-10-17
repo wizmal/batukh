@@ -99,8 +99,8 @@ For Baseline Detection(pytorch):
 For OCR(pytorch):
 
 ```python
->>> from batukh.torch.ocr import WordDetector
->>> m = WordDetector()
+>>> from batukh.torch.ocr import OCR
+>>> m = OCR()
 >>> m.load_data("/path/to/train_dir", "/path/to/train_labels", 
 "/path/to/val_dir", "/path/to/val_labels")
 Building Dictionary. . .
