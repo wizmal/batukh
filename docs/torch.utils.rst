@@ -2,7 +2,7 @@ torch.utils
 ====================================
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
 
    torch.utils.data
    torch.utils.models

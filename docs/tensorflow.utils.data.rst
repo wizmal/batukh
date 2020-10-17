@@ -2,7 +2,7 @@ tensorflow.utils.data
 =========================================
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
 
 .. automodule:: batukh.tensorflow.utils.data.augmentation
    :members:
