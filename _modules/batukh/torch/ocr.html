@@ -1,0 +1,839 @@
+
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en">
+<!--<![endif]-->
+
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>batukh.torch.ocr &mdash; batukh master documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+  
+
+  
+
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!-- <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" /> -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.10.0-beta/dist/katex.min.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/jit.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato" type="text/css" />
+  <link rel="index" title="Index" href="../../../genindex.html" />
+  <link rel="search" title="Search" href="../../../search.html" /> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+  <!-- Preload the theme fonts -->
+
+<link rel="preload" href="../../../_static/fonts/FreightSans/freight-sans-book.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="../../../_static/fonts/FreightSans/freight-sans-medium.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="../../../_static/fonts/IBMPlexMono/IBMPlexMono-Medium.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="../../../_static/fonts/FreightSans/freight-sans-bold.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="../../../_static/fonts/FreightSans/freight-sans-medium-italic.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="../../../_static/fonts/IBMPlexMono/IBMPlexMono-SemiBold.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+
+<!-- Preload the katex fonts -->
+
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Math-Italic.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Main-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Main-Bold.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Size1-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Size4-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Size2-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Size3-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Caligraphic-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+</head>
+
+<div class="container-fluid header-holder tutorials-header" id="header-holder">
+  <div class="container">
+    <div class="header-container">
+      <a class="header-logo" href="ourwebsite" aria-label="PyTorch"></a>
+
+      <div class="main-menu">
+        <ul>
+
+          <!-- Hid get started scene -->
+          <!-- <li>
+            <a href="https://ourwebsite/get-started">Get Started</a>
+          </li> -->
+
+          <!-- <li>
+            <div class="ecosystem-dropdown">
+              <a id="dropdownMenuButton" data-toggle="ecosystem-dropdown">
+                Ecosystem
+              </a>
+              <div class="ecosystem-dropdown-menu">
+                <a class="nav-dropdown-item" href="https://ourwebsite/hub"">
+                  <span class=dropdown-title>Models (Beta)</span>
+                  <p>Discover, publish, and reuse pre-trained models</p>
+                </a>
+                <a class=" nav-dropdown-item" href="https://ourwebsite/ecosystem">
+                  <span class=dropdown-title>Tools & Libraries</span>
+                  <p>Explore the ecosystem of tools and libraries</p>
+                </a>
+              </div>
+            </div>
+          </li> -->
+
+          <!-- <li>
+            <a href="https://ourwebsite/mobile">Mobile</a>
+          </li> -->
+
+          <!-- <li>
+            <a href="https://ourwebsite/blog/">Blog</a>
+          </li> -->
+
+          <li>
+            <a href="https://ourwebsite/tutorials">Tutorials</a>
+          </li>
+
+          <li class="active" >
+            <a href="https://ourwebsite/docs/stable/index.html">Docs</a>
+          </li>
+
+          <li>
+            <div class="resources-dropdown">
+              <a id="resourcesDropdownButton" data-toggle="resources-dropdown">
+                Resources
+              </a>
+              <div class="resources-dropdown-menu">
+                <a class="nav-dropdown-item" href="https://ourwebsite/resources"">
+                  <span class=dropdown-title>Developer Resources</span>
+                  <p>Find resources and get questions answered</p>
+                </a>
+                <a class=" nav-dropdown-item" href="https://ourwebsite/features">
+                  <span class=dropdown-title>About</span>
+                  <p>Learn about PyTorch’s features and capabilities</p>
+                </a>
+              </div>
+            </div>
+          </li>
+
+          <li>
+            <a href="https://github.com/KoshurNizam/batukh">Github</a>
+          </li>
+        </ul>
+      </div>
+
+      <a class="main-menu-open-button" href="#" data-behavior="open-mobile-menu"></a>
+    </div>
+
+  </div>
+</div>
+
+
+<body class="pytorch-body">
+
+   
+
+  
+
+  <div class="table-of-contents-link-wrapper">
+    <span>Table of Contents</span>
+    <a href="#" class="toggle-table-of-contents" data-behavior="toggle-table-of-contents"></a>
+  </div>
+
+  <nav data-toggle="wy-nav-shift" class="pytorch-left-menu" id="pytorch-left-menu">
+    <div class="pytorch-side-scroll">
+      <div class="pytorch-menu pytorch-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        <div class="pytorch-left-menu-search">
+          
+
+          
+          
+          
+          
+
+          
+
+
+  
+
+
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search Docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        
+        
+        
+        
+        
+        <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../batukh.html">batukh</a></li>
+</ul>
+
+        
+        
+      </div>
+    </div>
+  </nav>
+
+  <div class="pytorch-container">
+    <div class="pytorch-page-level-bar" id="pytorch-page-level-bar">
+      <div class="pytorch-breadcrumbs-wrapper">
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="pytorch-breadcrumbs">
+    
+      <li>
+        <a href="../../../index.html">
+          
+            Docs
+          
+        </a> &gt;
+      </li>
+
+        
+          <li><a href="../../index.html">Module code</a> &gt;</li>
+        
+      <li>batukh.torch.ocr</li>
+    
+    
+      <li class="pytorch-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+</div>
+      </div>
+
+      <div class="pytorch-shortcuts-wrapper" id="pytorch-shortcuts-wrapper">
+        Shortcuts
+      </div>
+    </div>
+
+    <section data-toggle="wy-nav-shift" id="pytorch-content-wrap" class="pytorch-content-wrap">
+      <div class="pytorch-content-left">
+
+        
+        
+          <div class="rst-content">
+            
+            <div role="main" class="main-content" itemscope="itemscope" itemtype="http://schema.org/Article">
+              <article itemprop="articleBody" id="pytorch-article" class="pytorch-article">
+                
+  <h1>Source code for batukh.torch.ocr</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">from</span> <span class="nn">torch</span> <span class="kn">import</span> <span class="n">nn</span><span class="p">,</span> <span class="n">optim</span>
+<span class="kn">from</span> <span class="nn">torchvision</span> <span class="kn">import</span> <span class="n">transforms</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">random</span>
+
+<span class="kn">from</span> <span class="nn">.utils.data.dataloader</span> <span class="kn">import</span> <span class="n">OCRDataLoader</span>
+
+<span class="kn">from</span> <span class="nn">.utils.models.ocr_model</span> <span class="kn">import</span> <span class="n">ImgEncoder</span><span class="p">,</span> <span class="n">Encoder</span><span class="p">,</span> <span class="n">AttnDecoderRNN</span>
+
+<span class="kn">from</span> <span class="nn">os.path</span> <span class="kn">import</span> <span class="n">join</span>
+<span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
+<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">localtime</span>
+
+<span class="n">MAX_LENGTH</span> <span class="o">=</span> <span class="mi">50</span>
+
+
+<div class="viewcode-block" id="WordDetector"><a class="viewcode-back" href="../../../torch.html#batukh.torch.ocr.WordDetector">[docs]</a><span class="k">class</span> <span class="nc">WordDetector</span><span class="p">:</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A basic CRNN which detects the characters in an image.</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        The :attr:`encoder_input` has been set to 1536 as default. This has</span>
+<span class="sd">        been done by keeping in mind that the height of each image is 60px. If</span>
+<span class="sd">        your images have a different height, say, :math:`h`, then encoder_input</span>
+<span class="sd">        should be </span>
+<span class="sd">        :math:`\left \lfloor \frac{\left \lfloor \frac{h-4}{2} \right \rfloor -4}{2} \right \rfloor \times 128`.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        encoder_input (int, optional): Input size of vector that goes into the encoder.</span>
+<span class="sd">            Default: 1536, based on the assumption that the input shape is</span>
+<span class="sd">            `[batch_size, 3, 60, x]`.</span>
+<span class="sd">        encoder_hidden (int, optional): hidden size of the GRU layer of encoder. </span>
+<span class="sd">            Default: 128.</span>
+<span class="sd">        encoder_nlayers (int, optional): number of layers in the GRU layer of encoder.</span>
+<span class="sd">            Default: 2.</span>
+<span class="sd">        decoder_hidden (int, optional): hidden size of the GRU layer of decoder.</span>
+<span class="sd">            Default: 128.</span>
+<span class="sd">        decoder_nlayers (int, optional): number of layers in the GRU layer of decoder.</span>
+<span class="sd">            Default: 2.</span>
+<span class="sd">        decoder_output (int, optional): Size of the output vector</span>
+<span class="sd">            (i.e the number of total characters in your language, including EOS and SOS).</span>
+<span class="sd">            Default: ``None``.</span>
+<span class="sd">        dropout (float, optional): The probability of the dropout layers.</span>
+<span class="sd">            Default: 0.1.</span>
+<span class="sd">        max_length (int, optional): The maximum number of characters that can occur in an image.</span>
+<span class="sd">            Default: 50.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="n">encoder_input</span><span class="o">=</span><span class="mi">1536</span><span class="p">,</span>
+                 <span class="n">encoder_hidden</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span>
+                 <span class="n">encoder_nlayers</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                 <span class="n">decoder_hidden</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span>
+                 <span class="n">decoder_nlayers</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                 <span class="n">decoder_output</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">dropout</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
+                 <span class="n">max_length</span><span class="o">=</span><span class="n">MAX_LENGTH</span><span class="p">,</span>
+                 <span class="p">):</span>
+
+        <span class="c1"># if providing decoder_output as None, they need to use load_data</span>
+        <span class="c1"># Only provide decoder_output, if using custom data loaders.</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_length</span> <span class="o">=</span> <span class="n">max_length</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">img_encoder</span> <span class="o">=</span> <span class="n">ImgEncoder</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span> <span class="o">=</span> <span class="n">Encoder</span><span class="p">(</span><span class="n">encoder_input</span><span class="p">,</span>
+                               <span class="n">encoder_hidden</span><span class="p">,</span>
+                               <span class="n">encoder_nlayers</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">decoder</span> <span class="o">=</span> <span class="n">AttnDecoderRNN</span><span class="p">(</span><span class="n">decoder_hidden</span><span class="p">,</span>
+                                      <span class="n">decoder_output</span><span class="p">,</span>
+                                      <span class="n">decoder_nlayers</span><span class="p">,</span>
+                                      <span class="n">dropout</span><span class="p">,</span>
+                                      <span class="n">max_length</span><span class="p">)</span>
+
+<div class="viewcode-block" id="WordDetector.load_data"><a class="viewcode-back" href="../../../torch.html#batukh.torch.ocr.WordDetector.load_data">[docs]</a>    <span class="k">def</span> <span class="nf">load_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                  <span class="n">train_dir</span><span class="p">,</span>
+                  <span class="n">train_label_path</span><span class="p">,</span>
+                  <span class="n">val_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                  <span class="n">val_label_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                  <span class="n">transform</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Args:</span>
+<span class="sd">            train_dir (str): directory containing training images.</span>
+<span class="sd">            train_label_path (str): path to a file with training labels.</span>
+<span class="sd">            val_dir (str, optional): directory containing validation images.</span>
+<span class="sd">                Default: None</span>
+<span class="sd">            val_label_path (str, optional): path to a file with training labels.</span>
+<span class="sd">                Default: None</span>
+<span class="sd">            transform (:class:`~torchvision.transforms`, optional): transforms to be applied on images.</span>
+<span class="sd">                Default: None       </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">train_dl</span> <span class="o">=</span> <span class="n">OCRDataLoader</span><span class="p">(</span><span class="n">train_dir</span><span class="p">,</span> <span class="n">train_label_path</span><span class="p">,</span> <span class="n">transform</span><span class="p">)</span>
+
+        <span class="c1"># if loading data, then make decoder_output</span>
+        <span class="n">decoder_output</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">train_dl</span><span class="o">.</span><span class="n">letter2index</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">decoder</span><span class="o">.</span><span class="n">embedding</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Embedding</span><span class="p">(</span>
+            <span class="n">decoder_output</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">decoder</span><span class="o">.</span><span class="n">hidden_size</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">decoder</span><span class="o">.</span><span class="n">out</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">decoder</span><span class="o">.</span><span class="n">hidden_size</span><span class="p">,</span> <span class="n">decoder_output</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">decoder</span><span class="o">.</span><span class="n">output_size</span> <span class="o">=</span> <span class="n">decoder_output</span>
+
+        <span class="k">if</span> <span class="n">val_dir</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">val_label_path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">val_dl</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">val_dl</span> <span class="o">=</span> <span class="n">OCRDataLoader</span><span class="p">(</span><span class="n">val_dir</span><span class="p">,</span> <span class="n">val_label_path</span><span class="p">,</span> <span class="n">transform</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">forward_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                     <span class="n">x</span><span class="p">,</span>
+                     <span class="n">y</span><span class="p">,</span>
+                     <span class="n">criterion</span><span class="p">,</span>
+                     <span class="n">device</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                     <span class="n">teacher_forcing_ratio</span><span class="o">=</span><span class="mf">0.1</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">device</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span>
+                <span class="s2">&quot;cuda&quot;</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="s2">&quot;cpu&quot;</span><span class="p">)</span>
+
+        <span class="n">loss</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">img_encoder</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="c1"># conv_output shape will be [1,1536, x&#39;]</span>
+
+        <span class="n">enc_hidden</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span><span class="o">.</span><span class="n">initHidden</span><span class="p">()</span>
+
+        <span class="c1"># for attention</span>
+        <span class="n">encoder_outputs</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">max_length</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span><span class="o">.</span><span class="n">hidden_size</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+
+        <span class="c1"># pass each of the [1, 1536] vectors to encoder</span>
+        <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]):</span>
+            <span class="n">enc_out</span><span class="p">,</span> <span class="n">enc_hidden</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span><span class="p">(</span><span class="n">out</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">idx</span><span class="p">],</span> <span class="n">enc_hidden</span><span class="p">)</span>
+            <span class="n">encoder_outputs</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">enc_out</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+
+        <span class="n">decoder_input</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span>
+            <span class="p">[[[</span><span class="bp">self</span><span class="o">.</span><span class="n">train_dl</span><span class="o">.</span><span class="n">SOS</span><span class="p">]]],</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+
+        <span class="n">dec_hidden</span> <span class="o">=</span> <span class="n">enc_hidden</span>
+
+        <span class="n">use_teacher_forcing</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">teacher_forcing_ratio</span>
+
+        <span class="n">target_len</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">use_teacher_forcing</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">di</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">target_len</span><span class="p">):</span>
+                <span class="n">dec_out</span><span class="p">,</span> <span class="n">dec_hidden</span><span class="p">,</span> <span class="n">dec_attn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">decoder</span><span class="p">(</span>
+                    <span class="n">decoder_input</span><span class="p">,</span> <span class="n">dec_hidden</span><span class="p">,</span> <span class="n">encoder_outputs</span><span class="p">)</span>
+                <span class="n">loss</span> <span class="o">+=</span> <span class="n">criterion</span><span class="p">(</span><span class="n">dec_out</span><span class="p">,</span> <span class="n">y</span><span class="p">[</span><span class="n">di</span><span class="p">])</span>
+                <span class="n">decoder_input</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="n">di</span><span class="p">]</span>  <span class="c1"># teacher forcing</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">di</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">target_len</span><span class="p">):</span>
+                <span class="n">dec_out</span><span class="p">,</span> <span class="n">dec_hidden</span><span class="p">,</span> <span class="n">dec_attn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">decoder</span><span class="p">(</span>
+                    <span class="n">decoder_input</span><span class="p">,</span> <span class="n">dec_hidden</span><span class="p">,</span> <span class="n">encoder_outputs</span><span class="p">)</span>
+
+                <span class="n">topv</span><span class="p">,</span> <span class="n">topi</span> <span class="o">=</span> <span class="n">dec_out</span><span class="o">.</span><span class="n">topk</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+                <span class="n">decoder_input</span> <span class="o">=</span> <span class="n">topi</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span>
+
+                <span class="n">loss</span> <span class="o">+=</span> <span class="n">criterion</span><span class="p">(</span><span class="n">dec_out</span><span class="p">,</span> <span class="n">y</span><span class="p">[</span><span class="n">di</span><span class="p">])</span>
+
+                <span class="k">if</span> <span class="n">decoder_input</span><span class="o">.</span><span class="n">item</span><span class="p">()</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">train_dl</span><span class="o">.</span><span class="n">EOS</span><span class="p">:</span>
+                    <span class="k">break</span>
+
+        <span class="k">return</span> <span class="n">loss</span><span class="p">,</span> <span class="n">target_len</span>
+
+<span class="c1"># TODO: before creating optimizers make sure they do not already exist</span>
+    <span class="k">def</span> <span class="nf">initOptimizers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                       <span class="n">imgenc_optimizer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                       <span class="n">enc_optimizer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                       <span class="n">dec_optimizer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                       <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,):</span>
+
+        <span class="k">if</span> <span class="n">imgenc_optimizer</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">imgenc_optimizer</span> <span class="o">=</span> <span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">img_encoder</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="n">learning_rate</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">enc_optimizer</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">enc_optimizer</span> <span class="o">=</span> <span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="n">learning_rate</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">dec_optimizer</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">dec_optimizer</span> <span class="o">=</span> <span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">decoder</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="n">learning_rate</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">imgenc_optimizer</span><span class="p">,</span> <span class="n">enc_optimizer</span><span class="p">,</span> <span class="n">dec_optimizer</span>
+
+    <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+              <span class="n">n_epochs</span><span class="p">,</span>
+              <span class="n">train_dl</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+              <span class="n">val_dl</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+              <span class="n">batch_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+              <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+              <span class="n">criterion</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+              <span class="n">imgenc_optimizer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+              <span class="n">enc_optimizer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+              <span class="n">dec_optimizer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+              <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span>
+              <span class="n">save_checkpoints</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+              <span class="n">checkpoint_freq</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+              <span class="n">checkpoint_path</span><span class="o">=</span><span class="s2">&quot;./&quot;</span><span class="p">,</span>  <span class="c1"># Change to None</span>
+              <span class="n">max_to_keep</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+              <span class="n">device</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+              <span class="p">):</span>
+
+        <span class="k">if</span> <span class="n">device</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span>
+                <span class="s2">&quot;cuda&quot;</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="s2">&quot;cpu&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">img_encoder</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">decoder</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+
+        <span class="n">imgenc_optimizer</span><span class="p">,</span> <span class="n">enc_optimizer</span><span class="p">,</span> <span class="n">dec_optimizer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">initOptimizers</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">criterion</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">criterion</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">CrossEntropyLoss</span><span class="p">()</span>
+
+        <span class="n">checkpoint_path</span> <span class="o">=</span> <span class="n">join</span><span class="p">(</span><span class="n">checkpoint_path</span><span class="p">,</span> <span class="s2">&quot;checkpoints&quot;</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">checkpoint_path</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">checkpoint_freq</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">checkpoint_freq</span> <span class="o">=</span> <span class="n">n_epochs</span><span class="o">//</span><span class="mi">10</span><span class="o">+</span><span class="mi">1</span>
+
+        <span class="k">for</span> <span class="n">epoch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_epochs</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">train_dl</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;train_dl&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
+                        <span class="s2">&quot;No DataLoader found. Either pass one in train or use load_data method.&quot;</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">train_dl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">train_dl</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">shuffle</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">val_dl</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;val_dl&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">val_dl</span> <span class="o">=</span> <span class="kc">None</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">val_dl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">val_dl</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">shuffle</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">img_encoder</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">decoder</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>
+            <span class="n">total_loss</span> <span class="o">=</span> <span class="mi">0</span>
+
+            <span class="c1"># Progress bar</span>
+            <span class="n">pbar</span> <span class="o">=</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">total</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">train_dl</span><span class="p">))</span>
+            <span class="n">pbar</span><span class="o">.</span><span class="n">set_description</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Epoch: </span><span class="si">{</span><span class="n">epoch</span><span class="si">}</span><span class="s2">. Traininig&quot;</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">train_dl</span><span class="p">):</span>
+
+                <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">16</span><span class="p">:</span>
+                    <span class="n">pbar</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+                    <span class="k">continue</span>
+
+                <span class="n">imgenc_optimizer</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
+                <span class="n">enc_optimizer</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
+                <span class="n">dec_optimizer</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
+                <span class="c1"># maybe add teacher_force_ratio control</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+                <span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+                <span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># only for batch_size=1, look into it</span>
+
+                <span class="n">loss</span><span class="p">,</span> <span class="n">target_len</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">forward_step</span><span class="p">(</span>
+                    <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">criterion</span><span class="p">,</span> <span class="n">device</span><span class="p">)</span>
+
+                <span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+
+                <span class="n">imgenc_optimizer</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+                <span class="n">enc_optimizer</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+                <span class="n">dec_optimizer</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+
+                <span class="n">total_loss</span> <span class="o">=</span> <span class="n">total_loss</span> <span class="o">+</span> <span class="p">(</span><span class="n">loss</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="o">/</span><span class="n">target_len</span><span class="p">)</span>
+
+                <span class="n">pbar</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+                <span class="n">pbar</span><span class="o">.</span><span class="n">set_postfix</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="n">total_loss</span><span class="o">/</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+            <span class="n">pbar</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+            <span class="k">if</span> <span class="n">val_dl</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">img_encoder</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">decoder</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+                <span class="n">eval_loss</span> <span class="o">=</span> <span class="mi">0</span>
+
+                <span class="c1"># validation progress bar</span>
+                <span class="n">pbar</span> <span class="o">=</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">total</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">val_dl</span><span class="p">))</span>
+                <span class="n">pbar</span><span class="o">.</span><span class="n">set_description</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Epoch: </span><span class="si">{</span><span class="n">epoch</span><span class="si">}</span><span class="s2">. Validating&quot;</span><span class="p">)</span>
+
+                <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">val_dl</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">16</span><span class="p">:</span>
+                        <span class="n">pbar</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+                        <span class="k">continue</span>
+
+                    <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+                    <span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+                    <span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># only</span>
+
+                    <span class="n">loss</span><span class="p">,</span> <span class="n">target_len</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">forward_step</span><span class="p">(</span>
+                        <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">criterion</span><span class="p">,</span> <span class="n">device</span><span class="p">)</span>
+
+                    <span class="n">eval_loss</span> <span class="o">=</span> <span class="n">eval_loss</span> <span class="o">+</span> <span class="p">(</span><span class="n">loss</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="o">/</span><span class="n">target_len</span><span class="p">)</span>
+
+                    <span class="n">pbar</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+                    <span class="n">pbar</span><span class="o">.</span><span class="n">set_postfix</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="n">eval_loss</span><span class="o">/</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+                <span class="n">pbar</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">epoch</span> <span class="o">%</span> <span class="n">checkpoint_freq</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">save_model</span><span class="p">(</span><span class="n">checkpoint_path</span><span class="p">,</span> <span class="n">epoch</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">load_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+        <span class="n">models</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">img_encoder</span><span class="o">.</span><span class="n">load_state_dict</span><span class="p">(</span><span class="n">models</span><span class="p">[</span><span class="s2">&quot;img_encoder&quot;</span><span class="p">]))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">encoder</span><span class="o">.</span><span class="n">load_state_dict</span><span class="p">(</span><span class="n">models</span><span class="p">[</span><span class="s2">&quot;encoder&quot;</span><span class="p">]))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">decoder</span><span class="o">.</span><span class="n">load_state_dict</span><span class="p">(</span><span class="n">models</span><span class="p">[</span><span class="s2">&quot;decoder&quot;</span><span class="p">]))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Models Loaded!&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">save_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">postfix</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2">-</span><span class="si">{}</span><span class="s2">-</span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2">.</span><span class="si">{}</span><span class="s2">.</span><span class="si">{}</span><span class="s2">.pt&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">postfix</span><span class="p">,</span> <span class="o">*</span><span class="n">localtime</span><span class="p">()[:</span><span class="mi">6</span><span class="p">])</span>
+        <span class="n">models</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;img_encoder&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">img_encoder</span><span class="o">.</span><span class="n">state_dict</span><span class="p">(),</span>
+                  <span class="s2">&quot;encoder&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span><span class="o">.</span><span class="n">state_dict</span><span class="p">(),</span>
+                  <span class="s2">&quot;decoder&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">decoder</span><span class="o">.</span><span class="n">state_dict</span><span class="p">()}</span>
+        <span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">models</span><span class="p">,</span> <span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Models Saved!&quot;</span><span class="p">)</span></div>
+
+
+<span class="c1"># TODO: Test each and every module of this file.</span>
+</pre></div>
+
+              </article>
+              
+            </div>
+            <footer>
+  
+
+  
+
+    <hr>
+
+  
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020.
+
+    </p>
+  </div>
+    
+      <div>
+        Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+      </div>
+     
+
+</footer>
+
+          </div>
+        </div>
+
+        <div class="pytorch-content-right" id="pytorch-content-right">
+          <div class="pytorch-right-menu" id="pytorch-right-menu">
+            <div class="pytorch-side-scroll" id="pytorch-side-scroll-right">
+              
+            </div>
+          </div>
+        </div>
+    </section>
+  </div>
+
+  
+
+
+  
+
+  
+  <script type="text/javascript" id="documentation_options" data-url_root="../../../"
+    src="../../../_static/documentation_options.js"></script>
+  <script type="text/javascript" src="../../../_static/jquery.js"></script>
+  <script type="text/javascript" src="../../../_static/underscore.js"></script>
+  <script type="text/javascript" src="../../../_static/doctools.js"></script>
+  <script type="text/javascript" src="../../../_static/language_data.js"></script>
+  <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+  
+
+  <script type="text/javascript" src="../../../_static/js/vendor/popper.min.js"></script>
+  <script type="text/javascript" src="../../../_static/js/vendor/bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js"></script>
+  <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+  <!-- Begin Footer -->
+
+  <div class="container-fluid docs-tutorials-resources" id="docs-tutorials-resources">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-4 text-center">
+          <h2>Docs</h2>
+          <p>Access comprehensive developer documentation for batukh.</p>
+          <a class="with-right-arrow" href="https://ourwebsite/docs/stable/index.html">View Docs</a>
+        </div>
+
+        <div class="col-md-4 text-center">
+          <h2>Tutorials</h2>
+          <p>Get in-depth tutorials for beginners and advanced developers</p>
+          <a class="with-right-arrow" href="https://ourwebsite/tutorials">View Tutorials</a>
+        </div>
+
+        <div class="col-md-4 text-center">
+          <h2>Resources</h2>
+          <p>Find development resources and get your questions answered</p>
+          <a class="with-right-arrow" href="https://ourwebsite/resources">View Resources</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <div class="container footer-container">
+      <div class="footer-logo-wrapper">
+        <a href="ourwebsite" class="footer-logo"></a>
+      </div>
+
+      <div class="footer-links-wrapper">
+        <div class="footer-links-col">
+          <ul>
+            <li class="list-title"><a href="ourwebsite">batukh</a></li>
+            <!-- <li><a href="https://ourwebsite/get-started">Get Started</a></li> -->
+            <!-- <li><a href="https://ourwebsite/features">Features</a></li> -->
+            <!-- <li><a href="https://ourwebsite/ecosystem">Ecosystem</a></li> -->
+            <!-- <li><a href="https://ourwebsite/blog/">Blog</a></li> -->
+            <!-- <li><a href="https://github.com/pytorch/pytorch/blob/master/CONTRIBUTING.md">Contributing</a></li> -->
+          </ul>
+        </div>
+
+        <div class="footer-links-col">
+          <ul>
+            <li class="list-title"><a href="https://ourwebsite/resources">Resources</a></li>
+            <li><a href="https://ourwebsite/tutorials">Tutorials</a></li>
+            <li><a href="https://ourwebsite/docs/stable/index.html">Docs</a></li>
+            <li><a href="https://discuss.ourwebsite" target="_blank">Discuss</a></li>
+            <li><a href="https://github.com/KoshurNizam/batukh/issues" target="_blank">Github Issues</a></li>
+            <!-- <li><a href="https://ourwebsite/assets/brand-guidelines/Brand-Guidelines.pdf" target="_blank">Brand Guidelines</a> -->
+            </li>
+          </ul>
+        </div>
+
+        <div class="footer-links-col follow-us-col">
+          <ul>
+            <li class="list-title">Stay Connected</li>
+            <li>
+              <div id="mc_embed_signup">
+                <form
+                  action="https://twitter.us14.list-manage.com/subscribe/post?u=75419c71fe0a935e53dfa4a3f&id=91d0dccd39"
+                  method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form"
+                  class="email-subscribe-form validate" target="_blank" novalidate>
+                  <div id="mc_embed_signup_scroll" class="email-subscribe-form-fields-wrapper">
+                    <div class="mc-field-group">
+                      <label for="mce-EMAIL" style="display:none;">Email Address</label>
+                      <input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL"
+                        placeholder="Email Address">
+                    </div>
+
+                    <div id="mce-responses" class="clear">
+                      <div class="response" id="mce-error-response" style="display:none"></div>
+                      <div class="response" id="mce-success-response" style="display:none"></div>
+                    </div>
+                    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+
+                    <div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text"
+                        name="b_75419c71fe0a935e53dfa4a3f_91d0dccd39" tabindex="-1" value=""></div>
+
+                    <div class="clear">
+                      <input type="submit" value="" name="subscribe" id="mc-embedded-subscribe"
+                        class="button email-subscribe-button">
+                    </div>
+                  </div>
+                </form>
+              </div>
+
+            </li>
+          </ul>
+
+          <div class="footer-social-icons">
+            <a href="https://www.facebook.com/ourusername" target="_blank" class="facebook"></a>
+            <a href="https://twitter.com/ourusername" target="_blank" class="twitter"></a>
+            <a href="https://www.youtube.com/ourusername" target="_blank" class="youtube"></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <div class="cookie-banner-wrapper">
+  <div class="container">
+    <p class="gdpr-notice">To analyze traffic and optimize your experience, we serve cookies on this site. By clicking or navigating, you agree to allow our usage of cookies. As the current maintainers of this site, Facebook’s Cookies Policy applies. Learn more, including about available controls: <a href="https://www.facebook.com/policies/cookies/">Cookies Policy</a>.</p>
+    <img class="close-button" src="../../../_static/images/pytorch-x.svg">
+  </div>
+</div>
+
+  <!-- End Footer -->
+
+  <!-- Begin Mobile Menu -->
+
+  <div class="mobile-main-menu">
+    <div class="container-fluid">
+      <div class="container">
+        <div class="mobile-main-menu-header-container">
+          <a class="header-logo" href="ourwebsite" aria-label="PyTorch"></a>
+          <a class="main-menu-close-button" href="#" data-behavior="close-mobile-menu"></a>
+        </div>
+      </div>
+    </div>
+
+    <div class="mobile-main-menu-links-container">
+      <div class="main-menu">
+        <ul>
+          <!-- <li>
+            <a href="https://ourwebsite/get-started">Get Started</a>
+          </li> -->
+
+          <!-- <li>
+            <a href="https://ourwebsite/features">Features</a>
+          </li> -->
+
+          <!-- <li>
+            <a href="https://ourwebsite/ecosystem">Ecosystem</a>
+          </li> -->
+
+          <li>
+            <a href="https://ourwebsite/mobile">Mobile</a>
+          </li>
+
+          <!-- <li>
+            <a href="https://ourwebsite/hub">batukh Hub</a>
+          </li> -->
+
+          <!-- <li>
+            <a href="https://ourwebsite/blog/">Blog</a>
+          </li> -->
+
+          <li>
+            <a href="https://ourwebsite/tutorials">Tutorials</a>
+          </li>
+
+          <li class="active">
+            <a href="https://ourwebsite/docs/stable/index.html">Docs</a>
+          </li>
+
+          <li>
+            <a href="https://ourwebsite/resources">Resources</a>
+          </li>
+
+          <li>
+            <a href="https://github.com/KoshurNizam/batukh">Github</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- End Mobile Menu -->
+
+  <script type="text/javascript" src="../../../_static/js/vendor/anchor.min.js"></script>
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      mobileMenu.bind();
+      mobileTOC.bind();
+      pytorchAnchors.bind();
+      sideMenus.bind();
+      scrollToAnchor.bind();
+      highlightNavigation.bind();
+      mainMenuDropdown.bind();
+      filterTags.bind();
+
+      // Add class to links that have code blocks, since we cannot create links in code blocks
+      $("article.pytorch-article a span.pre").each(function (e) {
+        $(this).closest("a").addClass("has-code");
+      });
+    })
+  </script>
+</body>
+
+</html>
