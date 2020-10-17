@@ -26,9 +26,17 @@
 
 /* change logo */
 
+.header-logo {
+    background-image: url("../img/logo.png");
+}
+
 .tutorials-header .header-logo {
     background-image: url("../img/logo.png");
 }
+
+/* .header-logo {
+    background-image: url("../img/logo.png");
+} */
 
 @media screen and (min-width: 1100px) {
     .header-logo {
