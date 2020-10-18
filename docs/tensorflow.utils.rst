@@ -7,3 +7,6 @@ tensorflow.utils
    tensorflow.utils.data
    tensorflow.utils.models
 
+.. automodule:: batukh.tensorflow.utils.train
+   :members:
+

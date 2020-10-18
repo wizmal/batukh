@@ -7,4 +7,8 @@ torch
    torch.utils
 
 
+.. automodule:: batukh.torch.segmenter
+   :members:
 
+.. automodule:: batukh.torch.ocr
+   :members:

@@ -7,6 +7,8 @@ batukh
 
    
    tensorflow
+
+   torch
   
 
 
