@@ -263,14 +263,18 @@
 
 
 <div class="viewcode-block" id="BottleneckUnit"><a class="viewcode-back" href="../../../../../tensorflow.utils.models.html#batukh.tensorflow.utils.models.segmentation_model.BottleneckUnit">[docs]</a><span class="k">class</span> <span class="nc">BottleneckUnit</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
-    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Consists of three ``layers.Conv2D`` convolution layers with same padding,relu activation and kernel size 1,3,1 respectively.</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Consists of :math:`3` :class:`tensorflow.keras.layers.Conv2D` convolution layers with same padding,</span>
+<span class="sd">    relu activation and kernel size :math:`1,3,1` respectively.</span>
 
-<span class="sd">        Args:</span>
-<span class="sd">            out_filters (int)         : Specifies filters of third convulution layer.</span>
-<span class="sd">            in_filters (int)          : Specifies fliters of first and second convulution layer.</span>
-<span class="sd">            strides (tuple,optional)  : Specifies strides of convulution layers.</span>
-<span class="sd">            connect (bolean,optional) : Specifies if the layer will be used for horizantal connection in upscaler.default ``True``.</span>
-<span class="sd">            is_first (bolean,optional): Specifies if the bottleneck unit is first of the bollteneck block.default ``False``.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        out_filters (int)         : Specifies filters of third convulution layer.</span>
+<span class="sd">        in_filters (int)          : Specifies fliters of first and second convulution layer.</span>
+<span class="sd">        strides (tuple,optional)  : Specifies strides of convulution layers.</span>
+<span class="sd">            Default : :math:`(1,1)`</span>
+<span class="sd">        connect (bol,optional) : Specifies if the layer will be used for horizantal connection in upscaler.</span>
+<span class="sd">            Default :``True``.</span>
+<span class="sd">        is_first (bol,optional): Specifies if the bottleneck unit is first of the bollteneck block.</span>
+<span class="sd">            Default :``False``.</span>
 
 
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -293,11 +297,12 @@
 
 <div class="viewcode-block" id="BottleneckUnit.call"><a class="viewcode-back" href="../../../../../tensorflow.utils.models.html#batukh.tensorflow.utils.models.segmentation_model.BottleneckUnit.call">[docs]</a>    <span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_tensor</span><span class="p">):</span>
         <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+
 <span class="sd">        Args:</span>
-<span class="sd">            input_tensor (tf.Tensor) : Input image tensor.</span>
+<span class="sd">            input_tensor ( :class:`tensorflow.Tensor`) : Input image tensor.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            x (tf.Tensor) : Output image tensor.</span>
+<span class="sd">            :class:`tensorflow.Tensor` : Output image tensor.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">conv1</span><span class="p">(</span><span class="n">input_tensor</span><span class="p">)</span>
         <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">conv2</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
@@ -310,7 +315,9 @@
 
 
 <div class="viewcode-block" id="ResnetLayer"><a class="viewcode-back" href="../../../../../tensorflow.utils.models.html#batukh.tensorflow.utils.models.segmentation_model.ResnetLayer">[docs]</a><span class="k">class</span> <span class="nc">ResnetLayer</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
-    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Consists of three ``layers.conv2D`` convolution layer,``layers.MaxPool2D`` maxpoll layer and 16 ``BottleNeckUnit`` units.</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Consists of three :class:`tensorflow.keras.layers.conv2D` convolution layer, </span>
+<span class="sd">    :class:`tensorflow.keras.layers.MaxPool2D` maxpoll layer and :math:`16`  </span>
+<span class="sd">    :class:`~batukh.tensorflow.utils.models.segmentation_model.BottleneckUnit` units.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -353,11 +360,11 @@
 <div class="viewcode-block" id="ResnetLayer.call"><a class="viewcode-back" href="../../../../../tensorflow.utils.models.html#batukh.tensorflow.utils.models.segmentation_model.ResnetLayer.call">[docs]</a>    <span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_tensor</span><span class="p">):</span>
         <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Args:</span>
-<span class="sd">            input_tensor (tf.Tensor) : Input image tensor.</span>
+<span class="sd">            input_tensor ( :class:`tensorflow.Tensor`) : Input image tensor.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            x (tf.Tensor)         : Output image tensor.</span>
-<span class="sd">            concat_tensors (list) : List of image tensor used in horizantal connections of upscaller.</span>
+<span class="sd">            :class:`tensorflow.Tensor`        : Output image tensor.</span>
+<span class="sd">            list : List of image tensor used in horizantal connections of upscaller.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">concat_tensors</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">concat_tensors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">input_tensor</span><span class="p">)</span>
@@ -394,11 +401,12 @@
 
 
 <div class="viewcode-block" id="UpScalerUnit"><a class="viewcode-back" href="../../../../../tensorflow.utils.models.html#batukh.tensorflow.utils.models.segmentation_model.UpScalerUnit">[docs]</a><span class="k">class</span> <span class="nc">UpScalerUnit</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
-    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Consists of ``layers.Conv2DT`` convolution transpose layer and ``layers.Conv2D`` convolution layer.</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Consists of :class:`layers.Conv2DT` convolution transpose layer and</span>
+<span class="sd">    :class:`tensorflow.keras.layers.Conv2D` convolution layer.</span>
 
-<span class="sd">        Args:</span>
-<span class="sd">            in_filters (int)  : Specifies the filters of convolution transpose layer.</span>
-<span class="sd">            out_filters (int) : Specifies the filters of convolution layer.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        in_filters (int)  : Specifies the filters of convolution transpose layer.</span>
+<span class="sd">        out_filters (int) : Specifies the filters of convolution layer.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -416,11 +424,11 @@
 <div class="viewcode-block" id="UpScalerUnit.call"><a class="viewcode-back" href="../../../../../tensorflow.utils.models.html#batukh.tensorflow.utils.models.segmentation_model.UpScalerUnit.call">[docs]</a>    <span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_tensor</span><span class="p">,</span> <span class="n">concat_tensor</span><span class="p">):</span>
         <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Args:</span>
-<span class="sd">            input_tensor (tf.Tensor) : Input image tensor.</span>
-<span class="sd">            concat_tensor (tf.Tensor): Image tensor used to concat with the input tensor.</span>
+<span class="sd">            input_tensor ( :class:`tensorflow.Tensor`) : Input image tensor.</span>
+<span class="sd">            concat_tensor ( :class:`tensorflow.Tensor`): Image tensor used to concat with the input tensor.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            x (tf.Tensor) : Output image tensor.</span>
+<span class="sd">            :class:`tensorflow.Tensor` : Output image tensor.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">convT</span><span class="p">(</span><span class="n">input_tensor</span><span class="p">)</span>
         <span class="n">x</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">concat_tensor</span><span class="p">,</span> <span class="n">x</span><span class="p">],</span> <span class="mi">3</span><span class="p">)</span>
@@ -429,7 +437,8 @@
 
 
 <div class="viewcode-block" id="UpScaler"><a class="viewcode-back" href="../../../../../tensorflow.utils.models.html#batukh.tensorflow.utils.models.segmentation_model.UpScaler">[docs]</a><span class="k">class</span> <span class="nc">UpScaler</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
-    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Consists of ``layers.Conv2D`` convolution layer and five ``UpScalerUnits``.</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Consists of :class:`tensorflow.keras.layers.Conv2D` convolution layer and </span>
+<span class="sd">    five :class:`~batukh.tensorflow.utils.models.segmentation_model.UpScalerUnit`.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        n_classes (int) : Specifies the number of classes or channels in output image.</span>
@@ -451,11 +460,11 @@
 <div class="viewcode-block" id="UpScaler.call"><a class="viewcode-back" href="../../../../../tensorflow.utils.models.html#batukh.tensorflow.utils.models.segmentation_model.UpScaler.call">[docs]</a>    <span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_tensor</span><span class="p">,</span> <span class="n">concat_tensors</span><span class="p">):</span>
         <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Args:</span>
-<span class="sd">            input_tensor (tf.Tensor) : Input image tensor.</span>
+<span class="sd">            input_tensor ( :class:`tensorflow.Tensor`) : Input image tensor.</span>
 <span class="sd">            concat_tensors (list)    : List of concat tensors used for horizantal connections.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            x (tf.Tssssensor) : Output image tensor with channels equal to n_classes.</span>
+<span class="sd">            :class:`tensorflow.Tensor` : Output image tensor with channels equal to n_classes.</span>
 <span class="sd">            &quot;&quot;&quot;</span>
         <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">upScaler1</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">input_tensor</span><span class="p">,</span> <span class="n">concat_tensors</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
         <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">upScaler2</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">concat_tensors</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
@@ -467,14 +476,15 @@
 
 
 <div class="viewcode-block" id="SegmentationModel"><a class="viewcode-back" href="../../../../../tensorflow.utils.models.html#batukh.tensorflow.utils.models.segmentation_model.SegmentationModel">[docs]</a><span class="k">class</span> <span class="nc">SegmentationModel</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
-    <span class="sa">r</span><span class="sd">&quot;&quot;&quot; Consists of ``ResnetLayer`` and ``UpScaller``.</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Consists of :class:`~batukh.tensorflow.utils.models.segmentation_model.ResnetLayer` and  </span>
+<span class="sd">    :class:`~batukh.tensorflow.utils.models.segmentation_model.UpScaler`.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        n_classes (int) : Specifies number of classes or channels in output image tensor.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_classes</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_classes</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">SegmentationModel</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">n_classes</span> <span class="o">=</span> <span class="n">n_classes</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">resnet</span> <span class="o">=</span> <span class="n">ResnetLayer</span><span class="p">()</span>
@@ -483,10 +493,10 @@
 <div class="viewcode-block" id="SegmentationModel.call"><a class="viewcode-back" href="../../../../../tensorflow.utils.models.html#batukh.tensorflow.utils.models.segmentation_model.SegmentationModel.call">[docs]</a>    <span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_tensor</span><span class="p">):</span>
         <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Args:</span>
-<span class="sd">            input_tensor (tf.Tensor) : Input image tensor.</span>
+<span class="sd">            input_tensor ( :class:`tensorflow.Tensor`) : Input image tensor.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            x (tf.Tensor) : Output image tensor with channels equal to n_classes.</span>
+<span class="sd">            :class:`tensorflow.Tensor` : Output image tensor with channels equal to n_classes.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">x</span><span class="p">,</span> <span class="n">concat_tensors</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">resnet</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">input_tensor</span><span class="p">)</span>
         <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">upScaler</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">concat_tensors</span><span class="p">)</span>

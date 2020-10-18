@@ -267,15 +267,32 @@
 <span class="c1"># todo:apply augmentation</span>
 
 
-<div class="viewcode-block" id="PageExtraction"><a class="viewcode-back" href="../../../tensorflow.html#batukh.tensorflow.segmenter.PageExtraction">[docs]</a><span class="k">class</span> <span class="nc">PageExtraction</span><span class="p">(</span><span class="n">Train</span><span class="p">):</span>
-    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;This class used to extract pages (removing borders and blank spaces around pages) from the images.&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="PageExtracter"><a class="viewcode-back" href="../../../generated/batukh.tensorflow.segmenter.PageExtracter.html#batukh.tensorflow.segmenter.PageExtracter">[docs]</a><span class="k">class</span> <span class="nc">PageExtracter</span><span class="p">(</span><span class="n">Train</span><span class="p">):</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;This class used to extract pages (removing borders and blank spaces around pages) from originals.</span>
+
+<span class="sd">    Example</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        &gt;&gt;&gt; from batukh.tensorflow.segmenter import PageExtraction</span>
+<span class="sd">        &gt;&gt;&gt; page_extracter = PageExtraction()</span>
+<span class="sd">        &gt;&gt;&gt; page_extracter.load_data(train_path = &quot;/train_data/&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; page_extracter.train(n_epochs=10,batch_size=1,weights=[1,100])</span>
+<span class="sd">        Initializing from scratch</span>
+<span class="sd">        Epoch: 1. Traininig: 100%|██████████| 70/70 [00:02&lt;00:00, 23.95it/s, loss=0.0708]</span>
+<span class="sd">        Model saved to /tf_ckpts/Fri Oct 16 08:23:13 2020/ckpt-14280</span>
+<span class="sd">        &gt;&gt;&gt; page_extracter.save_model(&quot;/model/&quot;)</span>
+<span class="sd">        Model saved at /saved_models</span>
+
+
+<span class="sd">        &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">SegmentationModel</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">train_dl</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">val_dl</span> <span class="o">=</span> <span class="kc">None</span>
 
-<div class="viewcode-block" id="PageExtraction.load_data"><a class="viewcode-back" href="../../../tensorflow.html#batukh.tensorflow.segmenter.PageExtraction.load_data">[docs]</a>    <span class="k">def</span> <span class="nf">load_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">train_path</span><span class="p">,</span> <span class="n">val_path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="PageExtracter.load_data"><a class="viewcode-back" href="../../../generated/batukh.tensorflow.segmenter.PageExtracter.html#batukh.tensorflow.segmenter.PageExtracter.load_data">[docs]</a>    <span class="k">def</span> <span class="nf">load_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">train_path</span><span class="p">,</span> <span class="n">val_path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Loads Train and Validation datset.</span>
 
 <span class="sd">        Note:</span>
@@ -283,8 +300,8 @@
 <span class="sd">            label images should be of black background with  pixels corresponding to page area colored red.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            train_path (str)        : path of the folder contaings images folder (containing orginal images) and labels folder (containing label images) for train dataset.</span>
-<span class="sd">            val_path (str,optional) : path of the folder contaings images folder (containing orginal images) and labels folder (containing label images) for validation dataset.</span>
+<span class="sd">            train_path (str)        : path of the folder contaings originals folder (containing original images) and labels folder (containing label images) for train dataset.</span>
+<span class="sd">            val_path (str,optional) : path of the folder contaings originals folder (containing original images) and labels folder (containing label images) for validation dataset.</span>
 <span class="sd">            &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">train_dl</span> <span class="o">=</span> <span class="n">SegmentationDataLoader</span><span class="p">(</span>
             <span class="n">train_path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">n_classes</span><span class="p">)</span>
@@ -292,20 +309,35 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">val_dl</span> <span class="o">=</span> <span class="n">SegmentationDataLoader</span><span class="p">(</span>
                 <span class="n">val_path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">n_classes</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_epochs</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">criterion</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">class_weights</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">optimizer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.0001</span><span class="p">,</span> <span class="n">save_checkpoints</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">checkpoint_freq</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">checkpoint_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">max_to_keep</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_epochs</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">criterion</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">class_weights</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">optimizer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.0001</span><span class="p">,</span> <span class="n">save_checkpoints</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">checkpoint_freq</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">checkpoint_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">max_to_keep</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">n_epochs</span><span class="p">,</span> <span class="n">train_dl</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">train_dl</span><span class="p">,</span> <span class="n">val_dl</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">val_dl</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="n">repeat</span><span class="p">,</span> <span class="n">criterion</span><span class="o">=</span><span class="n">criterion</span><span class="p">,</span> <span class="n">class_weights</span><span class="o">=</span><span class="n">class_weights</span><span class="p">,</span>
                       <span class="n">optimizer</span><span class="o">=</span><span class="n">optimizer</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="n">learning_rate</span><span class="p">,</span> <span class="n">save_checkpoints</span><span class="o">=</span><span class="n">save_checkpoints</span><span class="p">,</span> <span class="n">checkpoint_freq</span><span class="o">=</span><span class="n">checkpoint_freq</span><span class="p">,</span> <span class="n">checkpoint_path</span><span class="o">=</span><span class="n">checkpoint_path</span><span class="p">,</span> <span class="n">max_to_keep</span><span class="o">=</span><span class="n">max_to_keep</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="ImageExtraction"><a class="viewcode-back" href="../../../tensorflow.html#batukh.tensorflow.segmenter.ImageExtraction">[docs]</a><span class="k">class</span> <span class="nc">ImageExtraction</span><span class="p">(</span><span class="n">Train</span><span class="p">):</span>
-    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;The class used to extract images.&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="ImageExtracter"><a class="viewcode-back" href="../../../generated/batukh.tensorflow.segmenter.ImageExtracter.html#batukh.tensorflow.segmenter.ImageExtracter">[docs]</a><span class="k">class</span> <span class="nc">ImageExtracter</span><span class="p">(</span><span class="n">Train</span><span class="p">):</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;The class used to extract images.</span>
+
+<span class="sd">    Example</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        &gt;&gt;&gt; from batukh.tensorflow.segmenter import ImageExtracter</span>
+<span class="sd">        &gt;&gt;&gt; image_extracter = ImageExtracter()</span>
+<span class="sd">        &gt;&gt;&gt; image_extracter.load_data( train_path=&quot;/train_data/&quot;,val_path=&quot;/val_data/&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; image_extracter.train(n_epochs=1)</span>
+<span class="sd">        Initializing from scratch</span>
+<span class="sd">        Epoch: 1. Traininig: 100%|██████████| 70/70 [00:02&lt;00:00, 23.95it/s, loss=0.0708]</span>
+<span class="sd">        Epoch: 1. validation: 100%|██████████| 70/70 [00:02&lt;00:00, 23.95it/s, loss=0.0708]</span>
+<span class="sd">        Model saved to /tf_ckpts/Fri Oct 16 08:23:13 2020/ckpt-14280</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">SegmentationModel</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">train_dl</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">val_dl</span> <span class="o">=</span> <span class="kc">None</span>
 
-<div class="viewcode-block" id="ImageExtraction.load_data"><a class="viewcode-back" href="../../../tensorflow.html#batukh.tensorflow.segmenter.ImageExtraction.load_data">[docs]</a>    <span class="k">def</span> <span class="nf">load_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">train_path</span><span class="p">,</span> <span class="n">val_path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="ImageExtracter.load_data"><a class="viewcode-back" href="../../../generated/batukh.tensorflow.segmenter.ImageExtracter.html#batukh.tensorflow.segmenter.ImageExtracter.load_data">[docs]</a>    <span class="k">def</span> <span class="nf">load_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">train_path</span><span class="p">,</span> <span class="n">val_path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Loads Train and Validation datset.</span>
 
 <span class="sd">        Note:</span>
@@ -313,8 +345,8 @@
 <span class="sd">            label images should be of black background with  pixels corresponding image areas colored red.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            train_path (str)        : path of the folder contaings images folder (containing orginal images) and labels folder (containing label images) for train dataset.</span>
-<span class="sd">            val_path (str,optional) : path of the folder contaings images folder (containing orginal images) and labels folder (containing label images) for validation dataset.</span>
+<span class="sd">            train_path (str)        : path of the folder contaings originals folder (containing originals images) and labels folder (containing label images) for train dataset.</span>
+<span class="sd">            val_path (str,optional) : path of the folder contaings originals folder (containing originals images) and labels folder (containing label images) for validation dataset.</span>
 <span class="sd">            &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">train_dl</span> <span class="o">=</span> <span class="n">SegmentationDataLoader</span><span class="p">(</span>
             <span class="n">train_path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">n_classes</span><span class="p">)</span>
@@ -322,20 +354,35 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">val_dl</span> <span class="o">=</span> <span class="n">SegmentationDataLoader</span><span class="p">(</span>
                 <span class="n">val_path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">n_classes</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_epochs</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">criterion</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">class_weights</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">optimizer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.0001</span><span class="p">,</span> <span class="n">save_checkpoints</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">checkpoint_freq</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">checkpoint_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">max_to_keep</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_epochs</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">criterion</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">class_weights</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">optimizer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.0001</span><span class="p">,</span> <span class="n">save_checkpoints</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">checkpoint_freq</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">checkpoint_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">max_to_keep</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">n_epochs</span><span class="p">,</span> <span class="n">train_dl</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">train_dl</span><span class="p">,</span> <span class="n">val_dl</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">val_dl</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="n">repeat</span><span class="p">,</span> <span class="n">criterion</span><span class="o">=</span><span class="n">criterion</span><span class="p">,</span> <span class="n">class_weights</span><span class="o">=</span><span class="n">class_weights</span><span class="p">,</span>
                       <span class="n">optimizer</span><span class="o">=</span><span class="n">optimizer</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="n">learning_rate</span><span class="p">,</span> <span class="n">save_checkpoints</span><span class="o">=</span><span class="n">save_checkpoints</span><span class="p">,</span> <span class="n">checkpoint_freq</span><span class="o">=</span><span class="n">checkpoint_freq</span><span class="p">,</span> <span class="n">checkpoint_path</span><span class="o">=</span><span class="n">checkpoint_path</span><span class="p">,</span> <span class="n">max_to_keep</span><span class="o">=</span><span class="n">max_to_keep</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="LayoutExtraction"><a class="viewcode-back" href="../../../tensorflow.html#batukh.tensorflow.segmenter.LayoutExtraction">[docs]</a><span class="k">class</span> <span class="nc">LayoutExtraction</span><span class="p">(</span><span class="n">Train</span><span class="p">):</span>
-    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;This class is used to extract diffrent layouts from a image.&quot;&quot;&quot;</span>
+<span class="k">class</span> <span class="nc">LayoutExtracter</span><span class="p">(</span><span class="n">Train</span><span class="p">):</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;This class is used to extract diffrent layouts from a image.</span>
+
+<span class="sd">    Example</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        &gt;&gt;&gt; from batukh.tensorflow.segmenter import LayoutExtracter</span>
+<span class="sd">        &gt;&gt;&gt; layout_extracter = LayoutExtracter(2)</span>
+<span class="sd">        &gt;&gt;&gt; layout_extracter.load_data(train_path =&quot;/train_data/&quot;,val_data=&quot;/val_data/&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; layout_extracter.train(n_epochs=1,checkpoint_path=&quot;/tf_chkpts/&quot;)</span>
+<span class="sd">        Restored from /tf_chkpts/ckpt-13280</span>
+<span class="sd">        Epoch: 1. Traininig: 100%|██████████| 70/70 [00:02&lt;00:00, 23.95it/s, loss=0.0708]</span>
+<span class="sd">        Epoch: 1. validation: 100%|██████████| 70/70 [00:02&lt;00:00, 23.95it/s, loss=0.0708]</span>
+<span class="sd">        Model saved to /tf_ckpts/Fri Oct 16 08:23:13 2020/ckpt-14280</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_layouts</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">SegmentationModel</span><span class="p">(</span><span class="n">n_layouts</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">train_dl</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">val_dl</span> <span class="o">=</span> <span class="kc">None</span>
 
-<div class="viewcode-block" id="LayoutExtraction.load_data"><a class="viewcode-back" href="../../../tensorflow.html#batukh.tensorflow.segmenter.LayoutExtraction.load_data">[docs]</a>    <span class="k">def</span> <span class="nf">load_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">train_path</span><span class="p">,</span> <span class="n">val_path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">load_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">train_path</span><span class="p">,</span> <span class="n">val_path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Loads Train and Validation datset.</span>
 
 <span class="sd">        Note:</span>
@@ -343,29 +390,43 @@
 <span class="sd">            label images should be of black background with  pixels corresponding to diffrent areas colored diffrently.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            train_path (str)        : path of the folder contaings images folder (containing orginal images) and labels folder (containing label images) for train dataset.</span>
-<span class="sd">            val_path (str,optional) : path of the folder contaings images folder (containing orginal images) and labels folder (containing label images) for validation dataset.</span>
+<span class="sd">            train_path (str)        : path of the folder contaings originals folder (containing originals images) and labels folder (containing label images) for train dataset.</span>
+<span class="sd">            val_path (str,optional) : path of the folder contaings originals folder (containing originals images) and labels folder (containing label images) for validation dataset.</span>
 <span class="sd">            &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">train_dl</span> <span class="o">=</span> <span class="n">SegmentationDataLoader</span><span class="p">(</span>
             <span class="n">train_path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">n_classes</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">val_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">val_dl</span> <span class="o">=</span> <span class="n">SegmentationDataLoader</span><span class="p">(</span>
-                <span class="n">val_path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">n_classes</span><span class="p">)</span></div>
+                <span class="n">val_path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">n_classes</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_epochs</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">criterion</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">class_weights</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">optimizer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.0001</span><span class="p">,</span> <span class="n">save_checkpoints</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">checkpoint_freq</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">checkpoint_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">max_to_keep</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">n_epochs</span><span class="p">,</span> <span class="n">train_dl</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">train_dl</span><span class="p">,</span> <span class="n">val_dl</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">val_dl</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="n">repeat</span><span class="p">,</span> <span class="n">criterion</span><span class="o">=</span><span class="n">criterion</span><span class="p">,</span> <span class="n">class_weights</span><span class="o">=</span><span class="n">class_weights</span><span class="p">,</span>
-                      <span class="n">optimizer</span><span class="o">=</span><span class="n">optimizer</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="n">learning_rate</span><span class="p">,</span> <span class="n">save_checkpoints</span><span class="o">=</span><span class="n">save_checkpoints</span><span class="p">,</span> <span class="n">checkpoint_freq</span><span class="o">=</span><span class="n">checkpoint_freq</span><span class="p">,</span> <span class="n">checkpoint_path</span><span class="o">=</span><span class="n">checkpoint_path</span><span class="p">,</span> <span class="n">max_to_keep</span><span class="o">=</span><span class="n">max_to_keep</span><span class="p">)</span></div>
+                      <span class="n">optimizer</span><span class="o">=</span><span class="n">optimizer</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="n">learning_rate</span><span class="p">,</span> <span class="n">save_checkpoints</span><span class="o">=</span><span class="n">save_checkpoints</span><span class="p">,</span> <span class="n">checkpoint_freq</span><span class="o">=</span><span class="n">checkpoint_freq</span><span class="p">,</span> <span class="n">checkpoint_path</span><span class="o">=</span><span class="n">checkpoint_path</span><span class="p">,</span> <span class="n">max_to_keep</span><span class="o">=</span><span class="n">max_to_keep</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="BaselineDetection"><a class="viewcode-back" href="../../../tensorflow.html#batukh.tensorflow.segmenter.BaselineDetection">[docs]</a><span class="k">class</span> <span class="nc">BaselineDetection</span><span class="p">(</span><span class="n">Train</span><span class="p">):</span>
-    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;This class is used to detect baseline.&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="BaselineDetecter"><a class="viewcode-back" href="../../../generated/batukh.tensorflow.segmenter.BaselineDetecter.html#batukh.tensorflow.segmenter.BaselineDetecter">[docs]</a><span class="k">class</span> <span class="nc">BaselineDetecter</span><span class="p">(</span><span class="n">Train</span><span class="p">):</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;This class is used to detect baseline.</span>
+
+<span class="sd">    Example</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        &gt;&gt;&gt; from batukh.tensorflow.segmenter import BaselineDetecter</span>
+<span class="sd">        &gt;&gt;&gt; baseline_detecter = BaselineDetecter()</span>
+<span class="sd">        &gt;&gt;&gt; baseline_detecter.load_data(&quot;/train_data/&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; baseline_detecter.train(1,weights=[1:700])</span>
+<span class="sd">        Initializing from scratch</span>
+<span class="sd">        Epoch: 1. Traininig: 100%|██████████| 70/70 [00:02&lt;00:00, 23.95it/s, loss=0.0708]</span>
+<span class="sd">        Model saved to /tf_ckpts/Fri Oct 16 08:23:13 2020/ckpt-14280</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">SegmentationModel</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">train_dl</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">val_dl</span> <span class="o">=</span> <span class="kc">None</span>
 
-<div class="viewcode-block" id="BaselineDetection.load_data"><a class="viewcode-back" href="../../../tensorflow.html#batukh.tensorflow.segmenter.BaselineDetection.load_data">[docs]</a>    <span class="k">def</span> <span class="nf">load_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">train_path</span><span class="p">,</span> <span class="n">val_path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="BaselineDetecter.load_data"><a class="viewcode-back" href="../../../generated/batukh.tensorflow.segmenter.BaselineDetecter.html#batukh.tensorflow.segmenter.BaselineDetecter.load_data">[docs]</a>    <span class="k">def</span> <span class="nf">load_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">train_path</span><span class="p">,</span> <span class="n">val_path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Loads Train and Validation datset.</span>
 
 <span class="sd">        Note:</span>
@@ -373,8 +434,8 @@
 <span class="sd">            label images should be of black background with  red lines of about 5px representing baselines.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            train_path (str)        : path of the folder contaings images folder (containing orginal images) and labels folder (containing label images) for train dataset.</span>
-<span class="sd">            val_path (str,optional) : path of the folder contaings images folder (containing orginal images) and labels folder (containing label images) for validation dataset.</span>
+<span class="sd">            train_path (str)        : path of the folder contaings originals folder (containing original images) and labels folder (containing label images) for train dataset.</span>
+<span class="sd">            val_path (str,optional) : path of the folder contaings originals folder (containing original images) and labels folder (containing label images) for validation dataset.</span>
 <span class="sd">            &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">train_dl</span> <span class="o">=</span> <span class="n">SegmentationDataLoader</span><span class="p">(</span>
             <span class="n">train_path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">n_classest</span><span class="p">)</span>

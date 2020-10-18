@@ -266,17 +266,32 @@
 
 
 <div class="viewcode-block" id="SegmentationDataLoader"><a class="viewcode-back" href="../../../../../tensorflow.utils.data.html#batukh.tensorflow.utils.data.dataloader.SegmentationDataLoader">[docs]</a><span class="k">class</span> <span class="nc">SegmentationDataLoader</span><span class="p">():</span>
-    <span class="sa">r</span><span class="sd">&quot;&quot;&quot; Loads the ``tf.data.Dataset`` for ``PageExtraction``,``ImageExtraction``,``LayoutExtraction`` and ``BaselineDetection`` classes.</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot; Loads the :class:`tensorflow.data.Dataset` for :class:`~batukh.tensorflow.segmenter.PageExtracter`, </span>
+<span class="sd">    :class:`~batukh.tensorflow.segmenter.ImageExtracter`, :class:`~batukh.tensorflow.segmenter.LayoutExtracter` and </span>
+<span class="sd">    :class:`~batukh.tensorflow.segmenter.BaselineDetecter` classes.</span>
+
+<span class="sd">    Example</span>
+
+<span class="sd">    .. code:: python</span>
+
+<span class="sd">        &gt;&gt;&gt; from batukh.tensorflow.utils.data.dataloader import SegmentationDataLoader</span>
+<span class="sd">        &gt;&gt;&gt; dl=SegmentationDataLoader(&quot;/data/&quot;,2)</span>
+<span class="sd">        &gt;&gt;&gt; for i,j in dl(batch_size=1):</span>
+<span class="sd">        ...     print(i.shape,j.shape)</span>
+<span class="sd">        ...     break</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        path (str)       : Path of the folder containing images folder and labels folder to be loaded in dataset.Folder names must be as mentioned.</span>
+<span class="sd">        path (str)       : Path of the folder containing originals folder and labels folder to be loaded in dataset.</span>
+<span class="sd">            Folder names must be as mentioned.</span>
 <span class="sd">        n_classes (int)  : number of classes in label images.</span>
+
+
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">n_classes</span><span class="p">):</span>
 
-        <span class="n">images_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">&quot;images&quot;</span><span class="p">)</span>
+        <span class="n">images_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">&quot;originals&quot;</span><span class="p">)</span>
         <span class="n">labels_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">&quot;labels&quot;</span><span class="p">)</span>
 
         <span class="n">img_paths</span><span class="p">,</span> <span class="n">label_paths</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_read_img_paths_and_labels</span><span class="p">(</span>
@@ -290,6 +305,7 @@
         <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">experimental</span><span class="o">.</span><span class="n">ignore_errors</span><span class="p">())</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">dataset</span> <span class="o">=</span> <span class="n">ds</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Dataset build....&quot;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_decode_and_resize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image_filename</span><span class="p">,</span> <span class="n">label_filename</span><span class="p">):</span>
         <span class="sa">r</span><span class="sd">&quot;&quot;&quot; Reads images. Reads and one hot encodes labels.</span>
@@ -299,8 +315,8 @@
 <span class="sd">            label_filename (str) : Path of label file.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            image (tf.Tensor)  : Image tensor.</span>
-<span class="sd">            label (tf.Tensor)  : Label tensor.</span>
+<span class="sd">            :class:`tensorflow.Tensor`  : Image tensor.</span>
+<span class="sd">            :class:`tensorflow.Tensor`  : Label tensor.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">image</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">image_filename</span><span class="p">)</span>
         <span class="n">image</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">decode_png</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">channels</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
@@ -318,12 +334,14 @@
         <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            batch_size (int,optional) : Batchsize of ``tf.data.datset``. Default value 1.</span>
-<span class="sd">            repeat (int, optional)    : Specifies the number of times the dataset can be iterated.Default value 1.</span>
+<span class="sd">            batch_size (int,optional) : Batchsize of :class:`~tf.data.datset`. </span>
+<span class="sd">                Default value 1.</span>
+<span class="sd">            repeat (int, optional)    : Specifies the number of times the dataset will  be iterated in one epoch.</span>
+<span class="sd">                Default value 1</span>
 
 
 <span class="sd">        Return:</span>
-<span class="sd">            ds (tf.data.dataset)  : Dataloader.</span>
+<span class="sd">            :class:`tensorflow.data.dataset`  : Dataloader.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">ds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataset</span>
         <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">batch</span><span class="p">(</span><span class="n">batch_size</span><span class="p">)</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">repeat</span><span class="p">)</span>
@@ -333,7 +351,7 @@
     <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return:</span>
-<span class="sd">            lenght of dataset</span>
+<span class="sd">            int:lenght of dataset</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span>
 
@@ -346,8 +364,8 @@
 <span class="sd">            labels_path (str) : Path of the folder of labels.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            img_path (list)   : List of image paths.</span>
-<span class="sd">            label_path (list) : List of label paths.</span>
+<span class="sd">            list  : List of image paths.</span>
+<span class="sd">            list : List of label paths.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">img_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">images_path</span><span class="p">)</span>
@@ -361,13 +379,24 @@
 
 
 <div class="viewcode-block" id="OCRDataLoader"><a class="viewcode-back" href="../../../../../tensorflow.utils.data.html#batukh.tensorflow.utils.data.dataloader.OCRDataLoader">[docs]</a><span class="k">class</span> <span class="nc">OCRDataLoader</span><span class="p">():</span>
-    <span class="sa">r</span><span class="sd">&quot;&quot;&quot; Loads the ``tf.data.Dataset`` for ``OCR`` class.</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot; Loads the :class:`~tensorflow.data.Dataset` for :class:`~batukh.tensorflow.ocr.OCR` class.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    .. code:: python</span>
+
+<span class="sd">        &gt;&gt;&gt; from batukh.tensorflow.utils.data.dataloader import OCRDataLoader</span>
+<span class="sd">        &gt;&gt;&gt; dl=OCRDataLoader(&quot;/data/&quot;,64)</span>
+<span class="sd">        &gt;&gt;&gt; for i,j in dl(1,1):</span>
+<span class="sd">        ...     print(i.shape,j.values)</span>
+<span class="sd">        ...     break</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        path (strs)        :  Path of  folder containing images folder,labels.txt and table.txt to be loaded in dataset.Name of folders and files should be same as mentioned.</span>
+<span class="sd">        path (str)        :  Path of  folder containing images folder,labels.txt and table.txt to be loaded in dataset.Name of folders and files should be same as mentioned.</span>
+<span class="sd">        height (int,optional)      : Specifies the height to which all images will be resized keeping same aspect ratio.</span>
+<span class="sd">            Default: :math:`64`</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">height</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">64</span><span class="p">):</span>
 
         <span class="n">images_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">&quot;images&quot;</span><span class="p">)</span>
         <span class="n">labels_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">&quot;labels.txt&quot;</span><span class="p">)</span>
@@ -393,6 +422,7 @@
         <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">experimental</span><span class="o">.</span><span class="n">ignore_errors</span><span class="p">())</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">dataset</span> <span class="o">=</span> <span class="n">ds</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Dataset build....&quot;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_decode_and_resize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">label</span><span class="p">):</span>
         <span class="sa">r</span><span class="sd">&quot;&quot;&quot; Reads image.</span>
@@ -402,8 +432,8 @@
 <span class="sd">            label    (str) : Label of  image.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            image  (tf.Tensor) : Image Tensor</span>
-<span class="sd">            labels (tf.Tensor):  Label tensor</span>
+<span class="sd">            :class:`tensorflow.Tensor` : Image Tensor</span>
+<span class="sd">            :class:`tensorflow.tf.Tensor` :  Label tensor</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">image</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
@@ -417,12 +447,12 @@
         <span class="sa">r</span><span class="sd">&quot;&quot;&quot; Maps chars in label to integers  according to table.txt</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            image (tf.tensor) : Image tensor</span>
+<span class="sd">            image ( :class:`tensorflow.tensor`) : Image tensor</span>
 <span class="sd">            label  (str)      : label</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            image (tf.Tensor) : Image tensor. </span>
-<span class="sd">            label (tf.Tensor) : Label sparse tensor.</span>
+<span class="sd">            :class:`tensorflow.Tensor` : Image tensor. </span>
+<span class="sd">            :class:`tensorflow.Tensor` : Label sparse tensor.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">chars</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">strings</span><span class="o">.</span><span class="n">unicode_split</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">input_encoding</span><span class="o">=</span><span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span>
         <span class="n">mapped_label</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">ragged</span><span class="o">.</span><span class="n">map_flat_values</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">lookup</span><span class="p">,</span> <span class="n">chars</span><span class="p">)</span>
@@ -431,12 +461,22 @@
         <span class="k">return</span> <span class="n">image</span><span class="p">,</span> <span class="n">label</span>
 
     <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return:</span>
+<span class="sd">            int:lenght of dataset</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span>
 
-    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
         <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            batch_size (int,optional): specifies the batch size.</span>
+<span class="sd">                Default: :math:`1`</span>
+<span class="sd">            repeat (int,optional): Specifes the of time :class:`tensorflow.data.dataset` will be itterated in one epoch.</span>
+<span class="sd">                Default: :math:`1`</span>
 <span class="sd">        Returns:</span>
-<span class="sd">            ds (tf.data.dataset) : Dataloader.</span>
+<span class="sd">            :class:`tensorflow.data.dataset` : Dataloader.</span>
 <span class="sd">            &quot;&quot;&quot;</span>
         <span class="n">ds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataset</span>
         <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">batch</span><span class="p">(</span><span class="n">batch_size</span><span class="p">)</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
@@ -451,8 +491,8 @@
 <span class="sd">            imgages_path (str)  : Path of image folder.</span>
 <span class="sd">            labels_path (str)  : path of label.txt</span>
 <span class="sd">        Returns:</span>
-<span class="sd">            img_path (list)   : List of  images filenames.</span>
-<span class="sd">            label (list)      : List of labels.</span>
+<span class="sd">            list   : List of  images filenames.</span>
+<span class="sd">            list      : List of labels.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">img_path_</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">images_path</span><span class="p">)</span>
         <span class="n">img_path</span> <span class="o">=</span> <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">images_path</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">img_path_</span><span class="p">]</span>
@@ -466,15 +506,51 @@
             <span class="n">labels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">labels_</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">])])</span>
         <span class="k">return</span> <span class="n">img_path</span><span class="p">,</span> <span class="n">labels</span>
 
-    <span class="k">def</span> <span class="nf">map2string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">):</span>
+<div class="viewcode-block" id="OCRDataLoader.map2string"><a class="viewcode-back" href="../../../../../tensorflow.utils.data.html#batukh.tensorflow.utils.data.dataloader.OCRDataLoader.map2string">[docs]</a>    <span class="k">def</span> <span class="nf">map2string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">):</span>
+        <span class="c1"># todo : shift theese methods to ocr</span>
+        <span class="sd">&quot;&quot;&quot;Maps tensor to stings as per :class:`~self.inv_table`.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            inputs (:class:`tensorflow.Tensor`) : Input tensor.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list : list of strings.&quot;&quot;&quot;</span>
         <span class="n">strings</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">inputs</span><span class="p">:</span>
             <span class="n">text</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">inv_table</span><span class="p">[</span><span class="n">char_index</span><span class="p">]</span> <span class="k">for</span> <span class="n">char_index</span> <span class="ow">in</span> <span class="n">i</span>
                     <span class="k">if</span> <span class="n">char_index</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">blank_index</span><span class="p">]</span>
             <span class="n">strings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">text</span><span class="p">))</span>
-        <span class="k">return</span> <span class="n">strings</span>
+        <span class="k">return</span> <span class="n">strings</span></div>
 
-    <span class="k">def</span> <span class="nf">decode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">from_pred</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;beam_search&#39;</span><span class="p">,</span> <span class="n">merge_repeated</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="OCRDataLoader.decode"><a class="viewcode-back" href="../../../../../tensorflow.utils.data.html#batukh.tensorflow.utils.data.dataloader.OCRDataLoader.decode">[docs]</a>    <span class="k">def</span> <span class="nf">decode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">from_pred</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;gready&#39;</span><span class="p">,</span> <span class="n">merge_repeated</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Decodes the model logits using ctc decoder.</span>
+
+<span class="sd">        Example</span>
+
+<span class="sd">        .. code:: python</span>
+
+<span class="sd">            &gt;&gt;&gt; from batukh.tensorflow.ocr import OCR</span>
+<span class="sd">            &gt;&gt;&gt; import tensorflow as tf</span>
+<span class="sd">            &gt;&gt;&gt; m = OCR(177)</span>
+<span class="sd">            &gt;&gt;&gt; m.load_model(&quot;/saved_model/&quot;)</span>
+<span class="sd">            &gt;&gt;&gt; x = tf.io.read_file(&quot;/image.png&quot;)</span>
+<span class="sd">            &gt;&gt;&gt; x = tf.io.decode_png(x,channels=1)</span>
+<span class="sd">            &gt;&gt;&gt; y = m.predict(x)</span>
+<span class="sd">            &gt;&gt;&gt; pred = m.train_dl.decode(y)</span>
+
+
+
+<span class="sd">        Args:</span>
+<span class="sd">            inputs ( :class:`tensorflow.Tensor`) : Input tensor.</span>
+<span class="sd">            from_pred (bol,optional): ``True`` if input is return of ( :class:`~batukh.tensorflow.ocr.OCR.predict`. ``False`` if input is a :class:`tensorflow.SparseTensor`.</span>
+<span class="sd">                Default: ``True``</span>
+<span class="sd">            method (str,optional)   :if  ``&#39;gready&#39;``  :class:`tensorflow.nn.ctc_greedy_decoder` used for decoding.if  ``&#39;beam_search&#39;``  :class:`tensorflow.nn.ctc_beam_search_decoder` used.</span>
+<span class="sd">                Default: `` &#39;greedy&#39; ``</span>
+<span class="sd">            merge_repeated (bol,optional): Specifes if similar charsters will be merged.</span>
+<span class="sd">                Default: ``True``</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list: decoded list of strings  &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">merge_repeated</span> <span class="o">=</span> <span class="n">merge_repeated</span>
         <span class="k">if</span> <span class="n">from_pred</span><span class="p">:</span>
             <span class="n">logit_length</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">fill</span><span class="p">([</span><span class="n">tf</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">inputs</span><span class="p">)[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">tf</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">inputs</span><span class="p">)[</span><span class="mi">1</span><span class="p">])</span>
@@ -491,7 +567,7 @@
         <span class="n">decoded</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">sparse</span><span class="o">.</span><span class="n">to_dense</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span>
                                      <span class="n">default_value</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">blank_index</span><span class="p">)</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
         <span class="n">decoded</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">map2string</span><span class="p">(</span><span class="n">decoded</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">decoded</span></div>
+        <span class="k">return</span> <span class="n">decoded</span></div></div>
 </pre></div>
 
               </article>

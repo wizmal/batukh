@@ -35,8 +35,7 @@
   <link rel="stylesheet" href="_static/css/custom.css" type="text/css" />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato" type="text/css" />
   <link rel="index" title="Index" href="genindex.html" />
-  <link rel="search" title="Search" href="search.html" />
-  <link rel="prev" title="tensorflow.utils.data" href="tensorflow.utils.data.html" /> 
+  <link rel="search" title="Search" href="search.html" /> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -186,8 +185,8 @@
         
         
         <p class="caption"><span class="caption-text">Contents:</span></p>
-<ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="batukh.html">batukh</a></li>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="batukh.html">batukh</a></li>
 </ul>
 
         
@@ -228,12 +227,6 @@
       </li>
 
         
-          <li><a href="batukh.html">batukh</a> &gt;</li>
-        
-          <li><a href="tensorflow.html">tensorflow</a> &gt;</li>
-        
-          <li><a href="tensorflow.utils.html">tensorflow.utils</a> &gt;</li>
-        
       <li>tensorflow.utils.models</li>
     
     
@@ -273,21 +266,21 @@
 <span class="target" id="module-batukh.tensorflow.utils.models.ocr_model"></span><dl class="class">
 <dt id="batukh.tensorflow.utils.models.ocr_model.ConvBlock">
 <em class="property">class </em><code class="sig-prename descclassname">batukh.tensorflow.utils.models.ocr_model.</code><code class="sig-name descname">ConvBlock</code><a class="reference internal" href="_modules/batukh/tensorflow/utils/models/ocr_model.html#ConvBlock"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#batukh.tensorflow.utils.models.ocr_model.ConvBlock" title="Permalink to this definition">¶</a></dt>
-<dd><p>This block consists of five <code class="docutils literal notranslate"><span class="pre">layers.Conv2D</span></code> convolution layers and a <code class="docutils literal notranslate"><span class="pre">layers.MaxPool2D</span></code> maxpool layer.
-Convolution layers is of  kernel size 3,same padding and relu activation, and filters 8,16,32,64 and 128 respectively.
-Maxpool layer is of pool size (2,2), strides (2,2) ans same padding.</p>
+<dd><p>This block consists of five <code class="xref py py-class docutils literal notranslate"><span class="pre">tensorflow.keras.layers.Conv2D</span></code> convolution layers and a <code class="xref py py-class docutils literal notranslate"><span class="pre">tensorflow.keras.layers.MaxPool2D</span></code> maxpool layer.
+Convolution layers is of  kernel size  <span class="math notranslate nohighlight">\(3\)</span> ,same padding and relu activation, and filters <span class="math notranslate nohighlight">\(8 , 16 , 32 , 64\)</span> and <span class="math notranslate nohighlight">\(128\)</span> respectively.
+Maxpool layer is of pool size <span class="math notranslate nohighlight">\((2 , 2)\)</span>, strides <span class="math notranslate nohighlight">\(( 2 , 2)\)</span> ans same padding.</p>
 <dl class="method">
 <dt id="batukh.tensorflow.utils.models.ocr_model.ConvBlock.call">
 <code class="sig-name descname">call</code><span class="sig-paren">(</span><em class="sig-param">input_tensor</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/batukh/tensorflow/utils/models/ocr_model.html#ConvBlock.call"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#batukh.tensorflow.utils.models.ocr_model.ConvBlock.call" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>input_tensor</strong> (<em>tf.Tensor</em>) – Input image tensor.</p>
+<dd class="field-odd"><p><strong>input_tensor</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">tensorflow.Tensor</span></code>) – Input image tensor.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>Output image tensor.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>x (tf.Tensor)</p>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">tensorflow.Tensor</span></code></p>
 </dd>
 </dl>
 </dd></dl>
@@ -297,19 +290,19 @@ Maxpool layer is of pool size (2,2), strides (2,2) ans same padding.</p>
 <dl class="class">
 <dt id="batukh.tensorflow.utils.models.ocr_model.BLSTM">
 <em class="property">class </em><code class="sig-prename descclassname">batukh.tensorflow.utils.models.ocr_model.</code><code class="sig-name descname">BLSTM</code><a class="reference internal" href="_modules/batukh/tensorflow/utils/models/ocr_model.html#BLSTM"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#batukh.tensorflow.utils.models.ocr_model.BLSTM" title="Permalink to this definition">¶</a></dt>
-<dd><p>Consists of a <code class="docutils literal notranslate"><span class="pre">layers.Bidirectional</span></code> layer with 256 units.</p>
+<dd><p>Consists of a two <code class="xref py py-class docutils literal notranslate"><span class="pre">tensorflow.keras.layers.Bidirectional</span></code> layer with <span class="math notranslate nohighlight">\(256\)</span> units.</p>
 <dl class="method">
 <dt id="batukh.tensorflow.utils.models.ocr_model.BLSTM.call">
 <code class="sig-name descname">call</code><span class="sig-paren">(</span><em class="sig-param">input_tensor</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/batukh/tensorflow/utils/models/ocr_model.html#BLSTM.call"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#batukh.tensorflow.utils.models.ocr_model.BLSTM.call" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>input_tensor</strong> (<em>tf.Tensor</em>) – Input tensor.</p>
+<dd class="field-odd"><p><strong>input_tensor</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">tensorflow.Tensor</span></code>) – Input tensor.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>Output tensor.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>x (tf.Tensor)</p>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">tensorflow.Tensor</span></code></p>
 </dd>
 </dl>
 </dd></dl>
@@ -319,10 +312,10 @@ Maxpool layer is of pool size (2,2), strides (2,2) ans same padding.</p>
 <dl class="class">
 <dt id="batukh.tensorflow.utils.models.ocr_model.OCRModel">
 <em class="property">class </em><code class="sig-prename descclassname">batukh.tensorflow.utils.models.ocr_model.</code><code class="sig-name descname">OCRModel</code><span class="sig-paren">(</span><em class="sig-param">n_classes</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/batukh/tensorflow/utils/models/ocr_model.html#OCRModel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#batukh.tensorflow.utils.models.ocr_model.OCRModel" title="Permalink to this definition">¶</a></dt>
-<dd><p>Consistis of <code class="docutils literal notranslate"><span class="pre">ConvBlock</span></code> block,``BLSTM`` block and <code class="docutils literal notranslate"><span class="pre">layers.dense</span></code> layer.</p>
+<dd><p>Consistis of <a class="reference internal" href="#batukh.tensorflow.utils.models.ocr_model.ConvBlock" title="batukh.tensorflow.utils.models.ocr_model.ConvBlock"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConvBlock</span></code></a> block, <a class="reference internal" href="#batukh.tensorflow.utils.models.ocr_model.BLSTM" title="batukh.tensorflow.utils.models.ocr_model.BLSTM"><code class="xref py py-class docutils literal notranslate"><span class="pre">BLSTM</span></code></a> block and <code class="xref py py-class docutils literal notranslate"><span class="pre">tensorflow.keras.layers.dense</span></code> layer.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>n_classes</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – Specifies number of output classes in <code class="docutils literal notranslate"><span class="pre">layers.dense</span></code> layer.</p>
+<dd class="field-odd"><p><strong>n_classes</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – Specifies number of output classes in <code class="xref py py-class docutils literal notranslate"><span class="pre">tensorflow.keras.layers.dense</span></code> layer.</p>
 </dd>
 </dl>
 <dl class="method">
@@ -330,13 +323,13 @@ Maxpool layer is of pool size (2,2), strides (2,2) ans same padding.</p>
 <code class="sig-name descname">call</code><span class="sig-paren">(</span><em class="sig-param">input_tensor</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/batukh/tensorflow/utils/models/ocr_model.html#OCRModel.call"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#batukh.tensorflow.utils.models.ocr_model.OCRModel.call" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>input_tensor</strong> (<em>tf.Tensor</em>) – Input image tensor.</p>
+<dd class="field-odd"><p><strong>input_tensor</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">tensorflow.Tensor</span></code>) – Input image tensor.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>Output Tensor.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>x (tf.Tensor)</p>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">tensorflow.Tensor</span></code></p>
 </dd>
 </dl>
 </dd></dl>
@@ -346,15 +339,19 @@ Maxpool layer is of pool size (2,2), strides (2,2) ans same padding.</p>
 <span class="target" id="module-batukh.tensorflow.utils.models.segmentation_model"></span><dl class="class">
 <dt id="batukh.tensorflow.utils.models.segmentation_model.BottleneckUnit">
 <em class="property">class </em><code class="sig-prename descclassname">batukh.tensorflow.utils.models.segmentation_model.</code><code class="sig-name descname">BottleneckUnit</code><span class="sig-paren">(</span><em class="sig-param">out_filters</em>, <em class="sig-param">in_filters</em>, <em class="sig-param">stride=(1</em>, <em class="sig-param">1)</em>, <em class="sig-param">connect=True</em>, <em class="sig-param">is_first=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/batukh/tensorflow/utils/models/segmentation_model.html#BottleneckUnit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#batukh.tensorflow.utils.models.segmentation_model.BottleneckUnit" title="Permalink to this definition">¶</a></dt>
-<dd><p>Consists of three <code class="docutils literal notranslate"><span class="pre">layers.Conv2D</span></code> convolution layers with same padding,relu activation and kernel size 1,3,1 respectively.</p>
+<dd><p>Consists of <span class="math notranslate nohighlight">\(3\)</span> <code class="xref py py-class docutils literal notranslate"><span class="pre">tensorflow.keras.layers.Conv2D</span></code> convolution layers with same padding,
+relu activation and kernel size <span class="math notranslate nohighlight">\(1,3,1\)</span> respectively.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>out_filters</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – Specifies filters of third convulution layer.</p></li>
 <li><p><strong>in_filters</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – Specifies fliters of first and second convulution layer.</p></li>
-<li><p><strong>strides</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.9)"><em>tuple</em></a><em>,</em><em>optional</em>) – Specifies strides of convulution layers.</p></li>
-<li><p><strong>connect</strong> (<em>bolean</em><em>,</em><em>optional</em>) – Specifies if the layer will be used for horizantal connection in upscaler.default <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
-<li><p><strong>is_first</strong> (<em>bolean</em><em>,</em><em>optional</em>) – Specifies if the bottleneck unit is first of the bollteneck block.default <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+<li><p><strong>strides</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.9)"><em>tuple</em></a><em>,</em><em>optional</em>) – Specifies strides of convulution layers.
+Default : <span class="math notranslate nohighlight">\((1,1)\)</span></p></li>
+<li><p><strong>connect</strong> (<em>bol</em><em>,</em><em>optional</em>) – Specifies if the layer will be used for horizantal connection in upscaler.
+Default :<code class="docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
+<li><p><strong>is_first</strong> (<em>bol</em><em>,</em><em>optional</em>) – Specifies if the bottleneck unit is first of the bollteneck block.
+Default :<code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
 </ul>
 </dd>
 </dl>
@@ -363,13 +360,13 @@ Maxpool layer is of pool size (2,2), strides (2,2) ans same padding.</p>
 <code class="sig-name descname">call</code><span class="sig-paren">(</span><em class="sig-param">input_tensor</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/batukh/tensorflow/utils/models/segmentation_model.html#BottleneckUnit.call"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#batukh.tensorflow.utils.models.segmentation_model.BottleneckUnit.call" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>input_tensor</strong> (<em>tf.Tensor</em>) – Input image tensor.</p>
+<dd class="field-odd"><p><strong>input_tensor</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">tensorflow.Tensor</span></code>) – Input image tensor.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>Output image tensor.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>x (tf.Tensor)</p>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">tensorflow.Tensor</span></code></p>
 </dd>
 </dl>
 </dd></dl>
@@ -379,20 +376,22 @@ Maxpool layer is of pool size (2,2), strides (2,2) ans same padding.</p>
 <dl class="class">
 <dt id="batukh.tensorflow.utils.models.segmentation_model.ResnetLayer">
 <em class="property">class </em><code class="sig-prename descclassname">batukh.tensorflow.utils.models.segmentation_model.</code><code class="sig-name descname">ResnetLayer</code><a class="reference internal" href="_modules/batukh/tensorflow/utils/models/segmentation_model.html#ResnetLayer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#batukh.tensorflow.utils.models.segmentation_model.ResnetLayer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Consists of three <code class="docutils literal notranslate"><span class="pre">layers.conv2D</span></code> convolution layer,``layers.MaxPool2D`` maxpoll layer and 16 <code class="docutils literal notranslate"><span class="pre">BottleNeckUnit</span></code> units.</p>
+<dd><p>Consists of three <code class="xref py py-class docutils literal notranslate"><span class="pre">tensorflow.keras.layers.conv2D</span></code> convolution layer,
+<code class="xref py py-class docutils literal notranslate"><span class="pre">tensorflow.keras.layers.MaxPool2D</span></code> maxpoll layer and <span class="math notranslate nohighlight">\(16\)</span>
+<a class="reference internal" href="#batukh.tensorflow.utils.models.segmentation_model.BottleneckUnit" title="batukh.tensorflow.utils.models.segmentation_model.BottleneckUnit"><code class="xref py py-class docutils literal notranslate"><span class="pre">BottleneckUnit</span></code></a> units.</p>
 <dl class="method">
 <dt id="batukh.tensorflow.utils.models.segmentation_model.ResnetLayer.call">
 <code class="sig-name descname">call</code><span class="sig-paren">(</span><em class="sig-param">input_tensor</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/batukh/tensorflow/utils/models/segmentation_model.html#ResnetLayer.call"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#batukh.tensorflow.utils.models.segmentation_model.ResnetLayer.call" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>input_tensor</strong> (<em>tf.Tensor</em>) – Input image tensor.</p>
+<dd class="field-odd"><p><strong>input_tensor</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">tensorflow.Tensor</span></code>) – Input image tensor.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>Output image tensor.
-concat_tensors (list) : List of image tensor used in horizantal connections of upscaller.</p>
+list : List of image tensor used in horizantal connections of upscaller.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>x (tf.Tensor)</p>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">tensorflow.Tensor</span></code></p>
 </dd>
 </dl>
 </dd></dl>
@@ -402,7 +401,8 @@ concat_tensors (list) : List of image tensor used in horizantal connections of u
 <dl class="class">
 <dt id="batukh.tensorflow.utils.models.segmentation_model.UpScalerUnit">
 <em class="property">class </em><code class="sig-prename descclassname">batukh.tensorflow.utils.models.segmentation_model.</code><code class="sig-name descname">UpScalerUnit</code><span class="sig-paren">(</span><em class="sig-param">in_filters</em>, <em class="sig-param">out_filters</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/batukh/tensorflow/utils/models/segmentation_model.html#UpScalerUnit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#batukh.tensorflow.utils.models.segmentation_model.UpScalerUnit" title="Permalink to this definition">¶</a></dt>
-<dd><p>Consists of <code class="docutils literal notranslate"><span class="pre">layers.Conv2DT</span></code> convolution transpose layer and <code class="docutils literal notranslate"><span class="pre">layers.Conv2D</span></code> convolution layer.</p>
+<dd><p>Consists of <code class="xref py py-class docutils literal notranslate"><span class="pre">layers.Conv2DT</span></code> convolution transpose layer and
+<code class="xref py py-class docutils literal notranslate"><span class="pre">tensorflow.keras.layers.Conv2D</span></code> convolution layer.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -417,15 +417,15 @@ concat_tensors (list) : List of image tensor used in horizantal connections of u
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>input_tensor</strong> (<em>tf.Tensor</em>) – Input image tensor.</p></li>
-<li><p><strong>concat_tensor</strong> (<em>tf.Tensor</em>) – Image tensor used to concat with the input tensor.</p></li>
+<li><p><strong>input_tensor</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">tensorflow.Tensor</span></code>) – Input image tensor.</p></li>
+<li><p><strong>concat_tensor</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">tensorflow.Tensor</span></code>) – Image tensor used to concat with the input tensor.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>Output image tensor.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>x (tf.Tensor)</p>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">tensorflow.Tensor</span></code></p>
 </dd>
 </dl>
 </dd></dl>
@@ -435,7 +435,8 @@ concat_tensors (list) : List of image tensor used in horizantal connections of u
 <dl class="class">
 <dt id="batukh.tensorflow.utils.models.segmentation_model.UpScaler">
 <em class="property">class </em><code class="sig-prename descclassname">batukh.tensorflow.utils.models.segmentation_model.</code><code class="sig-name descname">UpScaler</code><span class="sig-paren">(</span><em class="sig-param">n_classes</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/batukh/tensorflow/utils/models/segmentation_model.html#UpScaler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#batukh.tensorflow.utils.models.segmentation_model.UpScaler" title="Permalink to this definition">¶</a></dt>
-<dd><p>Consists of <code class="docutils literal notranslate"><span class="pre">layers.Conv2D</span></code> convolution layer and five <code class="docutils literal notranslate"><span class="pre">UpScalerUnits</span></code>.</p>
+<dd><p>Consists of <code class="xref py py-class docutils literal notranslate"><span class="pre">tensorflow.keras.layers.Conv2D</span></code> convolution layer and
+five <a class="reference internal" href="#batukh.tensorflow.utils.models.segmentation_model.UpScalerUnit" title="batukh.tensorflow.utils.models.segmentation_model.UpScalerUnit"><code class="xref py py-class docutils literal notranslate"><span class="pre">UpScalerUnit</span></code></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>n_classes</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – Specifies the number of classes or channels in output image.</p>
@@ -447,7 +448,7 @@ concat_tensors (list) : List of image tensor used in horizantal connections of u
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>input_tensor</strong> (<em>tf.Tensor</em>) – Input image tensor.</p></li>
+<li><p><strong>input_tensor</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">tensorflow.Tensor</span></code>) – Input image tensor.</p></li>
 <li><p><strong>concat_tensors</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.9)"><em>list</em></a>) – List of concat tensors used for horizantal connections.</p></li>
 </ul>
 </dd>
@@ -455,7 +456,7 @@ concat_tensors (list) : List of image tensor used in horizantal connections of u
 <dd class="field-even"><p>Output image tensor with channels equal to n_classes.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>x (tf.Tssssensor)</p>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">tensorflow.Tensor</span></code></p>
 </dd>
 </dl>
 </dd></dl>
@@ -464,8 +465,9 @@ concat_tensors (list) : List of image tensor used in horizantal connections of u
 
 <dl class="class">
 <dt id="batukh.tensorflow.utils.models.segmentation_model.SegmentationModel">
-<em class="property">class </em><code class="sig-prename descclassname">batukh.tensorflow.utils.models.segmentation_model.</code><code class="sig-name descname">SegmentationModel</code><span class="sig-paren">(</span><em class="sig-param">n_classes=2</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/batukh/tensorflow/utils/models/segmentation_model.html#SegmentationModel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#batukh.tensorflow.utils.models.segmentation_model.SegmentationModel" title="Permalink to this definition">¶</a></dt>
-<dd><p>Consists of <code class="docutils literal notranslate"><span class="pre">ResnetLayer</span></code> and <code class="docutils literal notranslate"><span class="pre">UpScaller</span></code>.</p>
+<em class="property">class </em><code class="sig-prename descclassname">batukh.tensorflow.utils.models.segmentation_model.</code><code class="sig-name descname">SegmentationModel</code><span class="sig-paren">(</span><em class="sig-param">n_classes</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/batukh/tensorflow/utils/models/segmentation_model.html#SegmentationModel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#batukh.tensorflow.utils.models.segmentation_model.SegmentationModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Consists of <a class="reference internal" href="#batukh.tensorflow.utils.models.segmentation_model.ResnetLayer" title="batukh.tensorflow.utils.models.segmentation_model.ResnetLayer"><code class="xref py py-class docutils literal notranslate"><span class="pre">ResnetLayer</span></code></a> and
+<a class="reference internal" href="#batukh.tensorflow.utils.models.segmentation_model.UpScaler" title="batukh.tensorflow.utils.models.segmentation_model.UpScaler"><code class="xref py py-class docutils literal notranslate"><span class="pre">UpScaler</span></code></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>n_classes</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – Specifies number of classes or channels in output image tensor.</p>
@@ -476,13 +478,13 @@ concat_tensors (list) : List of image tensor used in horizantal connections of u
 <code class="sig-name descname">call</code><span class="sig-paren">(</span><em class="sig-param">input_tensor</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/batukh/tensorflow/utils/models/segmentation_model.html#SegmentationModel.call"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#batukh.tensorflow.utils.models.segmentation_model.SegmentationModel.call" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>input_tensor</strong> (<em>tf.Tensor</em>) – Input image tensor.</p>
+<dd class="field-odd"><p><strong>input_tensor</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">tensorflow.Tensor</span></code>) – Input image tensor.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>Output image tensor with channels equal to n_classes.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>x (tf.Tensor)</p>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">tensorflow.Tensor</span></code></p>
 </dd>
 </dl>
 </dd></dl>
@@ -496,13 +498,6 @@ concat_tensors (list) : List of image tensor used in horizantal connections of u
               
             </div>
             <footer>
-  
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-      
-        <a href="tensorflow.utils.data.html" class="btn btn-neutral" title="tensorflow.utils.data" accesskey="p" rel="prev"><img src="_static/images/chevron-right-orange.svg" class="previous-page"> Previous</a>
-      
-    </div>
   
 
   

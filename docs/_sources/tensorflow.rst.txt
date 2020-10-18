@@ -1,15 +1,39 @@
+.. role:: hidden
+    :class: hidden-section
+
 tensorflow
 ===============================
 
-.. toctree::
-   :maxdepth: 1
+This is the `Tensorflow <https://tensorflow.org>`_ implementation of the document 
+recognizer.
 
-   tensorflow.utils
+It has two basic modules:
 
-.. automodule:: batukh.tensorflow.segmenter
-   :members:
+.. contents::
+    :depth: 1
+    :local:
+    :backlinks: top
 
-.. automodule:: batukh.tensorflow.ocr
-   :members:
+.. currentmodule:: batukh.tensorflow
 
 
+segmenter
+----------
+
+.. autosummary::
+    :toctree: generated
+    :nosignatures:
+
+    ~segmenter.PageExtracter
+    ~segmenter.ImageExtracter
+    ~segmenter.BaselineDetecter
+
+
+ocr
+---
+
+.. autosummary::
+    :toctree: generated
+    :nosignatures:
+
+    ~ocr.OCR

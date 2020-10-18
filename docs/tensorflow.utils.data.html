@@ -35,9 +35,7 @@
   <link rel="stylesheet" href="_static/css/custom.css" type="text/css" />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato" type="text/css" />
   <link rel="index" title="Index" href="genindex.html" />
-  <link rel="search" title="Search" href="search.html" />
-  <link rel="next" title="tensorflow.utils.models" href="tensorflow.utils.models.html" />
-  <link rel="prev" title="tensorflow.utils" href="tensorflow.utils.html" /> 
+  <link rel="search" title="Search" href="search.html" /> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -187,8 +185,8 @@
         
         
         <p class="caption"><span class="caption-text">Contents:</span></p>
-<ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="batukh.html">batukh</a></li>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="batukh.html">batukh</a></li>
 </ul>
 
         
@@ -229,12 +227,6 @@
       </li>
 
         
-          <li><a href="batukh.html">batukh</a> &gt;</li>
-        
-          <li><a href="tensorflow.html">tensorflow</a> &gt;</li>
-        
-          <li><a href="tensorflow.utils.html">tensorflow.utils</a> &gt;</li>
-        
       <li>tensorflow.utils.data</li>
     
     
@@ -274,11 +266,22 @@
 <span class="target" id="module-batukh.tensorflow.utils.data.augmentation"></span><span class="target" id="module-batukh.tensorflow.utils.data.dataloader"></span><dl class="class">
 <dt id="batukh.tensorflow.utils.data.dataloader.SegmentationDataLoader">
 <em class="property">class </em><code class="sig-prename descclassname">batukh.tensorflow.utils.data.dataloader.</code><code class="sig-name descname">SegmentationDataLoader</code><span class="sig-paren">(</span><em class="sig-param">path</em>, <em class="sig-param">n_classes</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/batukh/tensorflow/utils/data/dataloader.html#SegmentationDataLoader"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#batukh.tensorflow.utils.data.dataloader.SegmentationDataLoader" title="Permalink to this definition">¶</a></dt>
-<dd><p>Loads the <code class="docutils literal notranslate"><span class="pre">tf.data.Dataset</span></code> for <code class="docutils literal notranslate"><span class="pre">PageExtraction</span></code>,``ImageExtraction``,``LayoutExtraction`` and <code class="docutils literal notranslate"><span class="pre">BaselineDetection</span></code> classes.</p>
+<dd><p>Loads the <code class="xref py py-class docutils literal notranslate"><span class="pre">tensorflow.data.Dataset</span></code> for <a class="reference internal" href="generated/batukh.tensorflow.segmenter.PageExtracter.html#batukh.tensorflow.segmenter.PageExtracter" title="batukh.tensorflow.segmenter.PageExtracter"><code class="xref py py-class docutils literal notranslate"><span class="pre">PageExtracter</span></code></a>,
+<a class="reference internal" href="generated/batukh.tensorflow.segmenter.ImageExtracter.html#batukh.tensorflow.segmenter.ImageExtracter" title="batukh.tensorflow.segmenter.ImageExtracter"><code class="xref py py-class docutils literal notranslate"><span class="pre">ImageExtracter</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">LayoutExtracter</span></code> and
+<a class="reference internal" href="generated/batukh.tensorflow.segmenter.BaselineDetecter.html#batukh.tensorflow.segmenter.BaselineDetecter" title="batukh.tensorflow.segmenter.BaselineDetecter"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaselineDetecter</span></code></a> classes.</p>
+<p>Example</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">batukh.tensorflow.utils.data.dataloader</span> <span class="kn">import</span> <span class="n">SegmentationDataLoader</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dl</span><span class="o">=</span><span class="n">SegmentationDataLoader</span><span class="p">(</span><span class="s2">&quot;/data/&quot;</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">j</span> <span class="ow">in</span> <span class="n">dl</span><span class="p">(</span><span class="n">batch_size</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span><span class="n">j</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="k">break</span>
+</pre></div>
+</div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Path of the folder containing images folder and labels folder to be loaded in dataset.Folder names must be as mentioned.</p></li>
+<li><p><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Path of the folder containing originals folder and labels folder to be loaded in dataset.
+Folder names must be as mentioned.</p></li>
 <li><p><strong>n_classes</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – number of classes in label images.</p></li>
 </ul>
 </dd>
@@ -287,13 +290,79 @@
 
 <dl class="class">
 <dt id="batukh.tensorflow.utils.data.dataloader.OCRDataLoader">
-<em class="property">class </em><code class="sig-prename descclassname">batukh.tensorflow.utils.data.dataloader.</code><code class="sig-name descname">OCRDataLoader</code><span class="sig-paren">(</span><em class="sig-param">path</em>, <em class="sig-param">height</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/batukh/tensorflow/utils/data/dataloader.html#OCRDataLoader"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#batukh.tensorflow.utils.data.dataloader.OCRDataLoader" title="Permalink to this definition">¶</a></dt>
-<dd><p>Loads the <code class="docutils literal notranslate"><span class="pre">tf.data.Dataset</span></code> for <code class="docutils literal notranslate"><span class="pre">OCR</span></code> class.</p>
+<em class="property">class </em><code class="sig-prename descclassname">batukh.tensorflow.utils.data.dataloader.</code><code class="sig-name descname">OCRDataLoader</code><span class="sig-paren">(</span><em class="sig-param">path</em>, <em class="sig-param">height=64</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/batukh/tensorflow/utils/data/dataloader.html#OCRDataLoader"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#batukh.tensorflow.utils.data.dataloader.OCRDataLoader" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads the <code class="xref py py-class docutils literal notranslate"><span class="pre">Dataset</span></code> for <a class="reference internal" href="generated/batukh.tensorflow.ocr.OCR.html#batukh.tensorflow.ocr.OCR" title="batukh.tensorflow.ocr.OCR"><code class="xref py py-class docutils literal notranslate"><span class="pre">OCR</span></code></a> class.</p>
+<p>Example
+.. code:: python</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">batukh.tensorflow.utils.data.dataloader</span> <span class="kn">import</span> <span class="n">OCRDataLoader</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dl</span><span class="o">=</span><span class="n">OCRDataLoader</span><span class="p">(</span><span class="s2">&quot;/data/&quot;</span><span class="p">,</span><span class="mi">64</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">j</span> <span class="ow">in</span> <span class="n">dl</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span><span class="n">j</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="k">break</span>
+</pre></div>
+</div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>path</strong> (<em>strs</em>) – Path of  folder containing images folder,labels.txt and table.txt to be loaded in dataset.Name of folders and files should be same as mentioned.</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Path of  folder containing images folder,labels.txt and table.txt to be loaded in dataset.Name of folders and files should be same as mentioned.</p></li>
+<li><p><strong>height</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a><em>,</em><em>optional</em>) – Specifies the height to which all images will be resized keeping same aspect ratio.
+Default: <span class="math notranslate nohighlight">\(64\)</span></p></li>
+</ul>
 </dd>
 </dl>
+<dl class="method">
+<dt id="batukh.tensorflow.utils.data.dataloader.OCRDataLoader.map2string">
+<code class="sig-name descname">map2string</code><span class="sig-paren">(</span><em class="sig-param">inputs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/batukh/tensorflow/utils/data/dataloader.html#OCRDataLoader.map2string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#batukh.tensorflow.utils.data.dataloader.OCRDataLoader.map2string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Maps tensor to stings as per <code class="xref py py-class docutils literal notranslate"><span class="pre">inv_table</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>inputs</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">tensorflow.Tensor</span></code>) – Input tensor.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>list of strings.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.9)">list</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="batukh.tensorflow.utils.data.dataloader.OCRDataLoader.decode">
+<code class="sig-name descname">decode</code><span class="sig-paren">(</span><em class="sig-param">inputs</em>, <em class="sig-param">from_pred=True</em>, <em class="sig-param">method='gready'</em>, <em class="sig-param">merge_repeated=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/batukh/tensorflow/utils/data/dataloader.html#OCRDataLoader.decode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#batukh.tensorflow.utils.data.dataloader.OCRDataLoader.decode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Decodes the model logits using ctc decoder.</p>
+<p>Example</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">batukh.tensorflow.ocr</span> <span class="kn">import</span> <span class="n">OCR</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">m</span> <span class="o">=</span> <span class="n">OCR</span><span class="p">(</span><span class="mi">177</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">m</span><span class="o">.</span><span class="n">load_model</span><span class="p">(</span><span class="s2">&quot;/saved_model/&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="s2">&quot;/image.png&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">decode_png</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">channels</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pred</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">train_dl</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>inputs</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">tensorflow.Tensor</span></code>) – Input tensor.</p></li>
+<li><p><strong>from_pred</strong> (<em>bol</em><em>,</em><em>optional</em>) – <code class="docutils literal notranslate"><span class="pre">True</span></code> if input is return of ( <a class="reference internal" href="generated/batukh.tensorflow.ocr.OCR.html#batukh.tensorflow.ocr.OCR.predict" title="batukh.tensorflow.ocr.OCR.predict"><code class="xref py py-class docutils literal notranslate"><span class="pre">predict</span></code></a>. <code class="docutils literal notranslate"><span class="pre">False</span></code> if input is a <code class="xref py py-class docutils literal notranslate"><span class="pre">tensorflow.SparseTensor</span></code>.
+Default: <code class="docutils literal notranslate"><span class="pre">True</span></code></p></li>
+<li><p><strong>method</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>,</em><em>optional</em>) – if  <code class="docutils literal notranslate"><span class="pre">'gready'</span></code>  <code class="xref py py-class docutils literal notranslate"><span class="pre">tensorflow.nn.ctc_greedy_decoder</span></code> used for decoding.if  <code class="docutils literal notranslate"><span class="pre">'beam_search'</span></code>  <code class="xref py py-class docutils literal notranslate"><span class="pre">tensorflow.nn.ctc_beam_search_decoder</span></code> used.
+Default: `` ‘greedy’ ``</p></li>
+<li><p><strong>merge_repeated</strong> (<em>bol</em><em>,</em><em>optional</em>) – Specifes if similar charsters will be merged.
+Default: <code class="docutils literal notranslate"><span class="pre">True</span></code></p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>decoded list of strings</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.9)">list</a></p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 </div>
@@ -303,15 +372,6 @@
               
             </div>
             <footer>
-  
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="tensorflow.utils.models.html" class="btn btn-neutral float-right" title="tensorflow.utils.models" accesskey="n" rel="next">Next <img src="_static/images/chevron-right-orange.svg" class="next-page"></a>
-      
-      
-        <a href="tensorflow.utils.html" class="btn btn-neutral" title="tensorflow.utils" accesskey="p" rel="prev"><img src="_static/images/chevron-right-orange.svg" class="previous-page"> Previous</a>
-      
-    </div>
   
 
   

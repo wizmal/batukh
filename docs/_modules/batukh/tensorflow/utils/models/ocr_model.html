@@ -263,9 +263,9 @@
 
 
 <div class="viewcode-block" id="ConvBlock"><a class="viewcode-back" href="../../../../../tensorflow.utils.models.html#batukh.tensorflow.utils.models.ocr_model.ConvBlock">[docs]</a><span class="k">class</span> <span class="nc">ConvBlock</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
-    <span class="sa">r</span><span class="sd">&quot;&quot;&quot; This block consists of five ``layers.Conv2D`` convolution layers and a ``layers.MaxPool2D`` maxpool layer.</span>
-<span class="sd">        Convolution layers is of  kernel size 3,same padding and relu activation, and filters 8,16,32,64 and 128 respectively.</span>
-<span class="sd">        Maxpool layer is of pool size (2,2), strides (2,2) ans same padding.</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot; This block consists of five :class:`tensorflow.keras.layers.Conv2D` convolution layers and a :class:`tensorflow.keras.layers.MaxPool2D` maxpool layer.</span>
+<span class="sd">        Convolution layers is of  kernel size  :math:`3` ,same padding and relu activation, and filters :math:`8 , 16 , 32 , 64` and :math:`128` respectively.</span>
+<span class="sd">        Maxpool layer is of pool size :math:`(2 , 2)`, strides :math:`( 2 , 2)` ans same padding.</span>
 
 
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -287,11 +287,12 @@
 
 <div class="viewcode-block" id="ConvBlock.call"><a class="viewcode-back" href="../../../../../tensorflow.utils.models.html#batukh.tensorflow.utils.models.ocr_model.ConvBlock.call">[docs]</a>    <span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_tensor</span><span class="p">):</span>
         <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+
 <span class="sd">        Args:</span>
-<span class="sd">            input_tensor (tf.Tensor) : Input image tensor.</span>
+<span class="sd">            input_tensor ( :class:`tensorflow.Tensor`) : Input image tensor.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            x (tf.Tensor) : Output image tensor.</span>
+<span class="sd">            :class:`tensorflow.Tensor` : Output image tensor.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">conv1</span><span class="p">(</span><span class="n">input_tensor</span><span class="p">)</span>
         <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">conv2</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
@@ -303,7 +304,7 @@
 
 
 <div class="viewcode-block" id="BLSTM"><a class="viewcode-back" href="../../../../../tensorflow.utils.models.html#batukh.tensorflow.utils.models.ocr_model.BLSTM">[docs]</a><span class="k">class</span> <span class="nc">BLSTM</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
-    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Consists of a ``layers.Bidirectional`` layer with 256 units.</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Consists of a two :class:`tensorflow.keras.layers.Bidirectional` layer with :math:`256` units.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -318,10 +319,10 @@
 <div class="viewcode-block" id="BLSTM.call"><a class="viewcode-back" href="../../../../../tensorflow.utils.models.html#batukh.tensorflow.utils.models.ocr_model.BLSTM.call">[docs]</a>    <span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_tensor</span><span class="p">):</span>
         <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Args:</span>
-<span class="sd">            input_tensor (tf.Tensor): Input tensor.</span>
+<span class="sd">            input_tensor( :class:`tensorflow.Tensor`): Input tensor.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            x (tf.Tensor) : Output tensor.</span>
+<span class="sd">            :class:`tensorflow.Tensor` : Output tensor.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">layer1</span><span class="p">(</span><span class="n">input_tensor</span><span class="p">)</span>
         <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">layer2</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
@@ -329,10 +330,10 @@
 
 
 <div class="viewcode-block" id="OCRModel"><a class="viewcode-back" href="../../../../../tensorflow.utils.models.html#batukh.tensorflow.utils.models.ocr_model.OCRModel">[docs]</a><span class="k">class</span> <span class="nc">OCRModel</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
-    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Consistis of ``ConvBlock`` block,``BLSTM`` block and ``layers.dense`` layer.</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Consistis of :class:`~batukh.tensorflow.utils.models.ocr_model.ConvBlock` block, :class:`~batukh.tensorflow.utils.models.ocr_model.BLSTM` block and :class:`tensorflow.keras.layers.dense` layer.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        n_classes (int)  : Specifies number of output classes in ``layers.dense`` layer.</span>
+<span class="sd">        n_classes (int)  : Specifies number of output classes in :class:`tensorflow.keras.layers.dense` layer.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_classes</span><span class="p">):</span>
@@ -345,9 +346,10 @@
 <div class="viewcode-block" id="OCRModel.call"><a class="viewcode-back" href="../../../../../tensorflow.utils.models.html#batukh.tensorflow.utils.models.ocr_model.OCRModel.call">[docs]</a>    <span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_tensor</span><span class="p">):</span>
         <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Args:</span>
-<span class="sd">            input_tensor (tf.Tensor) : Input image tensor.</span>
+<span class="sd">            input_tensor ( :class:`tensorflow.Tensor`) : Input image tensor.</span>
+
 <span class="sd">        Returns:</span>
-<span class="sd">            x (tf.Tensor) : Output Tensor.&quot;&quot;&quot;</span>
+<span class="sd">            :class:`tensorflow.Tensor` : Output Tensor.&quot;&quot;&quot;</span>
         <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">conv</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">input_tensor</span><span class="p">)</span>
         <span class="n">x</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
         <span class="n">x</span> <span class="o">=</span> <span class="n">layers</span><span class="o">.</span><span class="n">Reshape</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="mi">128</span><span class="p">))(</span><span class="n">x</span><span class="p">)</span>
