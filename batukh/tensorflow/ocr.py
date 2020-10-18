@@ -73,7 +73,7 @@ class OCR(Train):
             strings.append(''.join(text))
         return strings
 
-    def decode(self, inputs, from_pred=True, method='gready', merge_repeated=True):
+    def decode(self, inputs, from_pred=True, method='gready', merge_repeated=True, table=None, blank_index=None):
         """Decodes the model logits using ctc decoder.
 
         Example
@@ -99,6 +99,10 @@ class OCR(Train):
                 Default: `` 'greedy' ``
             merge_repeated (bol,optional): Specifes if similar charsters will be merged.
                 Default: ``True``
+            table ( :class:`tensorflow.lookup.StaticHashTable`,optional) : Table according to which maping is done.
+                Default: ``self.train_dl.inv_table``
+            blank_index (int,optional) : Blank index.
+                Default : ``self.train_dl.blank_index``
 
         Returns:
             list: decoded list of strings  """
