@@ -1,0 +1,89 @@
+/* .wy-nav-side {
+    color: #9b9b9b;
+    background: #01411cea;
+
+}
+
+.wy-side-nav-search {
+    background: #ff9900ec;
+    color: #fcfcfc
+} */
+
+/* change logo */
+
+.header-logo {
+    background-image: url("../img/logo.png");
+}
+
+.tutorials-header .header-logo {
+    background-image: url("../img/logo.png");
+}
+
+/* .header-logo {
+    background-image: url("../img/logo.png");
+} */
+
+/* change color of borders to gradient of flag */
+
+/* for classes */
+
+article.pytorch-article .class dt {
+    border-image: linear-gradient(to right, #01411C, #F90)1;
+}
+
+/* for methods */
+
+article.pytorch-article .class .method dt, article.pytorch-article .class .staticmethod dt {
+    border-image: linear-gradient(to bottom, #01411C, #F90)1;
+}
+
+/* change that pinkish link color */
+
+ul.pytorch-breadcrumbs a {
+    color: #F90;
+    text-decoration: none;
+}
+
+a:link, a:visited, a:hover {
+    color: #f90;
+}
+
+.pytorch-left-menu li.toctree-l1.current>a, .pytorch-right-menu li.toctree-l1.current>a {
+    color: #f90;
+}
+
+.header-holder .main-menu ul li.active:after {
+    color: #f90;
+}
+
+.header-holder .main-menu ul li.active a {
+    color: #f90;
+}
+
+@media screen and (min-width: 1100px) {
+    .header-holder .main-menu ul li a:hover {
+        color: #f90;
+    }
+}
+
+.mobile-main-menu.open ul li.active a {
+    color: #f90;
+}
+
+/* for that actual "CLASS" text */
+
+article.pytorch-article .class em.property {
+    color: #f90;
+}
+
+/* change footer logo */
+
+.footer-logo {
+    background-image: url("../img/none");
+}
+
+/* table fixing, test for multiple browsers */
+
+colgroup {
+    display: none;
+}

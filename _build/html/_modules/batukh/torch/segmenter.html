@@ -1,0 +1,1077 @@
+
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en">
+<!--<![endif]-->
+
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>batukh.torch.segmenter &mdash; batukh master documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+  
+
+  
+
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!-- <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" /> -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.10.0-beta/dist/katex.min.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/jit.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato" type="text/css" />
+  <link rel="index" title="Index" href="../../../genindex.html" />
+  <link rel="search" title="Search" href="../../../search.html" /> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+  <!-- Preload the theme fonts -->
+
+<link rel="preload" href="../../../_static/fonts/FreightSans/freight-sans-book.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="../../../_static/fonts/FreightSans/freight-sans-medium.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="../../../_static/fonts/IBMPlexMono/IBMPlexMono-Medium.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="../../../_static/fonts/FreightSans/freight-sans-bold.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="../../../_static/fonts/FreightSans/freight-sans-medium-italic.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="../../../_static/fonts/IBMPlexMono/IBMPlexMono-SemiBold.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+
+<!-- Preload the katex fonts -->
+
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Math-Italic.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Main-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Main-Bold.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Size1-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Size4-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Size2-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Size3-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Caligraphic-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+</head>
+
+<div class="container-fluid header-holder tutorials-header" id="header-holder">
+  <div class="container">
+    <div class="header-container">
+      <a class="header-logo" href="ourwebsite" aria-label="PyTorch"></a>
+
+      <div class="main-menu">
+        <ul>
+
+          <!-- Hid get started scene -->
+          <!-- <li>
+            <a href="https://ourwebsite/get-started">Get Started</a>
+          </li> -->
+
+          <!-- <li>
+            <div class="ecosystem-dropdown">
+              <a id="dropdownMenuButton" data-toggle="ecosystem-dropdown">
+                Ecosystem
+              </a>
+              <div class="ecosystem-dropdown-menu">
+                <a class="nav-dropdown-item" href="https://ourwebsite/hub"">
+                  <span class=dropdown-title>Models (Beta)</span>
+                  <p>Discover, publish, and reuse pre-trained models</p>
+                </a>
+                <a class=" nav-dropdown-item" href="https://ourwebsite/ecosystem">
+                  <span class=dropdown-title>Tools & Libraries</span>
+                  <p>Explore the ecosystem of tools and libraries</p>
+                </a>
+              </div>
+            </div>
+          </li> -->
+
+          <!-- <li>
+            <a href="https://ourwebsite/mobile">Mobile</a>
+          </li> -->
+
+          <!-- <li>
+            <a href="https://ourwebsite/blog/">Blog</a>
+          </li> -->
+
+          <li>
+            <a href="https://ourwebsite/tutorials">Tutorials</a>
+          </li>
+
+          <li class="active" >
+            <a href="https://ourwebsite/docs/stable/index.html">Docs</a>
+          </li>
+
+          <li>
+            <div class="resources-dropdown">
+              <a id="resourcesDropdownButton" data-toggle="resources-dropdown">
+                Resources
+              </a>
+              <div class="resources-dropdown-menu">
+                <a class="nav-dropdown-item" href="https://ourwebsite/resources"">
+                  <span class=dropdown-title>Developer Resources</span>
+                  <p>Find resources and get questions answered</p>
+                </a>
+                <a class=" nav-dropdown-item" href="https://ourwebsite/features">
+                  <span class=dropdown-title>About</span>
+                  <p>Learn about batukh’s features and capabilities</p>
+                </a>
+              </div>
+            </div>
+          </li>
+
+          <li>
+            <a href="https://github.com/KoshurNizam/batukh">Github</a>
+          </li>
+        </ul>
+      </div>
+
+      <a class="main-menu-open-button" href="#" data-behavior="open-mobile-menu"></a>
+    </div>
+
+  </div>
+</div>
+
+
+<body class="pytorch-body">
+
+   
+
+  
+
+  <div class="table-of-contents-link-wrapper">
+    <span>Table of Contents</span>
+    <a href="#" class="toggle-table-of-contents" data-behavior="toggle-table-of-contents"></a>
+  </div>
+
+  <nav data-toggle="wy-nav-shift" class="pytorch-left-menu" id="pytorch-left-menu">
+    <div class="pytorch-side-scroll">
+      <div class="pytorch-menu pytorch-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        <div class="pytorch-left-menu-search">
+          
+
+          
+          
+          
+          
+
+          
+
+
+  
+
+
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search Docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        
+        
+        
+        
+        
+        <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../batukh.html">batukh</a></li>
+</ul>
+
+        
+        
+      </div>
+    </div>
+  </nav>
+
+  <div class="pytorch-container">
+    <div class="pytorch-page-level-bar" id="pytorch-page-level-bar">
+      <div class="pytorch-breadcrumbs-wrapper">
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="pytorch-breadcrumbs">
+    
+      <li>
+        <a href="../../../index.html">
+          
+            Docs
+          
+        </a> &gt;
+      </li>
+
+        
+          <li><a href="../../index.html">Module code</a> &gt;</li>
+        
+      <li>batukh.torch.segmenter</li>
+    
+    
+      <li class="pytorch-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+</div>
+      </div>
+
+      <div class="pytorch-shortcuts-wrapper" id="pytorch-shortcuts-wrapper">
+        Shortcuts
+      </div>
+    </div>
+
+    <section data-toggle="wy-nav-shift" id="pytorch-content-wrap" class="pytorch-content-wrap">
+      <div class="pytorch-content-left">
+
+        
+        
+          <div class="rst-content">
+            
+            <div role="main" class="main-content" itemscope="itemscope" itemtype="http://schema.org/Article">
+              <article itemprop="articleBody" id="pytorch-article" class="pytorch-article">
+                
+  <h1>Source code for batukh.torch.segmenter</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">.utils.models.segmentation_model</span> <span class="kn">import</span> <span class="n">SegmentationModel</span>
+<span class="kn">from</span> <span class="nn">.utils.data.augmentation</span> <span class="kn">import</span> <span class="n">MultipleRandomRotation</span><span class="p">,</span> <span class="n">MultipleColorJitter</span><span class="p">,</span> <span class="n">MultipleToTensor</span>
+<span class="kn">from</span> <span class="nn">.utils.data.dataloader</span> <span class="kn">import</span> <span class="n">SegmentationDataLoader</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">torch.nn</span> <span class="k">as</span> <span class="nn">nn</span>
+<span class="kn">from</span> <span class="nn">torchvision</span> <span class="kn">import</span> <span class="n">transforms</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">torch.utils.data</span> <span class="kn">import</span> <span class="n">DataLoader</span>
+<span class="kn">from</span> <span class="nn">os.path</span> <span class="kn">import</span> <span class="n">join</span>
+<span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
+<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">localtime</span>
+<span class="kn">from</span> <span class="nn">torch</span> <span class="kn">import</span> <span class="n">optim</span>
+
+<span class="c1"># TODO: Add types to args</span>
+<span class="c1"># TODO: For checkpoints, have default directory named after the task</span>
+
+
+<span class="n">default_transform</span> <span class="o">=</span> <span class="n">transforms</span><span class="o">.</span><span class="n">Compose</span><span class="p">([</span><span class="n">MultipleRandomRotation</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="p">(</span><span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">)),</span>
+                                        <span class="n">MultipleColorJitter</span><span class="p">(</span>
+    <span class="n">brightness</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">contrast</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">n_max</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+    <span class="n">MultipleToTensor</span><span class="p">(),</span>
+<span class="p">])</span>
+
+
+<span class="c1"># General base class for Processors.</span>
+<span class="k">class</span> <span class="nc">BaseProcessor</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">SegmentationModel</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">load_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                  <span class="n">train_path</span><span class="p">,</span>
+                  <span class="n">val_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                  <span class="n">transform</span><span class="o">=</span><span class="s2">&quot;default&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Loads the data and creates a dataloader.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            train_path (str): path to a directory containing two folders named</span>
+<span class="sd">                `originals` and `labels` for training data.</span>
+<span class="sd">            val_path (str, optional): path to a directory containing two</span>
+<span class="sd">                named `originals` and `labels` for validation data.</span>
+<span class="sd">                Default: None.</span>
+<span class="sd">            transform (:mod:`~torchvision.transforms`, optional):</span>
+<span class="sd">                Transforms to be applied on images and labels. It should be </span>
+<span class="sd">                able to take a list of images as inputs and return a list of</span>
+<span class="sd">                transformed images.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">transform</span> <span class="o">==</span> <span class="s2">&quot;default&quot;</span><span class="p">:</span>
+            <span class="n">transform</span> <span class="o">=</span> <span class="n">default_transform</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">train_dl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_data</span><span class="p">(</span><span class="n">train_path</span><span class="p">,</span> <span class="n">transform</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">val_dl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_data</span><span class="p">(</span><span class="n">val_path</span><span class="p">,</span> <span class="n">transform</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_make_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                   <span class="n">directory</span><span class="p">,</span>
+                   <span class="n">transform</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">directory</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s2">&quot;originals&quot;</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span> <span class="ow">and</span>\
+                    <span class="s2">&quot;labels&quot;</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">directory</span><span class="p">):</span>
+                <span class="n">dataloader</span> <span class="o">=</span> <span class="n">SegmentationDataLoader</span><span class="p">(</span>
+                    <span class="n">join</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="s2">&quot;originals&quot;</span><span class="p">),</span>
+                    <span class="n">join</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="s2">&quot;labels&quot;</span><span class="p">),</span>
+                    <span class="n">transforms</span><span class="o">=</span><span class="n">transform</span>
+                <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The path: </span><span class="si">{</span><span class="n">directory</span><span class="si">}</span><span class="s2"> does not contain</span><span class="se">\</span>
+<span class="s2">                    &#39;originals&#39; or &#39;labels&#39; directories.&quot;</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="n">dataloader</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+
+<span class="c1"># TODO: move self.model.to(device) from `train_step` and `val_step` to `train`</span>
+
+    <span class="k">def</span> <span class="nf">train_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                   <span class="n">x</span><span class="p">,</span>
+                   <span class="n">y</span><span class="p">,</span>
+                   <span class="n">optimizer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                   <span class="n">criterion</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                   <span class="n">device</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                   <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.0001</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="n">device</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span>
+                <span class="s2">&quot;cuda&quot;</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="s2">&quot;cpu&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+
+        <span class="n">optimizer</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
+
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+
+        <span class="n">preds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">loss</span> <span class="o">=</span> <span class="n">criterion</span><span class="p">(</span><span class="n">preds</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        <span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+        <span class="n">optimizer</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">loss</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">val_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="n">x</span><span class="p">,</span>
+                 <span class="n">y</span><span class="p">,</span>
+                 <span class="n">criterion</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">device</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="n">device</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span>
+                <span class="s2">&quot;cuda&quot;</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="s2">&quot;cpu&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+
+        <span class="n">preds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+        <span class="n">loss</span> <span class="o">=</span> <span class="n">criterion</span><span class="p">(</span><span class="n">preds</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">loss</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+              <span class="n">n_epochs</span><span class="p">,</span>
+              <span class="n">train_dl</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+              <span class="n">val_dl</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+              <span class="n">batch_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+              <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+              <span class="n">num_workers</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+              <span class="n">pin_memory</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+              <span class="n">criterion</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+              <span class="n">optimizer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+              <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.0001</span><span class="p">,</span>
+              <span class="n">save_checkpoints</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+              <span class="n">checkpoint_freq</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+              <span class="n">checkpoint_path</span><span class="o">=</span><span class="s2">&quot;./&quot;</span><span class="p">,</span>  <span class="c1"># Change to None</span>
+              <span class="n">max_to_keep</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+              <span class="n">device</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+              <span class="p">):</span>
+
+        <span class="n">checkpoint_path</span> <span class="o">=</span> <span class="n">join</span><span class="p">(</span><span class="n">checkpoint_path</span><span class="p">,</span> <span class="s2">&quot;checkpoints&quot;</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">checkpoint_path</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">checkpoint_freq</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">checkpoint_freq</span> <span class="o">=</span> <span class="n">n_epochs</span><span class="o">//</span><span class="mi">10</span><span class="o">+</span><span class="mi">1</span>
+
+        <span class="k">for</span> <span class="n">epoch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_epochs</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">train_dl</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+
+                <span class="c1"># TEST IT</span>
+
+                <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;train_dl&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
+                        <span class="s2">&quot;No DataLoader found. Either pass one in train or use load_data method.&quot;</span><span class="p">)</span>
+
+                <span class="n">train_dl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">train_dl</span><span class="p">(</span>
+                    <span class="n">batch_size</span><span class="p">,</span> <span class="n">shuffle</span><span class="p">,</span> <span class="n">num_workers</span><span class="p">,</span> <span class="n">pin_memory</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">val_dl</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;val_dl&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">val_dl</span> <span class="o">=</span> <span class="kc">None</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">val_dl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">val_dl</span><span class="p">(</span>
+                        <span class="n">batch_size</span><span class="p">,</span> <span class="n">shuffle</span><span class="p">,</span> <span class="n">num_workers</span><span class="p">,</span> <span class="n">pin_memory</span><span class="p">)</span>
+                <span class="c1">######</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>
+            <span class="n">total_loss</span> <span class="o">=</span> <span class="mi">0</span>
+
+            <span class="c1"># Progress bar</span>
+            <span class="n">pbar</span> <span class="o">=</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">total</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">train_dl</span><span class="p">))</span>
+            <span class="n">pbar</span><span class="o">.</span><span class="n">set_description</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Epoch: </span><span class="si">{</span><span class="n">epoch</span><span class="si">}</span><span class="s2">. Traininig&quot;</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">train_dl</span><span class="p">):</span>
+                <span class="n">loss</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">train_step</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">,</span> <span class="n">criterion</span><span class="p">,</span>
+                                       <span class="n">learning_rate</span><span class="o">=</span><span class="n">learning_rate</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+                <span class="n">total_loss</span> <span class="o">+=</span> <span class="n">loss</span>
+
+                <span class="n">pbar</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+                <span class="n">pbar</span><span class="o">.</span><span class="n">set_postfix</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="n">total_loss</span><span class="o">/</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+            <span class="n">pbar</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+            <span class="k">if</span> <span class="n">val_dl</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+                <span class="n">eval_loss</span> <span class="o">=</span> <span class="mi">0</span>
+
+                <span class="c1"># validation progress bar</span>
+                <span class="n">pbar</span> <span class="o">=</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">total</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">val_dl</span><span class="p">))</span>
+                <span class="n">pbar</span><span class="o">.</span><span class="n">set_description</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Epoch: </span><span class="si">{</span><span class="n">epoch</span><span class="si">}</span><span class="s2">. Validating&quot;</span><span class="p">)</span>
+
+                <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">val_dl</span><span class="p">):</span>
+                    <span class="n">loss</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">val_step</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">criterion</span><span class="p">,</span> <span class="n">device</span><span class="p">)</span>
+                    <span class="n">eval_loss</span> <span class="o">+=</span> <span class="n">loss</span>
+
+                    <span class="n">pbar</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+                    <span class="n">pbar</span><span class="o">.</span><span class="n">set_postfix</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="n">eval_loss</span><span class="o">/</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+                <span class="n">pbar</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">epoch</span> <span class="o">%</span> <span class="n">checkpoint_freq</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">save_model</span><span class="p">(</span><span class="n">checkpoint_path</span><span class="p">,</span> <span class="n">epoch</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">save_checkpoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">checkpoint</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+        <span class="c1"># To be used instead of `save_model` later on!</span>
+        <span class="c1"># TODO: code here</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">load_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Loads the model parameters for ``self.model``.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            path (str): path to a .pth(or .pt) file.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">load_state_dict</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">path</span><span class="p">)))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Model Loaded!&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">save_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">postfix</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2">-</span><span class="si">{}</span><span class="s2">-</span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2">.</span><span class="si">{}</span><span class="s2">.</span><span class="si">{}</span><span class="s2">.pt&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">postfix</span><span class="p">,</span> <span class="o">*</span><span class="n">localtime</span><span class="p">()[:</span><span class="mi">6</span><span class="p">])</span>
+        <span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">state_dict</span><span class="p">(),</span> <span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Model Saved!&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="c1"># TODO: add dataloader option</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="PageExtractor"><a class="viewcode-back" href="../../../generated/batukh.torch.segmenter.PageExtractor.html#batukh.torch.segmenter.PageExtractor">[docs]</a><span class="k">class</span> <span class="nc">PageExtractor</span><span class="p">(</span><span class="n">BaseProcessor</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This class is used to detect boundary of text in an image of a document.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="PageExtractor.load_data"><a class="viewcode-back" href="../../../generated/batukh.torch.segmenter.PageExtractor.html#batukh.torch.segmenter.PageExtractor.load_data">[docs]</a>    <span class="k">def</span> <span class="nf">load_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                  <span class="n">train_path</span><span class="p">,</span>
+                  <span class="n">val_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                  <span class="n">transform</span><span class="o">=</span><span class="s2">&quot;default&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Loads the data and creates a dataloader.</span>
+
+<span class="sd">        The label images should be:</span>
+
+<span class="sd">        - the same name as the their original images (including the extension).</span>
+<span class="sd">        - the same size as their original images.</span>
+<span class="sd">        - black background with the page area filled with red color.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            train_path (str): path to a directory containing two folders named</span>
+<span class="sd">                `originals` and `labels` for training data.</span>
+<span class="sd">            val_path (str, optional): path to a directory containing two</span>
+<span class="sd">                named `originals` and `labels` for validation data.</span>
+<span class="sd">                Default: None.</span>
+<span class="sd">            transform (:mod:`~torchvision.transforms`, optional):</span>
+<span class="sd">                Transforms to be applied on images and labels. It should be </span>
+<span class="sd">                able to take a list of images as inputs and return a list of</span>
+<span class="sd">                transformed images.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">load_data</span><span class="p">(</span><span class="n">train_path</span><span class="p">,</span> <span class="n">val_path</span><span class="p">,</span> <span class="n">transform</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="PageExtractor.train"><a class="viewcode-back" href="../../../generated/batukh.torch.segmenter.PageExtractor.html#batukh.torch.segmenter.PageExtractor.train">[docs]</a>    <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+              <span class="n">n_epochs</span><span class="p">,</span>
+              <span class="n">train_dl</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+              <span class="n">val_dl</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+              <span class="n">batch_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+              <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+              <span class="n">num_workers</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+              <span class="n">pin_memory</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+              <span class="n">criterion</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+              <span class="n">optimizer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+              <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.0001</span><span class="p">,</span>
+              <span class="n">save_checkpoints</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+              <span class="n">checkpoint_freq</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+              <span class="n">checkpoint_path</span><span class="o">=</span><span class="s2">&quot;./&quot;</span><span class="p">,</span>
+              <span class="n">max_to_keep</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+              <span class="n">device</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Training method to detect boundary. </span>
+
+<span class="sd">        :attr:`train_dl` and :attr:`val_dl` should be provided if custom dataloaders</span>
+<span class="sd">        are required. Although, most of the times, :meth:`~PageExtractor.load_data`</span>
+<span class="sd">        will do the job. </span>
+
+<span class="sd">        Note:</span>
+
+<span class="sd">            If :attr:`train_dl` and/or :attr:`val_dl` are provided, then any already made</span>
+<span class="sd">            dataloader using  :meth:`~BaselineDetector.load_data` will not be used.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            n_epochs (int): number of epochs.</span>
+<span class="sd">            train_dl (:class:`~torch.utils.data.DataLoader`, optional): data loader to train on.</span>
+<span class="sd">                Default: None.</span>
+<span class="sd">            val_dl (:class:`~torch.utils.data.DataLoader`, optional): data loader to validate on.</span>
+<span class="sd">                Default: None.</span>
+<span class="sd">            batch_size (int, optional): batch size of the data loader created by :meth:`~BaselineDetector.load_data`.</span>
+<span class="sd">                Default: 1.</span>
+<span class="sd">            shuffle (bool, optional): whether to shuffle the data loader </span>
+<span class="sd">                created by :meth:`~BaselineDetector.load_data`.</span>
+<span class="sd">            num_workers (int, optional): number of processes to load data.</span>
+<span class="sd">                Default: 4</span>
+<span class="sd">            pin_memory (bool, optional): whether to pin memory while loading data.</span>
+<span class="sd">                Default: ``True``.</span>
+<span class="sd">            criterion (:class:`~torch.nn.module.loss._Loss` or :class:`~torch.nn.module.loss._WeightedLoss`, optional): </span>
+<span class="sd">                The loss function to use.</span>
+<span class="sd">                Default: ``CrossEntropyLoss(reduction=&quot;mean&quot;)``</span>
+<span class="sd">            optimizer (:class:`~torch.optim.Optimizer`, optional): The optimizer</span>
+<span class="sd">                to be used to update the parameters.</span>
+<span class="sd">                Default: ``Adam(model.parameters(), lr=learning_rate)``</span>
+<span class="sd">            learning_rate (float, optional): Learning rate to be used for the </span>
+<span class="sd">                default optimizer.</span>
+<span class="sd">                Default: 0.0001.</span>
+<span class="sd">            save_checkpoints (bool, optional): Whether to save training checkpoints.</span>
+<span class="sd">                Default: ``True``.</span>
+<span class="sd">            checkpoint_freq (int, optional): The saving frequency. After each </span>
+<span class="sd">                these many epochs, a checkpoint will be saved.</span>
+<span class="sd">                Default: :math:`\left \lfloor\frac{\text{n_epochs}}{10}\right \rfloor + 1`.</span>
+<span class="sd">            checkpoint_path (str, optional): Path of the checkpoint folder.</span>
+<span class="sd">                Default: &quot;./&quot;</span>
+<span class="sd">            max_to_keep (int or None, optional): The maximum number of latest </span>
+<span class="sd">                checkpoints to be saved. ``None`` to save all. </span>
+<span class="sd">                Default: 5.</span>
+<span class="sd">            device (str, optional): The device to do computations on.</span>
+<span class="sd">                Default: GPU, if GPU is available, else CPU. </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">device</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span>
+                <span class="s2">&quot;cuda&quot;</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="s2">&quot;cpu&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">optimizer</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">optimizer</span> <span class="o">=</span> <span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="n">learning_rate</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">criterion</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">criterion</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">CrossEntropyLoss</span><span class="p">(</span><span class="n">reduction</span><span class="o">=</span><span class="s2">&quot;mean&quot;</span><span class="p">)</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">n_epochs</span><span class="p">,</span> <span class="n">train_dl</span><span class="p">,</span> <span class="n">val_dl</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">,</span> <span class="n">shuffle</span><span class="p">,</span>
+                      <span class="n">num_workers</span><span class="p">,</span> <span class="n">pin_memory</span><span class="p">,</span> <span class="n">criterion</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">,</span>
+                      <span class="n">learning_rate</span><span class="p">,</span> <span class="n">save_checkpoints</span><span class="p">,</span> <span class="n">checkpoint_freq</span><span class="p">,</span>
+                      <span class="n">checkpoint_path</span><span class="p">,</span> <span class="n">max_to_keep</span><span class="p">,</span> <span class="n">device</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="ImageExtractor"><a class="viewcode-back" href="../../../generated/batukh.torch.segmenter.ImageExtractor.html#batukh.torch.segmenter.ImageExtractor">[docs]</a><span class="k">class</span> <span class="nc">ImageExtractor</span><span class="p">(</span><span class="n">BaseProcessor</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This class is used to detect images in a document.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="ImageExtractor.load_data"><a class="viewcode-back" href="../../../generated/batukh.torch.segmenter.ImageExtractor.html#batukh.torch.segmenter.ImageExtractor.load_data">[docs]</a>    <span class="k">def</span> <span class="nf">load_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                  <span class="n">train_path</span><span class="p">,</span>
+                  <span class="n">val_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                  <span class="n">transform</span><span class="o">=</span><span class="s2">&quot;default&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Loads the data and creates a dataloader.</span>
+
+<span class="sd">        The label images should be:</span>
+
+<span class="sd">        - the same name as the their original images (including the extension).</span>
+<span class="sd">        - the same size as their original images.</span>
+<span class="sd">        - black background with corresponding image area red. </span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            train_path (str): path to a directory containing two folders named</span>
+<span class="sd">                `originals` and `labels` for training data.</span>
+<span class="sd">            val_path (str, optional): path to a directory containing two</span>
+<span class="sd">                named `originals` and `labels` for validation data.</span>
+<span class="sd">                Default: None.</span>
+<span class="sd">            transform (:mod:`~torchvision.transforms`, optional):</span>
+<span class="sd">                Transforms to be applied on images and labels. It should be </span>
+<span class="sd">                able to take a list of images as inputs and return a list of</span>
+<span class="sd">                transformed images.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">load_data</span><span class="p">(</span><span class="n">train_path</span><span class="p">,</span> <span class="n">val_path</span><span class="p">,</span> <span class="n">transform</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ImageExtractor.train"><a class="viewcode-back" href="../../../generated/batukh.torch.segmenter.ImageExtractor.html#batukh.torch.segmenter.ImageExtractor.train">[docs]</a>    <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+              <span class="n">n_epochs</span><span class="p">,</span>
+              <span class="n">train_dl</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+              <span class="n">val_dl</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+              <span class="n">batch_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+              <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+              <span class="n">num_workers</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+              <span class="n">pin_memory</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+              <span class="n">criterion</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+              <span class="n">optimizer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+              <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.0001</span><span class="p">,</span>
+              <span class="n">save_checkpoints</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+              <span class="n">checkpoint_freq</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+              <span class="n">checkpoint_path</span><span class="o">=</span><span class="s2">&quot;./&quot;</span><span class="p">,</span>
+              <span class="n">max_to_keep</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+              <span class="n">device</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Training method to detect images. </span>
+
+
+<span class="sd">        :attr:`train_dl` and :attr:`val_dl` should be provided if custom dataloaders</span>
+<span class="sd">        are required. Although, most of the times, :meth:`~ImageExtractor.load_data`</span>
+<span class="sd">        will do the job. </span>
+
+<span class="sd">        Note:</span>
+
+<span class="sd">            If :attr:`train_dl` and/or :attr:`val_dl` are provided, then any already made</span>
+<span class="sd">            dataloader using  :meth:`~BaselineDetector.load_data` will not be used.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            n_epochs (int): number of epochs.</span>
+<span class="sd">            train_dl (:class:`~torch.utils.data.DataLoader`, optional): data loader to train on.</span>
+<span class="sd">                Default: None.</span>
+<span class="sd">            val_dl (:class:`~torch.utils.data.DataLoader`, optional): data loader to validate on.</span>
+<span class="sd">                Default: None.</span>
+<span class="sd">            batch_size (int, optional): batch size of the data loader created by :meth:`~BaselineDetector.load_data`.</span>
+<span class="sd">                Default: 1.</span>
+<span class="sd">            shuffle (bool, optional): whether to shuffle the data loader </span>
+<span class="sd">                created by :meth:`~BaselineDetector.load_data`.</span>
+<span class="sd">            num_workers (int, optional): number of processes to load data.</span>
+<span class="sd">                Default: 4</span>
+<span class="sd">            pin_memory (bool, optional): whether to pin memory while loading data.</span>
+<span class="sd">                Default: ``True``.</span>
+<span class="sd">            criterion (:class:`~torch.nn.module.loss._Loss` or :class:`~torch.nn.module.loss._WeightedLoss`, optional): </span>
+<span class="sd">                The loss function to use.</span>
+<span class="sd">                Default: ``CrossEntropyLoss(reduction=&quot;mean&quot;)``</span>
+<span class="sd">            optimizer (:class:`~torch.optim.Optimizer`, optional): The optimizer</span>
+<span class="sd">                to be used to update the parameters.</span>
+<span class="sd">                Default: ``Adam(model.parameters(), lr=learning_rate)``</span>
+<span class="sd">            learning_rate (float, optional): Learning rate to be used for the </span>
+<span class="sd">                default optimizer.</span>
+<span class="sd">                Default: 0.0001.</span>
+<span class="sd">            save_checkpoints (bool, optional): Whether to save training checkpoints.</span>
+<span class="sd">                Default: ``True``.</span>
+<span class="sd">            checkpoint_freq (int, optional): The saving frequency. After each </span>
+<span class="sd">                these many epochs, a checkpoint will be saved.</span>
+<span class="sd">                Default: :math:`\left \lfloor\frac{\text{n_epochs}}{10}\right \rfloor + 1`.</span>
+<span class="sd">            checkpoint_path (str, optional): Path of the checkpoint folder.</span>
+<span class="sd">                Default: &quot;./&quot;</span>
+<span class="sd">            max_to_keep (int or None, optional): The maximum number of latest </span>
+<span class="sd">                checkpoints to be saved. ``None`` to save all. </span>
+<span class="sd">                Default: 5.</span>
+<span class="sd">            device (str, optional): The device to do computations on.</span>
+<span class="sd">                Default: GPU, if GPU is available, else CPU. </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">device</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span>
+                <span class="s2">&quot;cuda&quot;</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="s2">&quot;cpu&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">optimizer</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">optimizer</span> <span class="o">=</span> <span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="n">learning_rate</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">criterion</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">criterion</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">CrossEntropyLoss</span><span class="p">(</span><span class="n">reduction</span><span class="o">=</span><span class="s2">&quot;mean&quot;</span><span class="p">)</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">n_epochs</span><span class="p">,</span> <span class="n">train_dl</span><span class="p">,</span> <span class="n">val_dl</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">,</span> <span class="n">shuffle</span><span class="p">,</span>
+                      <span class="n">num_workers</span><span class="p">,</span> <span class="n">pin_memory</span><span class="p">,</span> <span class="n">criterion</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">,</span>
+                      <span class="n">learning_rate</span><span class="p">,</span> <span class="n">save_checkpoints</span><span class="p">,</span> <span class="n">checkpoint_freq</span><span class="p">,</span>
+                      <span class="n">checkpoint_path</span><span class="p">,</span> <span class="n">max_to_keep</span><span class="p">,</span> <span class="n">device</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="BaselineDetector"><a class="viewcode-back" href="../../../generated/batukh.torch.segmenter.BaselineDetector.html#batukh.torch.segmenter.BaselineDetector">[docs]</a><span class="k">class</span> <span class="nc">BaselineDetector</span><span class="p">(</span><span class="n">BaseProcessor</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This class is used to detect baselines in an image of a document.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="BaselineDetector.load_data"><a class="viewcode-back" href="../../../generated/batukh.torch.segmenter.BaselineDetector.html#batukh.torch.segmenter.BaselineDetector.load_data">[docs]</a>    <span class="k">def</span> <span class="nf">load_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                  <span class="n">train_path</span><span class="p">,</span>
+                  <span class="n">val_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                  <span class="n">transform</span><span class="o">=</span><span class="s2">&quot;default&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Loads the data and creates a dataloader.</span>
+
+<span class="sd">        The label images should be:</span>
+
+<span class="sd">        - the same name as the their original images.</span>
+<span class="sd">        - the same size as their original images.</span>
+<span class="sd">        - black background with red lines of about 5px width representing baselines.</span>
+
+
+<span class="sd">        Args:</span>
+<span class="sd">            train_path (str): path to a directory containing two folders named</span>
+<span class="sd">                `originals` and `labels` for training data.</span>
+<span class="sd">            val_path (str, optional): path to a directory containing two</span>
+<span class="sd">                named `originals` and `labels` for validation data.</span>
+<span class="sd">                Default: None.</span>
+<span class="sd">            transform (:mod:`~torchvision.transforms`, optional):</span>
+<span class="sd">                Transforms to be applied on images and labels. It should be </span>
+<span class="sd">                able to take a list of images as inputs and return a list of</span>
+<span class="sd">                transformed images.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">load_data</span><span class="p">(</span><span class="n">train_path</span><span class="p">,</span> <span class="n">val_path</span><span class="p">,</span> <span class="n">transform</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BaselineDetector.train"><a class="viewcode-back" href="../../../generated/batukh.torch.segmenter.BaselineDetector.html#batukh.torch.segmenter.BaselineDetector.train">[docs]</a>    <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+              <span class="n">n_epochs</span><span class="p">,</span>
+              <span class="n">train_dl</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+              <span class="n">val_dl</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+              <span class="n">batch_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+              <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+              <span class="n">num_workers</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+              <span class="n">pin_memory</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+              <span class="n">criterion</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+              <span class="n">optimizer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+              <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.0001</span><span class="p">,</span>
+              <span class="n">save_checkpoints</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+              <span class="n">checkpoint_freq</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+              <span class="n">checkpoint_path</span><span class="o">=</span><span class="s2">&quot;./&quot;</span><span class="p">,</span>
+              <span class="n">max_to_keep</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+              <span class="n">device</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Training method to detect baselines. </span>
+
+<span class="sd">        :attr:`train_dl` and :attr:`val_dl` should be provided if custom dataloaders</span>
+<span class="sd">        are required. Although, most of the times, :meth:`~BaselineDetector.load_data`</span>
+<span class="sd">        will do the job. </span>
+
+<span class="sd">        Note:</span>
+
+<span class="sd">            If :attr:`train_dl` and/or :attr:`val_dl` are provided, then any already made</span>
+<span class="sd">            dataloader using  :meth:`~BaselineDetector.load_data` will not be used.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            n_epochs (int): number of epochs.</span>
+<span class="sd">            train_dl (:class:`~torch.utils.data.DataLoader`, optional): data loader to train on.</span>
+<span class="sd">                Default: None.</span>
+<span class="sd">            val_dl (:class:`~torch.utils.data.DataLoader`, optional): data loader to validate on.</span>
+<span class="sd">                Default: None.</span>
+<span class="sd">            batch_size (int, optional): batch size of the data loader created by :meth:`~BaselineDetector.load_data`.</span>
+<span class="sd">                Default: 1.</span>
+<span class="sd">            shuffle (bool, optional): whether to shuffle the data loader </span>
+<span class="sd">                created by :meth:`~BaselineDetector.load_data`.</span>
+<span class="sd">            num_workers (int, optional): number of processes to load data.</span>
+<span class="sd">                Default: 4</span>
+<span class="sd">            pin_memory (bool, optional): whether to pin memory while loading data.</span>
+<span class="sd">                Default: ``True``.</span>
+<span class="sd">            criterion (:class:`~torch.nn.module.loss._Loss` or :class:`~torch.nn.module.loss._WeightedLoss`, optional): </span>
+<span class="sd">                The loss function to use.</span>
+<span class="sd">                Default: ``CrossEntropyLoss(weight=Tensor[1, 700]), reduction=&quot;mean&quot;)``</span>
+<span class="sd">            optimizer (:class:`~torch.optim.Optimizer`, optional): The optimizer</span>
+<span class="sd">                to be used to update the parameters.</span>
+<span class="sd">                Default: ``Adam(model.parameters(), lr=learning_rate)``</span>
+<span class="sd">            learning_rate (float, optional): Learning rate to be used for the </span>
+<span class="sd">                default optimizer.</span>
+<span class="sd">                Default: 0.0001.</span>
+<span class="sd">            save_checkpoints (bool, optional): Whether to save training checkpoints.</span>
+<span class="sd">                Default: ``True``.</span>
+<span class="sd">            checkpoint_freq (int, optional): The saving frequency. After each </span>
+<span class="sd">                these many epochs, a checkpoint will be saved.</span>
+<span class="sd">                Default: :math:`\left \lfloor\frac{\text{n_epochs}}{10}\right \rfloor + 1`.</span>
+<span class="sd">            checkpoint_path (str, optional): Path of the checkpoint folder.</span>
+<span class="sd">                Default: &quot;./&quot;</span>
+<span class="sd">            max_to_keep (int or None, optional): The maximum number of latest </span>
+<span class="sd">                checkpoints to be saved. ``None`` to save all. </span>
+<span class="sd">                Default: 5.</span>
+<span class="sd">            device (str, optional): The device to do computations on.</span>
+<span class="sd">                Default: GPU, if GPU is available, else CPU. </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">device</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span>
+                <span class="s2">&quot;cuda&quot;</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="s2">&quot;cpu&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">optimizer</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">optimizer</span> <span class="o">=</span> <span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="n">learning_rate</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">criterion</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">criterion</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">CrossEntropyLoss</span><span class="p">(</span>
+                <span class="n">weight</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">700</span><span class="p">])</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">),</span> <span class="n">reduction</span><span class="o">=</span><span class="s2">&quot;mean&quot;</span><span class="p">)</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">n_epochs</span><span class="p">,</span> <span class="n">train_dl</span><span class="p">,</span> <span class="n">val_dl</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">,</span> <span class="n">shuffle</span><span class="p">,</span>
+                      <span class="n">num_workers</span><span class="p">,</span> <span class="n">pin_memory</span><span class="p">,</span> <span class="n">criterion</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">,</span>
+                      <span class="n">learning_rate</span><span class="p">,</span> <span class="n">save_checkpoints</span><span class="p">,</span> <span class="n">checkpoint_freq</span><span class="p">,</span>
+                      <span class="n">checkpoint_path</span><span class="p">,</span> <span class="n">max_to_keep</span><span class="p">,</span> <span class="n">device</span><span class="p">)</span></div></div>
+</pre></div>
+
+              </article>
+              
+            </div>
+            <footer>
+  
+
+  
+
+    <hr>
+
+  
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020.
+
+    </p>
+  </div>
+    
+      <div>
+        Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+      </div>
+     
+
+</footer>
+
+          </div>
+        </div>
+
+        <div class="pytorch-content-right" id="pytorch-content-right">
+          <div class="pytorch-right-menu" id="pytorch-right-menu">
+            <div class="pytorch-side-scroll" id="pytorch-side-scroll-right">
+              
+            </div>
+          </div>
+        </div>
+    </section>
+  </div>
+
+  
+
+
+  
+
+  
+  <script type="text/javascript" id="documentation_options" data-url_root="../../../"
+    src="../../../_static/documentation_options.js"></script>
+  <script type="text/javascript" src="../../../_static/jquery.js"></script>
+  <script type="text/javascript" src="../../../_static/underscore.js"></script>
+  <script type="text/javascript" src="../../../_static/doctools.js"></script>
+  <script type="text/javascript" src="../../../_static/language_data.js"></script>
+  <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+  
+
+  <script type="text/javascript" src="../../../_static/js/vendor/popper.min.js"></script>
+  <script type="text/javascript" src="../../../_static/js/vendor/bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js"></script>
+  <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+  <!-- Begin Footer -->
+
+  <div class="container-fluid docs-tutorials-resources" id="docs-tutorials-resources">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-4 text-center">
+          <h2>Docs</h2>
+          <p>Access comprehensive developer documentation for batukh.</p>
+          <a class="with-right-arrow" href="https://ourwebsite/docs/stable/index.html">View Docs</a>
+        </div>
+
+        <div class="col-md-4 text-center">
+          <h2>Tutorials</h2>
+          <p>Get in-depth tutorials for beginners and advanced developers</p>
+          <a class="with-right-arrow" href="https://ourwebsite/tutorials">View Tutorials</a>
+        </div>
+
+        <div class="col-md-4 text-center">
+          <h2>Resources</h2>
+          <p>Find development resources and get your questions answered</p>
+          <a class="with-right-arrow" href="https://ourwebsite/resources">View Resources</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <div class="container footer-container">
+      <div class="footer-logo-wrapper">
+        <a href="ourwebsite" class="footer-logo"></a>
+      </div>
+
+      <div class="footer-links-wrapper">
+        <div class="footer-links-col">
+          <ul>
+            <li class="list-title"><a href="ourwebsite">batukh</a></li>
+            <!-- <li><a href="https://ourwebsite/get-started">Get Started</a></li> -->
+            <!-- <li><a href="https://ourwebsite/features">Features</a></li> -->
+            <!-- <li><a href="https://ourwebsite/ecosystem">Ecosystem</a></li> -->
+            <!-- <li><a href="https://ourwebsite/blog/">Blog</a></li> -->
+            <!-- <li><a href="https://github.com/pytorch/pytorch/blob/master/CONTRIBUTING.md">Contributing</a></li> -->
+          </ul>
+        </div>
+
+        <div class="footer-links-col">
+          <ul>
+            <li class="list-title"><a href="https://ourwebsite/resources">Resources</a></li>
+            <li><a href="https://ourwebsite/tutorials">Tutorials</a></li>
+            <li><a href="https://ourwebsite/docs/stable/index.html">Docs</a></li>
+            <li><a href="https://discuss.ourwebsite" target="_blank">Discuss</a></li>
+            <li><a href="https://github.com/KoshurNizam/batukh/issues" target="_blank">Github Issues</a></li>
+            <!-- <li><a href="https://ourwebsite/assets/brand-guidelines/Brand-Guidelines.pdf" target="_blank">Brand Guidelines</a> -->
+            </li>
+          </ul>
+        </div>
+
+        <div class="footer-links-col follow-us-col">
+          <ul>
+            <li class="list-title">Stay Connected</li>
+            <li>
+              <div id="mc_embed_signup">
+                <form
+                  action="https://twitter.us14.list-manage.com/subscribe/post?u=75419c71fe0a935e53dfa4a3f&id=91d0dccd39"
+                  method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form"
+                  class="email-subscribe-form validate" target="_blank" novalidate>
+                  <div id="mc_embed_signup_scroll" class="email-subscribe-form-fields-wrapper">
+                    <div class="mc-field-group">
+                      <label for="mce-EMAIL" style="display:none;">Email Address</label>
+                      <input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL"
+                        placeholder="Email Address">
+                    </div>
+
+                    <div id="mce-responses" class="clear">
+                      <div class="response" id="mce-error-response" style="display:none"></div>
+                      <div class="response" id="mce-success-response" style="display:none"></div>
+                    </div>
+                    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+
+                    <div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text"
+                        name="b_75419c71fe0a935e53dfa4a3f_91d0dccd39" tabindex="-1" value=""></div>
+
+                    <div class="clear">
+                      <input type="submit" value="" name="subscribe" id="mc-embedded-subscribe"
+                        class="button email-subscribe-button">
+                    </div>
+                  </div>
+                </form>
+              </div>
+
+            </li>
+          </ul>
+
+          <div class="footer-social-icons">
+            <a href="https://www.facebook.com/ourusername" target="_blank" class="facebook"></a>
+            <a href="https://twitter.com/ourusername" target="_blank" class="twitter"></a>
+            <a href="https://www.youtube.com/ourusername" target="_blank" class="youtube"></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <div class="cookie-banner-wrapper">
+  <div class="container">
+    <p class="gdpr-notice">To analyze traffic and optimize your experience, we serve cookies on this site. By clicking or navigating, you agree to allow our usage of cookies. As the current maintainers of this site, Facebook’s Cookies Policy applies. Learn more, including about available controls: <a href="https://www.facebook.com/policies/cookies/">Cookies Policy</a>.</p>
+    <img class="close-button" src="../../../_static/images/pytorch-x.svg">
+  </div>
+</div>
+
+  <!-- End Footer -->
+
+  <!-- Begin Mobile Menu -->
+
+  <div class="mobile-main-menu">
+    <div class="container-fluid">
+      <div class="container">
+        <div class="mobile-main-menu-header-container">
+          <a class="header-logo" href="ourwebsite" aria-label="PyTorch"></a>
+          <a class="main-menu-close-button" href="#" data-behavior="close-mobile-menu"></a>
+        </div>
+      </div>
+    </div>
+
+    <div class="mobile-main-menu-links-container">
+      <div class="main-menu">
+        <ul>
+          <!-- <li>
+            <a href="https://ourwebsite/get-started">Get Started</a>
+          </li> -->
+
+          <!-- <li>
+            <a href="https://ourwebsite/features">Features</a>
+          </li> -->
+
+          <!-- <li>
+            <a href="https://ourwebsite/ecosystem">Ecosystem</a>
+          </li> -->
+
+          <li>
+            <a href="https://ourwebsite/mobile">Mobile</a>
+          </li>
+
+          <!-- <li>
+            <a href="https://ourwebsite/hub">batukh Hub</a>
+          </li> -->
+
+          <!-- <li>
+            <a href="https://ourwebsite/blog/">Blog</a>
+          </li> -->
+
+          <li>
+            <a href="https://ourwebsite/tutorials">Tutorials</a>
+          </li>
+
+          <li class="active">
+            <a href="https://ourwebsite/docs/stable/index.html">Docs</a>
+          </li>
+
+          <li>
+            <a href="https://ourwebsite/resources">Resources</a>
+          </li>
+
+          <li>
+            <a href="https://github.com/KoshurNizam/batukh">Github</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- End Mobile Menu -->
+
+  <script type="text/javascript" src="../../../_static/js/vendor/anchor.min.js"></script>
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      mobileMenu.bind();
+      mobileTOC.bind();
+      pytorchAnchors.bind();
+      sideMenus.bind();
+      scrollToAnchor.bind();
+      highlightNavigation.bind();
+      mainMenuDropdown.bind();
+      filterTags.bind();
+
+      // Add class to links that have code blocks, since we cannot create links in code blocks
+      $("article.pytorch-article a span.pre").each(function (e) {
+        $(this).closest("a").addClass("has-code");
+      });
+    })
+  </script>
+</body>
+
+</html>
