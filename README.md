@@ -1,6 +1,6 @@
 # batukh
 
-Detection of Koshur Language using CRNN.
+Detection of Languages using CRNN.
 
 Using [pip](http://pypi.org)
 
@@ -12,7 +12,7 @@ For Page Extraction(tensorflow):
 
 ```python
 >>> from batukh.tensorflow.segmenter import PageExtractor
->>> page_extacter=PageExtraction()
+>>> page_extacter=PageExtractor()
 >>> page_extracter.load_data("temp")
 >>> page_extarcter.train(n_epochs=10, batch_size=1,repeat=1)
 Initializing from scratch
