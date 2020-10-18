@@ -207,7 +207,7 @@ class OCRDataLoader():
         """
         return self.size
 
-    def __call__(self, batch_size=1, repeat=1):
+    def __call__(self, repeat=1):
         r"""
 
         Args:
@@ -219,7 +219,7 @@ class OCRDataLoader():
             :class:`tensorflow.data.dataset` : Dataloader.
             """
         ds = self.dataset
-        ds = ds.batch(batch_size).map(
+        ds = ds.batch(1).map(
             self._convert_label).repeat(repeat)
         ds = ds.prefetch(tf.data.experimental.AUTOTUNE)
         return ds

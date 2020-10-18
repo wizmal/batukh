@@ -41,8 +41,12 @@ class OCR(Train):
             self.val_dl = OCRDataLoader(
                 val_path, height)
 
-    def train(self, n_epochs, batch_size=1, repeat=1, criterion=None, class_weights=None, optimizer=None, learning_rate=0.0001, save_checkpoints=True, checkpoint_freq=None, checkpoint_path=None, max_to_keep=5):
-        super().train(n_epochs, train_dl=self.train_dl, val_dl=self.val_dl, batch_size=batch_size, repeat=repeat, criterion=criterion, class_weights=class_weights,
+    def train(self, n_epochs, train_dl=None, val_dl=None, repeat=1, criterion=None, class_weights=None, optimizer=None, learning_rate=0.0001, save_checkpoints=True, checkpoint_freq=None, checkpoint_path=None, max_to_keep=5):
+        if train_dl is None:
+            train_dl = self.train_dl
+        if val_dl is None:
+            val_dl = self.val_dl
+        super().train(n_epochs, train_dl=train_dl, val_dl=val_dl, batch_size=1, repeat=repeat, criterion=criterion, class_weights=class_weights,
                       optimizer=optimizer, learning_rate=learning_rate, save_checkpoints=save_checkpoints, checkpoint_freq=checkpoint_freq, checkpoint_path=checkpoint_path, max_to_keep=max_to_keep)
 
     def map2string(self, inputs, table=None, blank_index=None):
