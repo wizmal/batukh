@@ -330,26 +330,14 @@
             <span class="k">return</span> <span class="n">dataloader</span>
         <span class="k">return</span> <span class="kc">None</span>
 
-
-<span class="c1"># TODO: move self.model.to(device) from `train_step` and `val_step` to `train`</span>
-
     <span class="k">def</span> <span class="nf">train_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                    <span class="n">x</span><span class="p">,</span>
                    <span class="n">y</span><span class="p">,</span>
-                   <span class="n">optimizer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                   <span class="n">criterion</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                   <span class="n">device</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                   <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.0001</span><span class="p">):</span>
-
-        <span class="k">if</span> <span class="n">device</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span>
-                <span class="s2">&quot;cuda&quot;</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="s2">&quot;cpu&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+                   <span class="n">optimizer</span><span class="p">,</span>
+                   <span class="n">criterion</span><span class="p">,</span>
+                   <span class="n">learning_rate</span><span class="p">):</span>
 
         <span class="n">optimizer</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
-
-        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
-        <span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
 
         <span class="n">preds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
         <span class="n">loss</span> <span class="o">=</span> <span class="n">criterion</span><span class="p">(</span><span class="n">preds</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
@@ -361,17 +349,8 @@
     <span class="k">def</span> <span class="nf">val_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                  <span class="n">x</span><span class="p">,</span>
                  <span class="n">y</span><span class="p">,</span>
-                 <span class="n">criterion</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">device</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-
-        <span class="k">if</span> <span class="n">device</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span>
-                <span class="s2">&quot;cuda&quot;</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="s2">&quot;cpu&quot;</span><span class="p">)</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
-
-        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
-        <span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+                 <span class="n">criterion</span><span class="p">,</span>
+                 <span class="n">device</span><span class="p">):</span>
 
         <span class="n">preds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
 
@@ -420,6 +399,8 @@
                     <span class="n">val_dl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">val_dl</span><span class="p">(</span>
                         <span class="n">batch_size</span><span class="p">,</span> <span class="n">shuffle</span><span class="p">,</span> <span class="n">num_workers</span><span class="p">,</span> <span class="n">pin_memory</span><span class="p">)</span>
                 <span class="c1">######</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>
             <span class="n">total_loss</span> <span class="o">=</span> <span class="mi">0</span>
 
@@ -428,6 +409,10 @@
             <span class="n">pbar</span><span class="o">.</span><span class="n">set_description</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Epoch: </span><span class="si">{</span><span class="n">epoch</span><span class="si">}</span><span class="s2">. Traininig&quot;</span><span class="p">)</span>
 
             <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">train_dl</span><span class="p">):</span>
+
+                <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+                <span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+
                 <span class="n">loss</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">train_step</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">,</span> <span class="n">criterion</span><span class="p">,</span>
                                        <span class="n">learning_rate</span><span class="o">=</span><span class="n">learning_rate</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
                 <span class="n">total_loss</span> <span class="o">+=</span> <span class="n">loss</span>

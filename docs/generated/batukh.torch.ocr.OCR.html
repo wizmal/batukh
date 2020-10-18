@@ -322,6 +322,71 @@ Default: None</p></li>
 </dl>
 </dd></dl>
 
+<dl class="method">
+<dt id="batukh.torch.ocr.OCR.train">
+<code class="sig-name descname">train</code><span class="sig-paren">(</span><em class="sig-param">n_epochs</em>, <em class="sig-param">train_dl=None</em>, <em class="sig-param">val_dl=None</em>, <em class="sig-param">batch_size=1</em>, <em class="sig-param">shuffle=True</em>, <em class="sig-param">criterion=None</em>, <em class="sig-param">imgenc_optimizer=None</em>, <em class="sig-param">enc_optimizer=None</em>, <em class="sig-param">dec_optimizer=None</em>, <em class="sig-param">learning_rate=0.001</em>, <em class="sig-param">save_checkpoints=True</em>, <em class="sig-param">checkpoint_freq=None</em>, <em class="sig-param">checkpoint_path='./'</em>, <em class="sig-param">max_to_keep=5</em>, <em class="sig-param">device=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/batukh/torch/ocr.html#OCR.train"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#batukh.torch.ocr.OCR.train" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>n_epochs</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – number of epochs to train for.</p></li>
+<li><p><strong>train_dl</strong> (<a class="reference external" href="https://pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader" title="(in PyTorch vmaster (1.6.0a0+4392e52 ))"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataLoader</span></code></a>, optional) – dataloader
+to use for training. Default None.</p></li>
+<li><p><strong>val_dl</strong> (<a class="reference external" href="https://pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader" title="(in PyTorch vmaster (1.6.0a0+4392e52 ))"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataLoader</span></code></a>, optional) – dataloader
+to use for validation. Default None.</p></li>
+<li><p><strong>batch_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a><em>, </em><em>optional</em>) – batch size per training.
+Default: 1.</p></li>
+<li><p><strong>shuffle</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a><em>, </em><em>optional</em>) – whether to shuffle the default dataloader.
+Default: True.</p></li>
+<li><p><strong>criterion</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">_Loss</span></code> or <code class="xref py py-class docutils literal notranslate"><span class="pre">_WeightedLoss</span></code>, optional) – The loss function to use.
+Default: <code class="docutils literal notranslate"><span class="pre">CrossEntropyLoss(reduction=&quot;mean&quot;)</span></code></p></li>
+<li><p><strong>imgenc_optimizer</strong> (<a class="reference external" href="https://pytorch.org/docs/stable/optim.html#torch.optim.Optimizer" title="(in PyTorch vmaster (1.6.0a0+4392e52 ))"><code class="xref py py-class docutils literal notranslate"><span class="pre">Optimizer</span></code></a>, optional) – optimizer for img_encoder.
+Default: Adam.</p></li>
+<li><p><strong>enc_optimizer</strong> (<a class="reference external" href="https://pytorch.org/docs/stable/optim.html#torch.optim.Optimizer" title="(in PyTorch vmaster (1.6.0a0+4392e52 ))"><code class="xref py py-class docutils literal notranslate"><span class="pre">Optimizer</span></code></a>, optional) – optimizer for encoder.
+Default: Adam.</p></li>
+<li><p><strong>dec_optimizer</strong> (<a class="reference external" href="https://pytorch.org/docs/stable/optim.html#torch.optim.Optimizer" title="(in PyTorch vmaster (1.6.0a0+4392e52 ))"><code class="xref py py-class docutils literal notranslate"><span class="pre">Optimizer</span></code></a>, optional) – optimizer for decoder.
+Default: Adam.</p></li>
+<li><p><strong>learning_rate</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a><em>, </em><em>optional</em>) – learning rate to be used for default
+optimizers.
+Default: 0.001.</p></li>
+<li><p><strong>save_checkpoints</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a><em>, </em><em>optional</em>) – whether to save checkpoints or
+not.
+Default: True.</p></li>
+<li><p><strong>checkpoint_freq</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a><em>, </em><em>optional</em>) – the frequency of saving saving
+checkpoints.
+Default: <span class="math notranslate nohighlight">\(\left \lfloor\frac{\text{n_epochs}}{10}\right \rfloor + 1\)</span>.</p></li>
+<li><p><strong>checkpoint_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – Path of the checkpoint folder.
+Default: “./”</p></li>
+<li><p><strong>max_to_keep</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)"><em>None</em></a><em>, </em><em>optional</em>) – The maximum number of latest
+checkpoints to be saved. <code class="docutils literal notranslate"><span class="pre">None</span></code> to save all.
+Default: 5.</p></li>
+<li><p><strong>device</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – The device to do computations on.
+Default: GPU, if GPU is available, else CPU.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="batukh.torch.ocr.OCR.predict">
+<code class="sig-name descname">predict</code><span class="sig-paren">(</span><em class="sig-param">x</em>, <em class="sig-param">device=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/batukh/torch/ocr.html#OCR.predict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#batukh.torch.ocr.OCR.predict" title="Permalink to this definition">¶</a></dt>
+<dd><p>predicts the output given a tensor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch vmaster (1.6.0a0+4392e52 ))"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tensor</span></code></a>) – tensor of shape <code class="docutils literal notranslate"><span class="pre">[1,</span> <span class="pre">3,</span> <span class="pre">width,</span> <span class="pre">height]</span></code>.</p></li>
+<li><p><strong>device</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – device to predict on.
+Default: GPU if it is available else CPU.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>sequence of outputs.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.9)">list</a></p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 </div>

@@ -440,7 +440,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">decoder</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="n">learning_rate</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">imgenc_optimizer</span><span class="p">,</span> <span class="n">enc_optimizer</span><span class="p">,</span> <span class="n">dec_optimizer</span>
 
-    <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+<div class="viewcode-block" id="OCR.train"><a class="viewcode-back" href="../../../generated/batukh.torch.ocr.OCR.html#batukh.torch.ocr.OCR.train">[docs]</a>    <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
               <span class="n">n_epochs</span><span class="p">,</span>
               <span class="n">train_dl</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
               <span class="n">val_dl</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -457,6 +457,46 @@
               <span class="n">max_to_keep</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
               <span class="n">device</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
               <span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Args:</span>
+<span class="sd">            n_epochs (int): number of epochs to train for.</span>
+<span class="sd">            train_dl (:class:`~torch.utils.data.DataLoader`, optional): dataloader</span>
+<span class="sd">                to use for training. Default None.</span>
+<span class="sd">            val_dl (:class:`~torch.utils.data.DataLoader`, optional): dataloader</span>
+<span class="sd">                to use for validation. Default None.</span>
+<span class="sd">            batch_size (int, optional): batch size per training.</span>
+<span class="sd">                Default: 1.</span>
+<span class="sd">            shuffle (bool, optional): whether to shuffle the default dataloader.</span>
+<span class="sd">                Default: True.</span>
+<span class="sd">            criterion (:class:`~torch.nn.module.loss._Loss` or :class:`~torch.nn.module.loss._WeightedLoss`, optional): </span>
+<span class="sd">                The loss function to use.</span>
+<span class="sd">                Default: ``CrossEntropyLoss(reduction=&quot;mean&quot;)``</span>
+<span class="sd">            imgenc_optimizer (:class:`~torch.optim.Optimizer`, optional): </span>
+<span class="sd">                optimizer for img_encoder.</span>
+<span class="sd">                Default: Adam.</span>
+<span class="sd">            enc_optimizer (:class:`~torch.optim.Optimizer`, optional): </span>
+<span class="sd">                optimizer for encoder.</span>
+<span class="sd">                Default: Adam.</span>
+<span class="sd">            dec_optimizer (:class:`~torch.optim.Optimizer`, optional): </span>
+<span class="sd">                optimizer for decoder.</span>
+<span class="sd">                Default: Adam.</span>
+<span class="sd">            learning_rate (int, optional): learning rate to be used for default</span>
+<span class="sd">                optimizers.</span>
+<span class="sd">                Default: 0.001.</span>
+<span class="sd">            save_checkpoints (bool, optional): whether to save checkpoints or</span>
+<span class="sd">                not.</span>
+<span class="sd">                Default: True.</span>
+<span class="sd">            checkpoint_freq (int, optional): the frequency of saving saving</span>
+<span class="sd">                checkpoints.</span>
+<span class="sd">                Default: :math:`\left \lfloor\frac{\text{n_epochs}}{10}\right \rfloor + 1`.</span>
+<span class="sd">            checkpoint_path (str, optional): Path of the checkpoint folder.</span>
+<span class="sd">                Default: &quot;./&quot;</span>
+<span class="sd">            max_to_keep (int or None, optional): The maximum number of latest </span>
+<span class="sd">                checkpoints to be saved. ``None`` to save all. </span>
+<span class="sd">                Default: 5.</span>
+<span class="sd">            device (str, optional): The device to do computations on.</span>
+<span class="sd">                Default: GPU, if GPU is available, else CPU. </span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="n">device</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span>
@@ -466,7 +506,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">decoder</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
 
-        <span class="n">imgenc_optimizer</span><span class="p">,</span> <span class="n">enc_optimizer</span><span class="p">,</span> <span class="n">dec_optimizer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">initOptimizers</span><span class="p">()</span>
+        <span class="n">imgenc_optimizer</span><span class="p">,</span> <span class="n">enc_optimizer</span><span class="p">,</span> <span class="n">dec_optimizer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">initOptimizers</span><span class="p">(</span>
+            <span class="n">imgenc_optimizer</span><span class="p">,</span> <span class="n">enc_optimizer</span><span class="p">,</span> <span class="n">dec_optimizer</span><span class="p">,</span> <span class="n">learning_rate</span>
+        <span class="p">)</span>
 
         <span class="k">if</span> <span class="n">criterion</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">criterion</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">CrossEntropyLoss</span><span class="p">()</span>
@@ -555,7 +597,58 @@
                     <span class="n">pbar</span><span class="o">.</span><span class="n">set_postfix</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="n">eval_loss</span><span class="o">/</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
                 <span class="n">pbar</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
             <span class="k">if</span> <span class="n">epoch</span> <span class="o">%</span> <span class="n">checkpoint_freq</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">save_model</span><span class="p">(</span><span class="n">checkpoint_path</span><span class="p">,</span> <span class="n">epoch</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">save_model</span><span class="p">(</span><span class="n">checkpoint_path</span><span class="p">,</span> <span class="n">epoch</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="OCR.predict"><a class="viewcode-back" href="../../../generated/batukh.torch.ocr.OCR.html#batukh.torch.ocr.OCR.predict">[docs]</a>    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        predicts the output given a tensor.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            x (:class:`~torch.Tensor`): tensor of shape ``[1, 3, width, height]``.</span>
+<span class="sd">            device (str, optional): device to predict on.</span>
+<span class="sd">                Default: GPU if it is available else CPU.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list: sequence of outputs.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">img_encoder</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">decoder</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">device</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span>
+                <span class="s2">&quot;cuda&quot;</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="s2">&quot;cpu&quot;</span><span class="p">)</span>
+
+        <span class="n">outputs</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">img_encoder</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+        <span class="n">enc_hidden</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span><span class="o">.</span><span class="n">initHidden</span><span class="p">()</span>
+
+        <span class="n">encoder_outputs</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">max_length</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span><span class="o">.</span><span class="n">hidden_size</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]):</span>
+            <span class="n">enc_out</span><span class="p">,</span> <span class="n">enc_hidden</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span><span class="p">(</span><span class="n">out</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">idx</span><span class="p">],</span> <span class="n">enc_hidden</span><span class="p">)</span>
+            <span class="n">encoder_outputs</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">enc_out</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+
+        <span class="n">decoder_input</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span>
+            <span class="p">[[[</span><span class="bp">self</span><span class="o">.</span><span class="n">train_dl</span><span class="o">.</span><span class="n">SOS</span><span class="p">]]],</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+
+        <span class="n">dec_hidden</span> <span class="o">=</span> <span class="n">enc_hidden</span>
+
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">dec_out</span><span class="p">,</span> <span class="n">dec_hidden</span><span class="p">,</span> <span class="n">dec_attn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">decoder</span><span class="p">(</span>
+                <span class="n">decoder_input</span><span class="p">,</span> <span class="n">dec_hidden</span><span class="p">,</span> <span class="n">encoder_outputs</span><span class="p">)</span>
+
+            <span class="n">topv</span><span class="p">,</span> <span class="n">topi</span> <span class="o">=</span> <span class="n">dec_out</span><span class="o">.</span><span class="n">topk</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">decoder_input</span> <span class="o">=</span> <span class="n">topi</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span>
+
+            <span class="n">outputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">decoder_input</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">decoder_input</span><span class="o">.</span><span class="n">item</span><span class="p">()</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">train_dl</span><span class="o">.</span><span class="n">EOS</span><span class="p">:</span>
+                <span class="k">break</span>
+
+        <span class="k">return</span> <span class="n">outputs</span></div>
 
     <span class="k">def</span> <span class="nf">load_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
         <span class="n">models</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
