@@ -17,7 +17,7 @@ class SegmentationDataLoader(Dataset):
         label_dir (str): path to the directory containing the labelled images.
         transforms (transforms or None, optional): transforms that act on a 
             tuple of images and return a tuple of transformed images.
-            For some examples, see :class:`~KoshurRecognition.torch_implem.data.augmentation.MultipleRandomRotation`  
+            For some examples, see :class:`~batukh.torch_implem.data.augmentation.MultipleRandomRotation`  
     """
 
     def __init__(self, input_dir, label_dir, transforms=None):
@@ -52,7 +52,7 @@ class SegmentationDataLoader(Dataset):
 
         return input_image, label_image
 
-    def __call__(self, batch_size=1, shuffle=True):
+    def __call__(self, batch_size=1, shuffle=True, num_workers=4, pin_memory=True):
         """
         Args:
             batch_size (int, optional): size of the each batch for every iteration.
@@ -62,7 +62,8 @@ class SegmentationDataLoader(Dataset):
         Returns:
             :class:`~torch.utils.data.DataLoader` : Instance
         """
-        return DataLoader(self, batch_size=batch_size, shuffle=shuffle)
+        return DataLoader(self, batch_size=batch_size, shuffle=shuffle,
+                          num_workers=num_workers, pin_memory=pin_memory)
 
 
 class OCRDataLoader(Dataset):

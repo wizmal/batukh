@@ -5,10 +5,10 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="batukh",
-    version="0.0.1",
+    version="0.0.2",
     author="Murtaza, Wajid, Naveed",
     author_email="batukhorg@gmail.com",
-    description="Document recognizer for multiple languages",
+    description="Document recognizer for multiple languages.",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/KoshurNizam/batukh",

@@ -11,6 +11,9 @@ from tqdm import tqdm
 from time import localtime
 from torch import optim
 
+# TODO: Add types to args
+# TODO: For checkpoints, have default directory named after the task
+
 
 default_transform = transforms.Compose([MultipleRandomRotation(10, fill=(255, 0)),
                                         MultipleColorJitter(
@@ -109,6 +112,8 @@ class BaseProcessor:
               val_dl=None,
               batch_size=1,
               shuffle=True,
+              num_workers=4,
+              pin_memory=True,
               criterion=None,
               optimizer=None,
               learning_rate=0.0001,
@@ -133,12 +138,14 @@ class BaseProcessor:
                     raise Exception(
                         "No DataLoader found. Either pass one in train or use load_data method.")
 
-                train_dl = self.train_dl(batch_size, shuffle)
+                train_dl = self.train_dl(
+                    batch_size, shuffle, num_workers, pin_memory)
             if val_dl is None:
                 if getattr(self, "val_dl", None) is None:
                     val_dl = None
                 else:
-                    val_dl = self.val_dl(batch_size, shuffle)
+                    val_dl = self.val_dl(
+                        batch_size, shuffle, num_workers, pin_memory)
                 ######
             self.model.train()
             total_loss = 0
@@ -200,7 +207,185 @@ class BaseProcessor:
         self.model.eval()
         return self.model(x)
 
-# TODO: Add types to args
+
+class PageExtractor(BaseProcessor):
+    """
+    This class is used to detect boundary of text in an image of a document.
+    """
+
+    def train(self,
+              n_epochs,
+              train_dl=None,
+              val_dl=None,
+              batch_size=1,
+              shuffle=True,
+              num_workers=4,
+              pin_memory=True,
+              criterion=None,
+              optimizer=None,
+              learning_rate=0.0001,
+              save_checkpoints=True,
+              checkpoint_freq=None,
+              checkpoint_path="./",
+              max_to_keep=5,
+              device=None):
+        r"""
+        Training method to detect boundary. 
+
+        The label images should be:
+
+        - the same name as the their original images (including the extension).
+        - the same size as their original images.
+        - black background with the page area filled with red color.
+
+        :attr:`train_dl` and :attr:`val_dl` should be provided if custom dataloaders
+        are required. Although, most of the times, :meth:`~BaselineDetector.load_data`
+        will do the job. 
+
+        Note:
+
+            If :attr:`train_dl` and/or :attr:`val_dl` are provided, then any already made
+            dataloader using  :meth:`~BaselineDetector.load_data` will not be used.
+
+        Args:
+            n_epochs (int): number of epochs.
+            train_dl (:class:`~torch.utils.data.DataLoader`, optional): data loader to train on.
+                Default: None.
+            val_dl (:class:`~torch.utils.data.DataLoader`, optional): data loader to validate on.
+                Default: None.
+            batch_size (int, optional): batch size of the data loader created by :meth:`~BaselineDetector.load_data`.
+                Default: 1.
+            shuffle (bool, optional): whether to shuffle the data loader 
+                created by :meth:`~BaselineDetector.load_data`.
+            num_workers (int, optional): number of processes to load data.
+                Default: 4
+            pin_memory (bool, optional): whether to pin memory while loading data.
+                Default: ``True``.
+            criterion (:class:`~torch.nn.module.loss._Loss` or :class:`~torch.nn.module.loss._WeightedLoss`, optional): 
+                The loss function to use.
+                Default: ``CrossEntropyLoss(reduction="mean")``
+            optimizer (:class:`~torch.optim.Optimizer`, optional): The optimizer
+                to be used to update the parameters.
+                Default: ``Adam(model.parameters(), lr=learning_rate)``
+            learning_rate (float, optional): Learning rate to be used for the 
+                default optimizer.
+                Default: 0.0001.
+            save_checkpoints (bool, optional): Whether to save training checkpoints.
+                Default: ``True``.
+            checkpoint_freq (int, optional): The saving frequency. After each 
+                these many epochs, a checkpoint will be saved.
+                Default: :math:`\left \lfloor\frac{\text{n_epochs}}{10}\right \rfloor + 1`.
+            checkpoint_path (str, optional): Path of the checkpoint folder.
+                Default: "./"
+            max_to_keep (int or None, optional): The maximum number of latest 
+                checkpoints to be saved. ``None`` to save all. 
+                Default: 5.
+            device (str, optional): The device to do computations on.
+                Default: GPU, if GPU is available, else CPU. 
+        """
+
+        if device is None:
+            device = torch.device(
+                "cuda" if torch.cuda.is_available() else "cpu")
+        if optimizer is None:
+            optimizer = optim.Adam(self.model.parameters(), lr=learning_rate)
+        if criterion is None:
+            criterion = nn.CrossEntropyLoss(reduction="mean")
+
+        super().train(n_epochs, train_dl, val_dl, batch_size, shuffle,
+                      num_workers, pin_memory, criterion, optimizer,
+                      learning_rate, save_checkpoints, checkpoint_freq,
+                      checkpoint_path, max_to_keep, device)
+
+
+class ImageExtractor(BaseProcessor):
+    """
+    This class is used to detect images in a document.
+    """
+
+    def train(self,
+              n_epochs,
+              train_dl=None,
+              val_dl=None,
+              batch_size=1,
+              shuffle=True,
+              num_workers=4,
+              pin_memory=True,
+              criterion=None,
+              optimizer=None,
+              learning_rate=0.0001,
+              save_checkpoints=True,
+              checkpoint_freq=None,
+              checkpoint_path="./",
+              max_to_keep=5,
+              device=None):
+        r"""
+        Training method to detect images. 
+
+        The label images should be:
+
+        - the same name as the their original images (including the extension).
+        - the same size as their original images.
+        - black background with corresponding image area red.  
+
+        :attr:`train_dl` and :attr:`val_dl` should be provided if custom dataloaders
+        are required. Although, most of the times, :meth:`~BaselineDetector.load_data`
+        will do the job. 
+
+        Note:
+
+            If :attr:`train_dl` and/or :attr:`val_dl` are provided, then any already made
+            dataloader using  :meth:`~BaselineDetector.load_data` will not be used.
+
+        Args:
+            n_epochs (int): number of epochs.
+            train_dl (:class:`~torch.utils.data.DataLoader`, optional): data loader to train on.
+                Default: None.
+            val_dl (:class:`~torch.utils.data.DataLoader`, optional): data loader to validate on.
+                Default: None.
+            batch_size (int, optional): batch size of the data loader created by :meth:`~BaselineDetector.load_data`.
+                Default: 1.
+            shuffle (bool, optional): whether to shuffle the data loader 
+                created by :meth:`~BaselineDetector.load_data`.
+            num_workers (int, optional): number of processes to load data.
+                Default: 4
+            pin_memory (bool, optional): whether to pin memory while loading data.
+                Default: ``True``.
+            criterion (:class:`~torch.nn.module.loss._Loss` or :class:`~torch.nn.module.loss._WeightedLoss`, optional): 
+                The loss function to use.
+                Default: ``CrossEntropyLoss(reduction="mean")``
+            optimizer (:class:`~torch.optim.Optimizer`, optional): The optimizer
+                to be used to update the parameters.
+                Default: ``Adam(model.parameters(), lr=learning_rate)``
+            learning_rate (float, optional): Learning rate to be used for the 
+                default optimizer.
+                Default: 0.0001.
+            save_checkpoints (bool, optional): Whether to save training checkpoints.
+                Default: ``True``.
+            checkpoint_freq (int, optional): The saving frequency. After each 
+                these many epochs, a checkpoint will be saved.
+                Default: :math:`\left \lfloor\frac{\text{n_epochs}}{10}\right \rfloor + 1`.
+            checkpoint_path (str, optional): Path of the checkpoint folder.
+                Default: "./"
+            max_to_keep (int or None, optional): The maximum number of latest 
+                checkpoints to be saved. ``None`` to save all. 
+                Default: 5.
+            device (str, optional): The device to do computations on.
+                Default: GPU, if GPU is available, else CPU. 
+        """
+
+        if device is None:
+            device = torch.device(
+                "cuda" if torch.cuda.is_available() else "cpu")
+        if optimizer is None:
+            optimizer = optim.Adam(self.model.parameters(), lr=learning_rate)
+        if criterion is None:
+            criterion = nn.CrossEntropyLoss(reduction="mean")
+
+        super().train(n_epochs, train_dl, val_dl, batch_size, shuffle,
+                      num_workers, pin_memory, criterion, optimizer,
+                      learning_rate, save_checkpoints, checkpoint_freq,
+                      checkpoint_path, max_to_keep, device)
 
 
 class BaselineDetector(BaseProcessor):
@@ -214,6 +399,8 @@ class BaselineDetector(BaseProcessor):
               val_dl=None,
               batch_size=1,
               shuffle=True,
+              num_workers=4,
+              pin_memory=True,
               criterion=None,
               optimizer=None,
               learning_rate=0.0001,
@@ -250,6 +437,10 @@ class BaselineDetector(BaseProcessor):
                 Default: 1.
             shuffle (bool, optional): whether to shuffle the data loader 
                 created by :meth:`~BaselineDetector.load_data`.
+            num_workers (int, optional): number of processes to load data.
+                Default: 4
+            pin_memory (bool, optional): whether to pin memory while loading data.
+                Default: ``True``.
             criterion (:class:`~torch.nn.module.loss._Loss` or :class:`~torch.nn.module.loss._WeightedLoss`, optional): 
                 The loss function to use.
                 Default: ``CrossEntropyLoss(weight=Tensor[1, 700]), reduction="mean")``
@@ -273,10 +464,16 @@ class BaselineDetector(BaseProcessor):
                 Default: GPU, if GPU is available, else CPU. 
         """
 
+        if device is None:
+            device = torch.device(
+                "cuda" if torch.cuda.is_available() else "cpu")
         if optimizer is None:
             optimizer = optim.Adam(self.model.parameters(), lr=learning_rate)
         if criterion is None:
             criterion = nn.CrossEntropyLoss(
                 weight=torch.Tensor([1, 700]).to(device), reduction="mean")
-        super().train(n_epochs, train_dl, val_dl, batch_size, shuffle, criterion, optimizer,
-                      learning_rate, save_checkpoints, checkpoint_freq, checkpoint_path, max_to_keep, device)
+
+        super().train(n_epochs, train_dl, val_dl, batch_size, shuffle,
+                      num_workers, pin_memory, criterion, optimizer,
+                      learning_rate, save_checkpoints, checkpoint_freq,
+                      checkpoint_path, max_to_keep, device)

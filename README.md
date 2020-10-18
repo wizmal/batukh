@@ -1,14 +1,14 @@
 # batukh
 
-Detection of Language using CRNN.
+Detection of Koshur Language using CRNN.
 
-Using Pip
+Using [pip](http://pypi.org)
 
 `pip install batukh`
 
 After all the dependencies have been installed, you can train any model.
 
-For Page Extraction:
+For Page Extraction(tensorflow):
 
 ```python
 >>> from batukh.tensorflow.segmenter import PageExtraction
@@ -41,10 +41,9 @@ Epoch: 9. Traininig: 100%|██████████| 70/70 [00:02<00:00, 23
 Epoch: 10. Traininig: 100%|██████████| 70/70 [00:02<00:00, 23.54it/s, loss=0.0533]
 
 Model saved to /content/tf_ckpts/Fri Oct 16 08:23:13 2020/ckpt-14840
-
 ```
 
-For OCR:
+For OCR(tensorflow):
 
 ```python
 >>> from batukh.tensorflow.ocr import OCR
@@ -79,5 +78,47 @@ Epoch: 9. Traininig: 100%|██████████| 70/70 [00:03<00:00, 23
 Epoch: 10. Traininig: 100%|██████████| 70/70 [00:02<00:00, 23.52it/s, loss=22.3]
 
 Model saved to tf_ckpts/Fri Oct 16 09:44:35 2020/ckpt-700
+```
 
+
+
+
+
+
+
+For Baseline Detection(pytorch):
+
+```python
+>>> from batukh.torch.segmenter import BaselineDetector
+>>> m = BaselineDetector()
+<All keys matched successfully>
+>>> m.load_data("/path/to/data")
+>>> m.train(n_epochs=10, device="cpu")
+```
+
+For OCR(pytorch):
+
+```python
+>>> from batukh.torch.ocr import OCR
+>>> m = OCR()
+>>> m.load_data("/path/to/train_dir", "/path/to/train_labels", 
+"/path/to/val_dir", "/path/to/val_labels")
+Building Dictionary. . .
+Building Dictionary. . .
+>>> m.train(5)       
+Epoch: 0. Traininig: 100%|███████████████| 140/140 [00:04<00:00, 30.18it/s, loss=2.59]
+Epoch: 0. Validating: 100%|███████████████| 140/140 [00:01<00:00, 112.06it/s, loss=2.59]
+Models Saved!
+Epoch: 1. Traininig: 100%|███████████████| 140/140 [00:04<00:00, 32.39it/s, loss=2.36]
+Epoch: 1. Validating: 100%|███████████████| 140/140 [00:01<00:00, 121.36it/s, loss=2.18]
+Models Saved!
+Epoch: 2. Traininig: 100%|███████████████| 140/140 [00:04<00:00, 31.12it/s, loss=2.54]
+Epoch: 2. Validating: 100%|███████████████| 140/140 [00:01<00:00, 108.65it/s, loss=2.48]
+Models Saved!
+Epoch: 3. Traininig: 100%|███████████████| 140/140 [00:04<00:00, 31.10it/s, loss=2.48]
+Epoch: 3. Validating: 100%|███████████████| 140/140 [00:01<00:00, 109.46it/s, loss=2.42]
+Models Saved!
+Epoch: 4. Traininig: 100%|███████████████| 140/140 [00:04<00:00, 30.17it/s, loss=2.49]
+Epoch: 4. Validating: 100%|███████████████| 140/140 [00:01<00:00, 110.09it/s, loss=2.42]
+Models Saved!
 ```
