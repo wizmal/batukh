@@ -70,26 +70,14 @@ class BaseProcessor:
             return dataloader
         return None
 
-
-# TODO: move self.model.to(device) from `train_step` and `val_step` to `train`
-
     def train_step(self,
                    x,
                    y,
-                   optimizer=None,
-                   criterion=None,
-                   device=None,
-                   learning_rate=0.0001):
-
-        if device is None:
-            device = torch.device(
-                "cuda" if torch.cuda.is_available() else "cpu")
-        self.model.to(device)
+                   optimizer,
+                   criterion,
+                   learning_rate):
 
         optimizer.zero_grad()
-
-        x = x.to(device)
-        y = y.to(device)
 
         preds = self.model(x)
         loss = criterion(preds, y)
@@ -101,17 +89,8 @@ class BaseProcessor:
     def val_step(self,
                  x,
                  y,
-                 criterion=None,
-                 device=None):
-
-        if device is None:
-            device = torch.device(
-                "cuda" if torch.cuda.is_available() else "cpu")
-
-        self.model.to(device)
-
-        x = x.to(device)
-        y = y.to(device)
+                 criterion,
+                 device):
 
         preds = self.model(x)
 
@@ -160,6 +139,8 @@ class BaseProcessor:
                     val_dl = self.val_dl(
                         batch_size, shuffle, num_workers, pin_memory)
                 ######
+
+            self.model.to(device)
             self.model.train()
             total_loss = 0
 
@@ -168,6 +149,10 @@ class BaseProcessor:
             pbar.set_description(f"Epoch: {epoch}. Traininig")
 
             for i, (x, y) in enumerate(train_dl):
+
+                x = x.to(device)
+                y = y.to(device)
+
                 loss = self.train_step(x, y, optimizer, criterion,
                                        learning_rate=learning_rate, device=device)
                 total_loss += loss

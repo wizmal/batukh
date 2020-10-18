@@ -3,10 +3,6 @@
 
 torch
 ===============================
-.. .. toctree::
-..    :maxdepth: 1
-
-..    torch.utils
 
 This is the `PyTorch <https://pytorch.org>`_ implementation of the document 
 recognizer.
