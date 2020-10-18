@@ -30,11 +30,11 @@ class Train():
         r"""Trains one image or batch of image.
 
         Args:
-            x ( :class:`tensorflow.tensor`) : Input image tensor or batch of image tensor.
-            y ( :class:`tensorflow.tensor`) : Target image tensor or batch of image tensor.
+            x ( :class:`tensorflow.Tensor`) : Input image tensor or batch of image tensor.
+            y ( :class:`tensorflow.Tensor`) : Target image tensor or batch of image tensor.
 
         Returns:
-            :class:`tensorflow.int32` : loss of logits of x w.r.t target y.
+            :class:`tensorflow.float32` : loss.
 
         """
         with tf.GradientTape() as tape:
@@ -59,8 +59,8 @@ class Train():
     def _train(self, ds, epoch, batch_size, repeat):
         r"""
         Args:
-            ds (Dataloader)  : Dataloader object.
-            epoch (int)      : Number of epochs in training loop.
+            ds ( :class:`tensorflow.data.Dataset`)  : dataset.
+            epoch (int)      : epoch.
             batch_size (int) : Batch size of dataloader.
             repeat (int)     : Number of times dataloader will be itterated.
 
@@ -152,6 +152,16 @@ class Train():
         self.val_loss.reset_states()
 
     def _val_one_step(self, x, y):
+        r"""
+
+        Args:
+            x ( :class:`tensorflow.Tensor`) : input image tensor.
+            y ( :class:`tensorflow.Tensor`) : input label tensor.
+
+        Returns:
+            :class:`tensorflow.float` :loss
+            :class:`tensorflow.Tensor` : logits
+            """
         logits = self.model(x, training=False)
         if self.is_ocr:
             logit_length = tf.fill(
@@ -167,7 +177,14 @@ class Train():
 
         return loss, logits
 
-    def _val(self, ds,  batch_size, repeat, epoch):
+    def _val(self, ds, epoch,  batch_size, repeat):
+        r"""
+        Args:
+            ds ( :class:`tensorflow.data.Dataset`) : datsset.
+            epoch (int) : epoch.
+            batch_size (int) : batch size.
+            repeat (int): number of times dataset will be itterated in one epoch.
+            """
         pbar = tqdm(total=len(ds)*repeat)
         pbar.set_description(f"Epoch: {epoch}. validation")
         for x, y in ds(batch_size, repeat):
@@ -178,6 +195,14 @@ class Train():
         pbar.close()
 
     def predict(self, x):
+        r"""
+        Args:
+            x ( :class:`tensorflow.Tensor`) : Input image tensor.
+
+        Returns:
+            :class:`tensorflow.Tensor` : predictions.
+            """
+
         logits = self.model(x, training=False)
         return logits
 

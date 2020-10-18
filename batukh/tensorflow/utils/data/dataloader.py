@@ -33,6 +33,7 @@ class SegmentationDataLoader():
         ds = ds.apply(tf.data.experimental.ignore_errors())
 
         self.dataset = ds
+        print("Dataset build....")
 
     def _decode_and_resize(self, image_filename, label_filename):
         r""" Reads images. Reads and one hot encodes labels.
@@ -140,6 +141,7 @@ class OCRDataLoader():
         ds = ds.apply(tf.data.experimental.ignore_errors())
 
         self.dataset = ds
+        print("Dataset build....")
 
     def _decode_and_resize(self, filename, label):
         r""" Reads image.
