@@ -31,6 +31,20 @@ class BaseProcessor:
                   train_path,
                   val_path=None,
                   transform="default"):
+        """
+        Loads the data and creates a dataloader.
+
+        Args:
+            train_path (str): path to a directory containing two folders named
+                `originals` and `labels` for training data.
+            val_path (str, optional): path to a directory containing two
+                named `originals` and `labels` for validation data.
+                Default: None.
+            transform (:mod:`~torchvision.transforms`, optional):
+                Transforms to be applied on images and labels. It should be 
+                able to take a list of images as inputs and return a list of
+                transformed images.
+        """
 
         if transform == "default":
             transform = default_transform
@@ -58,7 +72,6 @@ class BaseProcessor:
 
 
 # TODO: move self.model.to(device) from `train_step` and `val_step` to `train`
-
 
     def train_step(self,
                    x,
@@ -213,6 +226,32 @@ class PageExtractor(BaseProcessor):
     This class is used to detect boundary of text in an image of a document.
     """
 
+    def load_data(self,
+                  train_path,
+                  val_path=None,
+                  transform="default"):
+        """
+        Loads the data and creates a dataloader.
+
+        The label images should be:
+
+        - the same name as the their original images (including the extension).
+        - the same size as their original images.
+        - black background with the page area filled with red color.
+
+        Args:
+            train_path (str): path to a directory containing two folders named
+                `originals` and `labels` for training data.
+            val_path (str, optional): path to a directory containing two
+                named `originals` and `labels` for validation data.
+                Default: None.
+            transform (:mod:`~torchvision.transforms`, optional):
+                Transforms to be applied on images and labels. It should be 
+                able to take a list of images as inputs and return a list of
+                transformed images.
+        """
+        super().load_data(train_path, val_path, transform)
+
     def train(self,
               n_epochs,
               train_dl=None,
@@ -232,14 +271,8 @@ class PageExtractor(BaseProcessor):
         r"""
         Training method to detect boundary. 
 
-        The label images should be:
-
-        - the same name as the their original images (including the extension).
-        - the same size as their original images.
-        - black background with the page area filled with red color.
-
         :attr:`train_dl` and :attr:`val_dl` should be provided if custom dataloaders
-        are required. Although, most of the times, :meth:`~BaselineDetector.load_data`
+        are required. Although, most of the times, :meth:`~PageExtractor.load_data`
         will do the job. 
 
         Note:
@@ -303,6 +336,32 @@ class ImageExtractor(BaseProcessor):
     This class is used to detect images in a document.
     """
 
+    def load_data(self,
+                  train_path,
+                  val_path=None,
+                  transform="default"):
+        """
+        Loads the data and creates a dataloader.
+
+        The label images should be:
+
+        - the same name as the their original images (including the extension).
+        - the same size as their original images.
+        - black background with corresponding image area red. 
+
+        Args:
+            train_path (str): path to a directory containing two folders named
+                `originals` and `labels` for training data.
+            val_path (str, optional): path to a directory containing two
+                named `originals` and `labels` for validation data.
+                Default: None.
+            transform (:mod:`~torchvision.transforms`, optional):
+                Transforms to be applied on images and labels. It should be 
+                able to take a list of images as inputs and return a list of
+                transformed images.
+        """
+        super().load_data(train_path, val_path, transform)
+
     def train(self,
               n_epochs,
               train_dl=None,
@@ -322,14 +381,9 @@ class ImageExtractor(BaseProcessor):
         r"""
         Training method to detect images. 
 
-        The label images should be:
-
-        - the same name as the their original images (including the extension).
-        - the same size as their original images.
-        - black background with corresponding image area red.  
 
         :attr:`train_dl` and :attr:`val_dl` should be provided if custom dataloaders
-        are required. Although, most of the times, :meth:`~BaselineDetector.load_data`
+        are required. Although, most of the times, :meth:`~ImageExtractor.load_data`
         will do the job. 
 
         Note:
@@ -393,6 +447,33 @@ class BaselineDetector(BaseProcessor):
     This class is used to detect baselines in an image of a document.
     """
 
+    def load_data(self,
+                  train_path,
+                  val_path=None,
+                  transform="default"):
+        """
+        Loads the data and creates a dataloader.
+
+        The label images should be:
+
+        - the same name as the their original images.
+        - the same size as their original images.
+        - black background with red lines of about 5px width representing baselines.
+
+
+        Args:
+            train_path (str): path to a directory containing two folders named
+                `originals` and `labels` for training data.
+            val_path (str, optional): path to a directory containing two
+                named `originals` and `labels` for validation data.
+                Default: None.
+            transform (:mod:`~torchvision.transforms`, optional):
+                Transforms to be applied on images and labels. It should be 
+                able to take a list of images as inputs and return a list of
+                transformed images.
+        """
+        super().load_data(train_path, val_path, transform)
+
     def train(self,
               n_epochs,
               train_dl=None,
@@ -411,12 +492,6 @@ class BaselineDetector(BaseProcessor):
               device=None):
         r"""
         Training method to detect baselines. 
-
-        The label images should be:
-
-        - the same name as the their original images.
-        - the same size as their original images.
-        - black background with red lines of about 5px width representing baselines.
 
         :attr:`train_dl` and :attr:`val_dl` should be provided if custom dataloaders
         are required. Although, most of the times, :meth:`~BaselineDetector.load_data`
