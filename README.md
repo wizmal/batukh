@@ -11,7 +11,7 @@ After all the dependencies have been installed, you can train any model.
 For Page Extraction(tensorflow):
 
 ```python
->>> from batukh.tensorflow.segmenter import PageExtraction
+>>> from batukh.tensorflow.segmenter import PageExtractor
 >>> page_extacter=PageExtraction()
 >>> page_extracter.load_data("temp")
 >>> page_extarcter.train(n_epochs=10, batch_size=1,repeat=1)

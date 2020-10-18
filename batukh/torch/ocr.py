@@ -46,6 +46,9 @@ class OCR:
         max_length (int, optional): The maximum number of characters that can occur in an image.
             Default: 50.
     """
+# TODO: Replace ``encoder_input`` with ``image_size``.
+# TODO: Have an EOS and SOS option available during training.
+# maybe the custom dataloader does not have an EOS or SOS varaible.
 
     def __init__(self,
                  encoder_input=1536,
