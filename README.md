@@ -1,6 +1,6 @@
 # batukh
 
-Detection of Language using CRNN.
+Detection of Koshur Language using CRNN.
 
 Using [pip](http://pypi.org)
 

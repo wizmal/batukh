@@ -7,6 +7,16 @@ from .utils.models.ocr_model import OCRModel
 class OCR(Train):
     r"""This class is used for octical character recognition.
 
+    Example
+
+    .. code:: python
+
+        >>> from batukh.tensorflow.ocr import OCR
+        >>> m = OCR(177)
+        >>> m.load_data(train_path="/data/",height=32)
+        >>> m.train(1)
+
+
     Args:
         n_classes (int) : number of outputs nodes of ocr model.
     """
@@ -30,6 +40,6 @@ class OCR(Train):
             self.val_dl = OCRDataLoader(
                 val_path, height)
 
-    def train(self, n_epochs, batch_size=2, repeat=1, criterion=None, class_weights=None, optimizer=None, learning_rate=0.0001, save_checkpoints=True, checkpoint_freq=None, checkpoint_path=None, max_to_keep=5):
+    def train(self, n_epochs, batch_size=1, repeat=1, criterion=None, class_weights=None, optimizer=None, learning_rate=0.0001, save_checkpoints=True, checkpoint_freq=None, checkpoint_path=None, max_to_keep=5):
         super().train(n_epochs, train_dl=self.train_dl, val_dl=self.val_dl, batch_size=batch_size, repeat=repeat, criterion=criterion, class_weights=class_weights,
                       optimizer=optimizer, learning_rate=learning_rate, save_checkpoints=save_checkpoints, checkpoint_freq=checkpoint_freq, checkpoint_path=checkpoint_path, max_to_keep=max_to_keep)
