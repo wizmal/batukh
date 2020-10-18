@@ -1,24 +1,45 @@
+.. role:: hidden
+    :class: hidden-section
+
 torch
 ===============================
+.. .. toctree::
+..    :maxdepth: 1
+
+..    torch.utils
 
 This is the `PyTorch <https://pytorch.org>`_ implementation of the document 
 recognizer.
 
 It has two basic modules:
 
-1. :mod:`~batukh.torch.segmenter`
-2. :mod:`~batukh.torch.ocr`
+.. contents::
+    :depth: 1
+    :local:
+    :backlinks: top
 
-.. toctree::
-   :maxdepth: 1
-
-   torch.utils
+.. currentmodule:: batukh.torch
 
 
-.. automodule:: batukh.torch.segmenter
-   :members:
+segmenter
+----------
 
-.. automodule:: batukh.torch.ocr
-   :members:
+.. autosummary::
+    :toctree: generated
+    :nosignatures:
+    :template: classtemplate.rst
 
+    ~segmenter.PageExtractor
+    ~segmenter.ImageExtractor
+    ~segmenter.BaselineDetector
+
+
+ocr
+---
+
+.. autosummary::
+    :toctree: generated
+    :nosignatures:
+
+    ~ocr.OCR
 

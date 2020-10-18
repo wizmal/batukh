@@ -81,8 +81,8 @@ napoleon_use_ivar = True
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
-if RELEASE:
-    templates_path = ['_templates-stable'] + templates_path
+# if RELEASE:
+#     templates_path = ['_templates-stable'] + templates_path
 
 # TODO: document these and remove them from here.
 
@@ -376,6 +376,7 @@ try:
 except ImportError:
     torchvision = None
 '''
+autodoc_member_order = 'bysource'
 
 
 def patched_make_field(self, types, domain, items, **kw):
