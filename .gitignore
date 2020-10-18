@@ -1,6 +1,6 @@
 *.vscode
 *__pycache__
-docs/_build
+docs/docs
 *pytest_cache
 batukh/torch/notebooks
 build
