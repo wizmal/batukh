@@ -6,9 +6,9 @@ import numpy as np
 
 
 class SegmentationDataLoader():
-    r""" Loads the :class:`tensorflow.data.Dataset` for :class:`~batukh.tensorflow.segmenter.PageExtracter`, 
-    :class:`~batukh.tensorflow.segmenter.ImageExtracter`, :class:`~batukh.tensorflow.segmenter.LayoutExtracter` and 
-    :class:`~batukh.tensorflow.segmenter.BaselineDetecter` classes.
+    r""" Loads the :class:`tensorflow.data.Dataset` for :class:`~batukh.tensorflow.segmenter.PageExtractor`, 
+    :class:`~batukh.tensorflow.segmenter.ImageExtractor`, :class:`~batukh.tensorflow.segmenter.LayoutExtractor` and 
+    :class:`~batukh.tensorflow.segmenter.BaselineDetector` classes.
 
     Example
 
