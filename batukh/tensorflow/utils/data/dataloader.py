@@ -10,10 +10,22 @@ class SegmentationDataLoader():
     :class:`~batukh.tensorflow.segmenter.ImageExtracter`, :class:`~batukh.tensorflow.segmenter.LayoutExtracter` and 
     :class:`~batukh.tensorflow.segmenter.BaselineDetecter` classes.
 
+    Example
+
+    .. code:: python
+
+        >>> from batukh.tensorflow.utils.data.dataloader import SegmentationDataLoader
+        >>> dl=SegmentationDataLoader("/data/",2)
+        >>> for i,j in dl(batch_size=1):
+        ...     print(i.shape,j.shape)
+        ...     break
+
     Args:
         path (str)       : Path of the folder containing originals folder and labels folder to be loaded in dataset.
             Folder names must be as mentioned.
         n_classes (int)  : number of classes in label images.
+
+
 
     """
 
@@ -108,6 +120,15 @@ class SegmentationDataLoader():
 
 class OCRDataLoader():
     r""" Loads the :class:`~tensorflow.data.Dataset` for :class:`~batukh.tensorflow.ocr.OCR` class.
+
+    Example
+    .. code:: python
+
+        >>> from batukh.tensorflow.utils.data.dataloader import OCRDataLoader
+        >>> dl=OCRDataLoader("/data/",64)
+        >>> for i,j in dl(1,1):
+        ...     print(i.shape,j.values)
+        ...     break
 
     Args:
         path (str)        :  Path of  folder containing images folder,labels.txt and table.txt to be loaded in dataset.Name of folders and files should be same as mentioned.
@@ -226,6 +247,7 @@ class OCRDataLoader():
         return img_path, labels
 
     def map2string(self, inputs):
+        # todo : shift theese methods to ocr
         """Maps tensor to stings as per :class:`~self.inv_table`.
 
         Args:
@@ -242,6 +264,21 @@ class OCRDataLoader():
 
     def decode(self, inputs, from_pred=True, method='gready', merge_repeated=True):
         """Decodes the model logits using ctc decoder.
+
+        Example
+
+        .. code:: python
+
+            >>> from batukh.tensorflow.ocr import OCR
+            >>> import tensorflow as tf
+            >>> m = OCR(177)
+            >>> m.load_model("/saved_model/")
+            >>> x = tf.io.read_file("/image.png")
+            >>> x = tf.io.decode_png(x,channels=1)
+            >>> y = m.predict(x)
+            >>> pred = m.train_dl.decode(y)
+
+
 
         Args:
             inputs ( :class:`tensorflow.Tensor`) : Input tensor.

@@ -10,19 +10,21 @@ from .utils.data.augmentation import MultipleColorJitter
 class PageExtracter(Train):
     r"""This class used to extract pages (removing borders and blank spaces around pages) from originals.
 
-    Examples:
-        ```
+    Example
+
+    .. code-block:: python
+
         >>> from batukh.tensorflow.segmenter import PageExtraction
         >>> page_extracter = PageExtraction()
         >>> page_extracter.load_data(train_path = "/train_data/")
         >>> page_extracter.train(n_epochs=10,batch_size=1,weights=[1,100])
         Initializing from scratch
-
         Epoch: 1. Traininig: 100%|██████████| 70/70 [00:02<00:00, 23.95it/s, loss=0.0708]
         Model saved to /tf_ckpts/Fri Oct 16 08:23:13 2020/ckpt-14280
-        >>> page_extracter.save_model("/model/')
+        >>> page_extracter.save_model("/model/")
         Model saved at /saved_models
-        ```
+
+
         """
 
     def __init__(self):
@@ -55,18 +57,19 @@ class PageExtracter(Train):
 class ImageExtracter(Train):
     r"""The class used to extract images.
 
-    Examples:
-        ```
+    Example
+
+    .. code-block:: python
+
         >>> from batukh.tensorflow.segmenter import ImageExtracter
         >>> image_extracter = ImageExtracter()
         >>> image_extracter.load_data( train_path="/train_data/",val_path="/val_data/")
         >>> image_extracter.train(n_epochs=1)
         Initializing from scratch
-
         Epoch: 1. Traininig: 100%|██████████| 70/70 [00:02<00:00, 23.95it/s, loss=0.0708]
         Epoch: 1. validation: 100%|██████████| 70/70 [00:02<00:00, 23.95it/s, loss=0.0708]
         Model saved to /tf_ckpts/Fri Oct 16 08:23:13 2020/ckpt-14280
-        ```
+
         """
 
     def __init__(self):
@@ -99,18 +102,19 @@ class ImageExtracter(Train):
 class LayoutExtracter(Train):
     r"""This class is used to extract diffrent layouts from a image.
 
-    Examples:
-        ```
+    Example
+
+    .. code-block:: python
+
         >>> from batukh.tensorflow.segmenter import LayoutExtracter
         >>> layout_extracter = LayoutExtracter(2)
         >>> layout_extracter.load_data(train_path ="/train_data/",val_data="/val_data/")
         >>> layout_extracter.train(n_epochs=1,checkpoint_path="/tf_chkpts/")
         Restored from /tf_chkpts/ckpt-13280
-
         Epoch: 1. Traininig: 100%|██████████| 70/70 [00:02<00:00, 23.95it/s, loss=0.0708]
         Epoch: 1. validation: 100%|██████████| 70/70 [00:02<00:00, 23.95it/s, loss=0.0708]
         Model saved to /tf_ckpts/Fri Oct 16 08:23:13 2020/ckpt-14280
-        ```
+
         """
 
     def __init__(self, n_layouts):
@@ -143,17 +147,18 @@ class LayoutExtracter(Train):
 class BaselineDetecter(Train):
     r"""This class is used to detect baseline.
 
-    Examples:
-        ```
+    Example
+
+    .. code-block:: python
+
         >>> from batukh.tensorflow.segmenter import BaselineDetecter
         >>> baseline_detecter = BaselineDetecter()
         >>> baseline_detecter.load_data("/train_data/")
         >>> baseline_detecter.train(1,weights=[1:700])
         Initializing from scratch
-
         Epoch: 1. Traininig: 100%|██████████| 70/70 [00:02<00:00, 23.95it/s, loss=0.0708]
-        Epoch: 1. validation: 100%|██████████| 70/70 [00:02<00:00, 23.95it/s, loss=0.0708]
         Model saved to /tf_ckpts/Fri Oct 16 08:23:13 2020/ckpt-14280
+
         """
 
     def __init__(self):

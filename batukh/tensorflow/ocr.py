@@ -7,13 +7,15 @@ from .utils.models.ocr_model import OCRModel
 class OCR(Train):
     r"""This class is used for octical character recognition.
 
-    Example:
-        ```
+    Example
+
+    .. code:: python
+
         >>> from batukh.tensorflow.ocr import OCR
         >>> m = OCR(177)
         >>> m.load_data(train_path="/data/",height=32)
         >>> m.train(1)
-        ```
+
 
     Args:
         n_classes (int) : number of outputs nodes of ocr model.
