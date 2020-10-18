@@ -15,7 +15,7 @@ from time import localtime
 MAX_LENGTH = 50
 
 
-class WordDetector:
+class OCR:
     r"""
     A basic CRNN which detects the characters in an image.
 

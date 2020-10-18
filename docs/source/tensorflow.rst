@@ -2,7 +2,7 @@ tensorflow
 ===============================
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
 
    tensorflow.utils
 

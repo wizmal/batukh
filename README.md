@@ -81,11 +81,6 @@ Model saved to tf_ckpts/Fri Oct 16 09:44:35 2020/ckpt-700
 ```
 
 
-
-
-
-
-
 For Baseline Detection(pytorch):
 
 ```python
@@ -99,8 +94,8 @@ For Baseline Detection(pytorch):
 For OCR(pytorch):
 
 ```python
->>> from batukh.torch.ocr import WordDetector
->>> m = WordDetector()
+>>> from batukh.torch.ocr import OCR
+>>> m = OCR()
 >>> m.load_data("/path/to/train_dir", "/path/to/train_labels", 
 "/path/to/val_dir", "/path/to/val_labels")
 Building Dictionary. . .
@@ -122,3 +117,4 @@ Epoch: 4. Traininig: 100%|███████████████| 140/140
 Epoch: 4. Validating: 100%|███████████████| 140/140 [00:01<00:00, 110.09it/s, loss=2.42]
 Models Saved!
 ```
+

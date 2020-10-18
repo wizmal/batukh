@@ -2,7 +2,7 @@ tensorflow.utils.models
 =========================================
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
 
 .. automodule:: batukh.tensorflow.utils.models.ocr_model
    :members:

@@ -2,7 +2,7 @@ torch.utils.models
 =========================================
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
 
 .. automodule:: batukh.torch.utils.models.ocr_model
    :members:
