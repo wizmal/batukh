@@ -273,9 +273,14 @@ class BaseProcessor:
         torch.save(self.model.state_dict(), path)
         print("Model Saved!")
 
-    def predict(self, x):
+    def predict(self, x, device=None):
         # TODO: add dataloader option
+        if device is None:
+            device = torch.device(
+                "cuda" if torch.cuda.is_available() else "cpu")
 
+        self.model.to(device)
+        x = x.to(device)
         self.model.eval()
         return self.model(x)
 
