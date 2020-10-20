@@ -262,6 +262,11 @@ class BaseProcessor:
         print("Model Loaded!")
 
     def save_model(self, path):
+        r"""saves the current model.
+
+        Args:
+            path(str): path to the file. (.pt or .pth)
+        """
         if not (path.endswith(".pt") or path.endswith(".pth")):
             path = path+".pt"
 
