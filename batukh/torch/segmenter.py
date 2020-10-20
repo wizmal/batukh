@@ -261,9 +261,11 @@ class BaseProcessor:
         print(self.model.load_state_dict(torch.load(path)))
         print("Model Loaded!")
 
-    def save_model(self, path, prefix=0):
-        name = "{} {}-{}-{} {}.{}.{}.pt".format(prefix, *localtime()[:6])
-        torch.save(self.model.state_dict(), join(path, name))
+    def save_model(self, path):
+        if not (path.endswith(".pt") or path.endswith(".pth")):
+            path = path+".pt"
+
+        torch.save(self.model.state_dict(), path)
         print("Model Saved!")
 
     def predict(self, x):
