@@ -274,6 +274,14 @@ class BaseProcessor:
         print("Model Saved!")
 
     def predict(self, x, device=None):
+        r"""predicts the output for a given input.
+
+        Args:
+            x (:class:`~torch.Tensor`): input tensor of shape 
+                ``[batch_size, height, width, 3]``.
+            device (str, optional): device on which to perform the computation.
+                Default: GPU is it is available, else CPU.
+        """
         # TODO: add dataloader option
         if device is None:
             device = torch.device(
