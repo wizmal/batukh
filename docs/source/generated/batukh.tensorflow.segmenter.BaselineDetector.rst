@@ -3,10 +3,10 @@
 .. currentmodule:: batukh.tensorflow.segmenter
 
 
-BaselineDetecter
+BaselineDetector
 ================
 
-.. autoclass:: BaselineDetecter
+.. autoclass:: BaselineDetector
     :inherited-members:
     :members:
 
