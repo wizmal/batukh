@@ -90,8 +90,7 @@ class BaseProcessor:
     def val_step(self,
                  x,
                  y,
-                 criterion,
-                 device):
+                 criterion):
 
         preds = self.model(x)
 
@@ -136,6 +135,8 @@ class BaseProcessor:
                     batch_size, shuffle, num_workers, pin_memory)
             ######
 
+        self.model.to(device)
+
         # checkpoint stuff
         if checkpoint_path is None:
             checkpoint_path = join(
@@ -149,7 +150,7 @@ class BaseProcessor:
             checkpoint_file_path = self.get_latest_ckpt_path(
                 checkpoint_path)
             current_epoch, optimizer, loss = self.load_checkpoint(
-                join(checkpoint_file_path), optimizer)
+                join(checkpoint_file_path), optimizer, device)
             print("Latest checkpoint found.")
             print(
                 f"Epoch: {current_epoch}    loss: {loss}\nResuming training...")
@@ -157,7 +158,6 @@ class BaseProcessor:
         current_epoch += 1
         for epoch in range(current_epoch, current_epoch+n_epochs):
 
-            self.model.to(device)
             self.model.train()
             total_loss = 0
 
@@ -171,7 +171,7 @@ class BaseProcessor:
                 y = y.to(device)
 
                 loss = self.train_step(x, y, optimizer, criterion,
-                                       learning_rate=learning_rate, device=device)
+                                       learning_rate=learning_rate)
                 total_loss += loss
 
                 pbar.update()
@@ -187,7 +187,11 @@ class BaseProcessor:
                 pbar.set_description(f"Epoch: {epoch}. Validating")
 
                 for i, (x, y) in enumerate(val_dl):
-                    loss = self.val_step(x, y, criterion, device)
+
+                    x = x.to(device)
+                    y = y.to(device)
+
+                    loss = self.val_step(x, y, criterion)
                     eval_loss += loss
 
                     pbar.update(1)
@@ -197,7 +201,7 @@ class BaseProcessor:
                 name = "{}-{}-{}-{}-{}-{}-{}.pt".format(
                     epoch, *localtime()[:6])
                 self.save_checkpoint(join(checkpoint_path, name), epoch,
-                                     optimizer, total_loss)
+                                     optimizer, total_loss/len(train_dl))
 
     def save_checkpoint(self, path, epoch, optimizer, loss):
         r"""
@@ -217,8 +221,9 @@ class BaseProcessor:
             "loss": loss,
         }
         torch.save(checkpoint, path)
+        print("checkpoint saved")
 
-    def load_checkpoint(self, path, optimizer):
+    def load_checkpoint(self, path, optimizer, device):
         r"""
         loads a saved checkpoint.
 
@@ -233,6 +238,8 @@ class BaseProcessor:
         """
         checkpoint = torch.load(path)
         self.model.load_state_dict(checkpoint["model"])
+        self.model.to(device)
+
         optimizer.load_state_dict(checkpoint["optimizer"])
 
         return checkpoint["epoch"], optimizer, checkpoint["loss"]
@@ -242,7 +249,7 @@ class BaseProcessor:
         for filename in os.listdir(path):
             date = list(map(int, filename.split(".")[0].split("-")))
             c_time = datetime(*date[1:])
-            if c_time > min_time:
+            if c_time < min_time:
                 min_time = c_time
                 min_file = filename
             elif c_time == min_time:
@@ -337,9 +344,10 @@ class PageExtractor(BaseProcessor):
               learning_rate=0.0001,
               save_checkpoints=True,
               checkpoint_freq=None,
-              checkpoint_path="./",
+              checkpoint_path=None,
               max_to_keep=5,
-              device=None):
+              device=None,
+              ):
         r"""
         Training method to detect boundary. 
 
@@ -447,9 +455,10 @@ class ImageExtractor(BaseProcessor):
               learning_rate=0.0001,
               save_checkpoints=True,
               checkpoint_freq=None,
-              checkpoint_path="./",
+              checkpoint_path=None,
               max_to_keep=5,
-              device=None):
+              device=None,
+              ):
         r"""
         Training method to detect images. 
 
@@ -559,9 +568,10 @@ class BaselineDetector(BaseProcessor):
               learning_rate=0.0001,
               save_checkpoints=True,
               checkpoint_freq=None,
-              checkpoint_path="./",
+              checkpoint_path=None,
               max_to_keep=5,
-              device=None):
+              device=None,
+              ):
         r"""
         Training method to detect baselines. 
 
