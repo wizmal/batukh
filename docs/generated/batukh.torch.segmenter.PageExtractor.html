@@ -66,7 +66,7 @@
 <div class="container-fluid header-holder tutorials-header" id="header-holder">
   <div class="container">
     <div class="header-container">
-      <a class="header-logo" href="ourwebsite" aria-label="PyTorch"></a>
+      <a class="header-logo" href="https://koshurnizam.github.io" aria-label="PyTorch"></a>
 
       <div class="main-menu">
         <ul>
@@ -107,7 +107,7 @@
           </li>
 
           <li class="active" >
-            <a href="https://ourwebsite/docs/stable/index.html">Docs</a>
+            <a href="https://koshurnizam.github.io/batukh">Docs</a>
           </li>
 
           <li>
@@ -299,7 +299,7 @@ transformed images.</p></li>
 
 <dl class="method">
 <dt id="batukh.torch.segmenter.PageExtractor.train">
-<code class="sig-name descname">train</code><span class="sig-paren">(</span><em class="sig-param">n_epochs</em>, <em class="sig-param">train_dl=None</em>, <em class="sig-param">val_dl=None</em>, <em class="sig-param">batch_size=1</em>, <em class="sig-param">shuffle=True</em>, <em class="sig-param">num_workers=4</em>, <em class="sig-param">pin_memory=True</em>, <em class="sig-param">criterion=None</em>, <em class="sig-param">optimizer=None</em>, <em class="sig-param">learning_rate=0.0001</em>, <em class="sig-param">save_checkpoints=True</em>, <em class="sig-param">checkpoint_freq=None</em>, <em class="sig-param">checkpoint_path='./'</em>, <em class="sig-param">max_to_keep=5</em>, <em class="sig-param">device=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/batukh/torch/segmenter.html#PageExtractor.train"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#batukh.torch.segmenter.PageExtractor.train" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">train</code><span class="sig-paren">(</span><em class="sig-param">n_epochs</em>, <em class="sig-param">train_dl=None</em>, <em class="sig-param">val_dl=None</em>, <em class="sig-param">batch_size=1</em>, <em class="sig-param">shuffle=True</em>, <em class="sig-param">num_workers=4</em>, <em class="sig-param">pin_memory=True</em>, <em class="sig-param">criterion=None</em>, <em class="sig-param">optimizer=None</em>, <em class="sig-param">learning_rate=0.0001</em>, <em class="sig-param">save_checkpoints=True</em>, <em class="sig-param">checkpoint_freq=None</em>, <em class="sig-param">checkpoint_path=None</em>, <em class="sig-param">max_to_keep=5</em>, <em class="sig-param">device=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/batukh/torch/segmenter.html#PageExtractor.train"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#batukh.torch.segmenter.PageExtractor.train" title="Permalink to this definition">¶</a></dt>
 <dd><p>Training method to detect boundary.</p>
 <p><code class="xref py py-attr docutils literal notranslate"><span class="pre">train_dl</span></code> and <code class="xref py py-attr docutils literal notranslate"><span class="pre">val_dl</span></code> should be provided if custom dataloaders
 are required. Although, most of the times, <a class="reference internal" href="#batukh.torch.segmenter.PageExtractor.load_data" title="batukh.torch.segmenter.PageExtractor.load_data"><code class="xref py py-meth docutils literal notranslate"><span class="pre">load_data()</span></code></a>
@@ -351,12 +351,78 @@ Default: GPU, if GPU is available, else CPU.</p></li>
 </dd></dl>
 
 <dl class="method">
+<dt id="batukh.torch.segmenter.PageExtractor.load_checkpoint">
+<code class="sig-name descname">load_checkpoint</code><span class="sig-paren">(</span><em class="sig-param">path</em>, <em class="sig-param">optimizer</em>, <em class="sig-param">device</em><span class="sig-paren">)</span><a class="headerlink" href="#batukh.torch.segmenter.PageExtractor.load_checkpoint" title="Permalink to this definition">¶</a></dt>
+<dd><p>loads a saved checkpoint.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – path to a .pt or .pth file.</p></li>
+<li><p><strong>optimizer</strong> (<a class="reference external" href="https://pytorch.org/docs/stable/optim.html#torch.optim.Optimizer" title="(in PyTorch vmaster (1.6.0a0+4392e52 ))"><code class="xref py py-class docutils literal notranslate"><span class="pre">Optimizer</span></code></a>) – optimizer
+(preferably the same one which was saved) to load it’s parameters.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>tuple of epoch,
+optimizer and loss.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tuple(int, <a class="reference external" href="https://pytorch.org/docs/stable/optim.html#torch.optim.Optimizer" title="(in PyTorch vmaster (1.6.0a0+4392e52 ))"><code class="xref py py-class docutils literal notranslate"><span class="pre">Optimizer</span></code></a>, float)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
 <dt id="batukh.torch.segmenter.PageExtractor.load_model">
 <code class="sig-name descname">load_model</code><span class="sig-paren">(</span><em class="sig-param">path</em><span class="sig-paren">)</span><a class="headerlink" href="#batukh.torch.segmenter.PageExtractor.load_model" title="Permalink to this definition">¶</a></dt>
-<dd><p>Loads the model parameters for <code class="docutils literal notranslate"><span class="pre">self.model</span></code>.</p>
+<dd><p>Loads the model parameters for <code class="xref py py-attr docutils literal notranslate"><span class="pre">self.model</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – path to a .pth(or .pt) file.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="batukh.torch.segmenter.PageExtractor.predict">
+<code class="sig-name descname">predict</code><span class="sig-paren">(</span><em class="sig-param">x</em>, <em class="sig-param">device=None</em><span class="sig-paren">)</span><a class="headerlink" href="#batukh.torch.segmenter.PageExtractor.predict" title="Permalink to this definition">¶</a></dt>
+<dd><p>predicts the output for a given input.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch vmaster (1.6.0a0+4392e52 ))"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tensor</span></code></a>) – input tensor of shape
+<code class="docutils literal notranslate"><span class="pre">[batch_size,</span> <span class="pre">height,</span> <span class="pre">width,</span> <span class="pre">3]</span></code>.</p></li>
+<li><p><strong>device</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – device on which to perform the computation.
+Default: GPU if it is available, else CPU.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="batukh.torch.segmenter.PageExtractor.save_checkpoint">
+<code class="sig-name descname">save_checkpoint</code><span class="sig-paren">(</span><em class="sig-param">path</em>, <em class="sig-param">epoch</em>, <em class="sig-param">optimizer</em>, <em class="sig-param">loss</em><span class="sig-paren">)</span><a class="headerlink" href="#batukh.torch.segmenter.PageExtractor.save_checkpoint" title="Permalink to this definition">¶</a></dt>
+<dd><p>save the checkpoint (epoch, model parameters, optimizer parameters, loss).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – path of the checkpoint file(.pt or .pth).</p></li>
+<li><p><strong>epoch</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – epoch number to be saved in the checkpoint.</p></li>
+<li><p><strong>optimizer</strong> (<a class="reference external" href="https://pytorch.org/docs/stable/optim.html#torch.optim.Optimizer" title="(in PyTorch vmaster (1.6.0a0+4392e52 ))"><code class="xref py py-class docutils literal notranslate"><span class="pre">Optimizer</span></code></a>) – optimizer whose
+parameters need to be saved.</p></li>
+<li><p><strong>loss</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a>) – loss value to be stored.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="batukh.torch.segmenter.PageExtractor.save_model">
+<code class="sig-name descname">save_model</code><span class="sig-paren">(</span><em class="sig-param">path</em><span class="sig-paren">)</span><a class="headerlink" href="#batukh.torch.segmenter.PageExtractor.save_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>saves the current model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – path to the file. (.pt or .pth)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -453,7 +519,7 @@ Default: GPU, if GPU is available, else CPU.</p></li>
         <div class="col-md-4 text-center">
           <h2>Docs</h2>
           <p>Access comprehensive developer documentation for batukh.</p>
-          <a class="with-right-arrow" href="https://ourwebsite/docs/stable/index.html">View Docs</a>
+          <a class="with-right-arrow" href="https://koshurnizam.github.io/batukh">View Docs</a>
         </div>
 
         <div class="col-md-4 text-center">
@@ -474,18 +540,18 @@ Default: GPU, if GPU is available, else CPU.</p></li>
   <footer class="site-footer">
     <div class="container footer-container">
       <div class="footer-logo-wrapper">
-        <a href="ourwebsite" class="footer-logo"></a>
+        <a href="https://koshurnizam.github.io" class="footer-logo"></a>
       </div>
 
       <div class="footer-links-wrapper">
         <div class="footer-links-col">
           <ul>
-            <li class="list-title"><a href="ourwebsite">batukh</a></li>
+            <li class="list-title"><a href="https://koshurnizam.github.io">batukh</a></li>
             <!-- <li><a href="https://ourwebsite/get-started">Get Started</a></li> -->
             <!-- <li><a href="https://ourwebsite/features">Features</a></li> -->
             <!-- <li><a href="https://ourwebsite/ecosystem">Ecosystem</a></li> -->
             <!-- <li><a href="https://ourwebsite/blog/">Blog</a></li> -->
-            <!-- <li><a href="https://github.com/pytorch/pytorch/blob/master/CONTRIBUTING.md">Contributing</a></li> -->
+            <!-- <li><a href="https://github.com/KoshurNizam/batukh/blob/master/CONTRIBUTING.md">Contributing</a></li> -->
           </ul>
         </div>
 
@@ -493,7 +559,7 @@ Default: GPU, if GPU is available, else CPU.</p></li>
           <ul>
             <li class="list-title"><a href="https://ourwebsite/resources">Resources</a></li>
             <li><a href="https://ourwebsite/tutorials">Tutorials</a></li>
-            <li><a href="https://ourwebsite/docs/stable/index.html">Docs</a></li>
+            <li><a href="https://koshurnizam.github.io/batukh">Docs</a></li>
             <li><a href="https://discuss.ourwebsite" target="_blank">Discuss</a></li>
             <li><a href="https://github.com/KoshurNizam/batukh/issues" target="_blank">Github Issues</a></li>
             <!-- <li><a href="https://ourwebsite/assets/brand-guidelines/Brand-Guidelines.pdf" target="_blank">Brand Guidelines</a> -->
@@ -562,7 +628,7 @@ Default: GPU, if GPU is available, else CPU.</p></li>
     <div class="container-fluid">
       <div class="container">
         <div class="mobile-main-menu-header-container">
-          <a class="header-logo" href="ourwebsite" aria-label="PyTorch"></a>
+          <a class="header-logo" href="https://koshurnizam.github.io" aria-label="PyTorch"></a>
           <a class="main-menu-close-button" href="#" data-behavior="close-mobile-menu"></a>
         </div>
       </div>
@@ -600,7 +666,7 @@ Default: GPU, if GPU is available, else CPU.</p></li>
           </li>
 
           <li class="active">
-            <a href="https://ourwebsite/docs/stable/index.html">Docs</a>
+            <a href="https://koshurnizam.github.io/batukh">Docs</a>
           </li>
 
           <li>

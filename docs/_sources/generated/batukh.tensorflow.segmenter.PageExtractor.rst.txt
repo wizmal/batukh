@@ -3,10 +3,10 @@
 .. currentmodule:: batukh.tensorflow.segmenter
 
 
-ImageExtracter
-==============
+PageExtractor
+=============
 
-.. autoclass:: ImageExtracter
+.. autoclass:: PageExtractor
     :inherited-members:
     :members:
 

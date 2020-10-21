@@ -64,7 +64,7 @@
 <div class="container-fluid header-holder tutorials-header" id="header-holder">
   <div class="container">
     <div class="header-container">
-      <a class="header-logo" href="ourwebsite" aria-label="PyTorch"></a>
+      <a class="header-logo" href="https://koshurnizam.github.io" aria-label="PyTorch"></a>
 
       <div class="main-menu">
         <ul>
@@ -105,7 +105,7 @@
           </li>
 
           <li class="active" >
-            <a href="https://ourwebsite/docs/stable/index.html">Docs</a>
+            <a href="https://koshurnizam.github.io/batukh">Docs</a>
           </li>
 
           <li>
@@ -266,9 +266,9 @@
 
 
 <div class="viewcode-block" id="SegmentationDataLoader"><a class="viewcode-back" href="../../../../../tensorflow.utils.data.html#batukh.tensorflow.utils.data.dataloader.SegmentationDataLoader">[docs]</a><span class="k">class</span> <span class="nc">SegmentationDataLoader</span><span class="p">():</span>
-    <span class="sa">r</span><span class="sd">&quot;&quot;&quot; Loads the :class:`tensorflow.data.Dataset` for :class:`~batukh.tensorflow.segmenter.PageExtracter`, </span>
-<span class="sd">    :class:`~batukh.tensorflow.segmenter.ImageExtracter`, :class:`~batukh.tensorflow.segmenter.LayoutExtracter` and </span>
-<span class="sd">    :class:`~batukh.tensorflow.segmenter.BaselineDetecter` classes.</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot; Loads the :class:`tensorflow.data.Dataset` for :class:`~batukh.tensorflow.segmenter.PageExtractor`, </span>
+<span class="sd">    :class:`~batukh.tensorflow.segmenter.ImageExtractor`, :class:`~batukh.tensorflow.segmenter.LayoutExtractor` and </span>
+<span class="sd">    :class:`~batukh.tensorflow.segmenter.BaselineDetector` classes.</span>
 
 <span class="sd">    Example</span>
 
@@ -467,7 +467,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span>
 
-    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
         <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">        Args:</span>
@@ -479,7 +479,7 @@
 <span class="sd">            :class:`tensorflow.data.dataset` : Dataloader.</span>
 <span class="sd">            &quot;&quot;&quot;</span>
         <span class="n">ds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataset</span>
-        <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">batch</span><span class="p">(</span><span class="n">batch_size</span><span class="p">)</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
+        <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">batch</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_convert_label</span><span class="p">)</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">repeat</span><span class="p">)</span>
         <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">prefetch</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">experimental</span><span class="o">.</span><span class="n">AUTOTUNE</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">ds</span>
@@ -504,70 +504,7 @@
         <span class="n">labels</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">img_path</span><span class="p">:</span>
             <span class="n">labels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">labels_</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">])])</span>
-        <span class="k">return</span> <span class="n">img_path</span><span class="p">,</span> <span class="n">labels</span>
-
-<div class="viewcode-block" id="OCRDataLoader.map2string"><a class="viewcode-back" href="../../../../../tensorflow.utils.data.html#batukh.tensorflow.utils.data.dataloader.OCRDataLoader.map2string">[docs]</a>    <span class="k">def</span> <span class="nf">map2string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">):</span>
-        <span class="c1"># todo : shift theese methods to ocr</span>
-        <span class="sd">&quot;&quot;&quot;Maps tensor to stings as per :class:`~self.inv_table`.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            inputs (:class:`tensorflow.Tensor`) : Input tensor.</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            list : list of strings.&quot;&quot;&quot;</span>
-        <span class="n">strings</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">inputs</span><span class="p">:</span>
-            <span class="n">text</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">inv_table</span><span class="p">[</span><span class="n">char_index</span><span class="p">]</span> <span class="k">for</span> <span class="n">char_index</span> <span class="ow">in</span> <span class="n">i</span>
-                    <span class="k">if</span> <span class="n">char_index</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">blank_index</span><span class="p">]</span>
-            <span class="n">strings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">text</span><span class="p">))</span>
-        <span class="k">return</span> <span class="n">strings</span></div>
-
-<div class="viewcode-block" id="OCRDataLoader.decode"><a class="viewcode-back" href="../../../../../tensorflow.utils.data.html#batukh.tensorflow.utils.data.dataloader.OCRDataLoader.decode">[docs]</a>    <span class="k">def</span> <span class="nf">decode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">from_pred</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;gready&#39;</span><span class="p">,</span> <span class="n">merge_repeated</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Decodes the model logits using ctc decoder.</span>
-
-<span class="sd">        Example</span>
-
-<span class="sd">        .. code:: python</span>
-
-<span class="sd">            &gt;&gt;&gt; from batukh.tensorflow.ocr import OCR</span>
-<span class="sd">            &gt;&gt;&gt; import tensorflow as tf</span>
-<span class="sd">            &gt;&gt;&gt; m = OCR(177)</span>
-<span class="sd">            &gt;&gt;&gt; m.load_model(&quot;/saved_model/&quot;)</span>
-<span class="sd">            &gt;&gt;&gt; x = tf.io.read_file(&quot;/image.png&quot;)</span>
-<span class="sd">            &gt;&gt;&gt; x = tf.io.decode_png(x,channels=1)</span>
-<span class="sd">            &gt;&gt;&gt; y = m.predict(x)</span>
-<span class="sd">            &gt;&gt;&gt; pred = m.train_dl.decode(y)</span>
-
-
-
-<span class="sd">        Args:</span>
-<span class="sd">            inputs ( :class:`tensorflow.Tensor`) : Input tensor.</span>
-<span class="sd">            from_pred (bol,optional): ``True`` if input is return of ( :class:`~batukh.tensorflow.ocr.OCR.predict`. ``False`` if input is a :class:`tensorflow.SparseTensor`.</span>
-<span class="sd">                Default: ``True``</span>
-<span class="sd">            method (str,optional)   :if  ``&#39;gready&#39;``  :class:`tensorflow.nn.ctc_greedy_decoder` used for decoding.if  ``&#39;beam_search&#39;``  :class:`tensorflow.nn.ctc_beam_search_decoder` used.</span>
-<span class="sd">                Default: `` &#39;greedy&#39; ``</span>
-<span class="sd">            merge_repeated (bol,optional): Specifes if similar charsters will be merged.</span>
-<span class="sd">                Default: ``True``</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            list: decoded list of strings  &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">merge_repeated</span> <span class="o">=</span> <span class="n">merge_repeated</span>
-        <span class="k">if</span> <span class="n">from_pred</span><span class="p">:</span>
-            <span class="n">logit_length</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">fill</span><span class="p">([</span><span class="n">tf</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">inputs</span><span class="p">)[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">tf</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">inputs</span><span class="p">)[</span><span class="mi">1</span><span class="p">])</span>
-            <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;greedy&#39;</span><span class="p">:</span>
-                <span class="n">decoded</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ctc_greedy_decoder</span><span class="p">(</span>
-                    <span class="n">inputs</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">perm</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">]),</span>
-                    <span class="n">sequence_length</span><span class="o">=</span><span class="n">logit_length</span><span class="p">,</span>
-                    <span class="n">merge_repeated</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">merge_repeated</span><span class="p">)</span>
-            <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;beam_search&#39;</span><span class="p">:</span>
-                <span class="n">decoded</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ctc_beam_search_decoder</span><span class="p">(</span>
-                    <span class="n">inputs</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">perm</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">]),</span>
-                    <span class="n">sequence_length</span><span class="o">=</span><span class="n">logit_length</span><span class="p">)</span>
-            <span class="n">inputs</span> <span class="o">=</span> <span class="n">decoded</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">decoded</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">sparse</span><span class="o">.</span><span class="n">to_dense</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span>
-                                     <span class="n">default_value</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">blank_index</span><span class="p">)</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
-        <span class="n">decoded</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">map2string</span><span class="p">(</span><span class="n">decoded</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">decoded</span></div></div>
+        <span class="k">return</span> <span class="n">img_path</span><span class="p">,</span> <span class="n">labels</span></div>
 </pre></div>
 
               </article>
@@ -645,7 +582,7 @@
         <div class="col-md-4 text-center">
           <h2>Docs</h2>
           <p>Access comprehensive developer documentation for batukh.</p>
-          <a class="with-right-arrow" href="https://ourwebsite/docs/stable/index.html">View Docs</a>
+          <a class="with-right-arrow" href="https://koshurnizam.github.io/batukh">View Docs</a>
         </div>
 
         <div class="col-md-4 text-center">
@@ -666,18 +603,18 @@
   <footer class="site-footer">
     <div class="container footer-container">
       <div class="footer-logo-wrapper">
-        <a href="ourwebsite" class="footer-logo"></a>
+        <a href="https://koshurnizam.github.io" class="footer-logo"></a>
       </div>
 
       <div class="footer-links-wrapper">
         <div class="footer-links-col">
           <ul>
-            <li class="list-title"><a href="ourwebsite">batukh</a></li>
+            <li class="list-title"><a href="https://koshurnizam.github.io">batukh</a></li>
             <!-- <li><a href="https://ourwebsite/get-started">Get Started</a></li> -->
             <!-- <li><a href="https://ourwebsite/features">Features</a></li> -->
             <!-- <li><a href="https://ourwebsite/ecosystem">Ecosystem</a></li> -->
             <!-- <li><a href="https://ourwebsite/blog/">Blog</a></li> -->
-            <!-- <li><a href="https://github.com/pytorch/pytorch/blob/master/CONTRIBUTING.md">Contributing</a></li> -->
+            <!-- <li><a href="https://github.com/KoshurNizam/batukh/blob/master/CONTRIBUTING.md">Contributing</a></li> -->
           </ul>
         </div>
 
@@ -685,7 +622,7 @@
           <ul>
             <li class="list-title"><a href="https://ourwebsite/resources">Resources</a></li>
             <li><a href="https://ourwebsite/tutorials">Tutorials</a></li>
-            <li><a href="https://ourwebsite/docs/stable/index.html">Docs</a></li>
+            <li><a href="https://koshurnizam.github.io/batukh">Docs</a></li>
             <li><a href="https://discuss.ourwebsite" target="_blank">Discuss</a></li>
             <li><a href="https://github.com/KoshurNizam/batukh/issues" target="_blank">Github Issues</a></li>
             <!-- <li><a href="https://ourwebsite/assets/brand-guidelines/Brand-Guidelines.pdf" target="_blank">Brand Guidelines</a> -->
@@ -754,7 +691,7 @@
     <div class="container-fluid">
       <div class="container">
         <div class="mobile-main-menu-header-container">
-          <a class="header-logo" href="ourwebsite" aria-label="PyTorch"></a>
+          <a class="header-logo" href="https://koshurnizam.github.io" aria-label="PyTorch"></a>
           <a class="main-menu-close-button" href="#" data-behavior="close-mobile-menu"></a>
         </div>
       </div>
@@ -792,7 +729,7 @@
           </li>
 
           <li class="active">
-            <a href="https://ourwebsite/docs/stable/index.html">Docs</a>
+            <a href="https://koshurnizam.github.io/batukh">Docs</a>
           </li>
 
           <li>

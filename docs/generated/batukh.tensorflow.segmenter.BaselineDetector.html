@@ -12,7 +12,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>PageExtracter &mdash; batukh master documentation</title>
+  <title>BaselineDetector &mdash; batukh master documentation</title>
   
 
   
@@ -36,8 +36,8 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato" type="text/css" />
   <link rel="index" title="Index" href="../genindex.html" />
   <link rel="search" title="Search" href="../search.html" />
-  <link rel="next" title="ImageExtracter" href="batukh.tensorflow.segmenter.ImageExtracter.html" />
-  <link rel="prev" title="tensorflow" href="../tensorflow.html" /> 
+  <link rel="next" title="OCR" href="batukh.tensorflow.ocr.OCR.html" />
+  <link rel="prev" title="ImageExtractor" href="batukh.tensorflow.segmenter.ImageExtractor.html" /> 
 
   
   <script src="../_static/js/modernizr.min.js"></script>
@@ -66,7 +66,7 @@
 <div class="container-fluid header-holder tutorials-header" id="header-holder">
   <div class="container">
     <div class="header-container">
-      <a class="header-logo" href="ourwebsite" aria-label="PyTorch"></a>
+      <a class="header-logo" href="https://koshurnizam.github.io" aria-label="PyTorch"></a>
 
       <div class="main-menu">
         <ul>
@@ -107,7 +107,7 @@
           </li>
 
           <li class="active" >
-            <a href="https://ourwebsite/docs/stable/index.html">Docs</a>
+            <a href="https://koshurnizam.github.io/batukh">Docs</a>
           </li>
 
           <li>
@@ -233,13 +233,13 @@
         
           <li><a href="../tensorflow.html">tensorflow</a> &gt;</li>
         
-      <li>PageExtracter</li>
+      <li>BaselineDetector</li>
     
     
       <li class="pytorch-breadcrumbs-aside">
         
             
-            <a href="../_sources/generated/batukh.tensorflow.segmenter.PageExtracter.rst.txt" rel="nofollow"><img src="../_static/images/view-page-source-icon.svg"></a>
+            <a href="../_sources/generated/batukh.tensorflow.segmenter.BaselineDetector.rst.txt" rel="nofollow"><img src="../_static/images/view-page-source-icon.svg"></a>
           
         
       </li>
@@ -265,32 +265,30 @@
             <div role="main" class="main-content" itemscope="itemscope" itemtype="http://schema.org/Article">
               <article itemprop="articleBody" id="pytorch-article" class="pytorch-article">
                 
-  <div class="section" id="pageextracter">
-<h1>PageExtracter<a class="headerlink" href="#pageextracter" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="baselinedetector">
+<h1>BaselineDetector<a class="headerlink" href="#baselinedetector" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
-<dt id="batukh.tensorflow.segmenter.PageExtracter">
-<em class="property">class </em><code class="sig-prename descclassname">batukh.tensorflow.segmenter.</code><code class="sig-name descname">PageExtracter</code><a class="reference internal" href="../_modules/batukh/tensorflow/segmenter.html#PageExtracter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#batukh.tensorflow.segmenter.PageExtracter" title="Permalink to this definition">¶</a></dt>
-<dd><p>This class used to extract pages (removing borders and blank spaces around pages) from originals.</p>
+<dt id="batukh.tensorflow.segmenter.BaselineDetector">
+<em class="property">class </em><code class="sig-prename descclassname">batukh.tensorflow.segmenter.</code><code class="sig-name descname">BaselineDetector</code><a class="reference internal" href="../_modules/batukh/tensorflow/segmenter.html#BaselineDetector"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#batukh.tensorflow.segmenter.BaselineDetector" title="Permalink to this definition">¶</a></dt>
+<dd><p>This class is used to detect baseline.</p>
 <p>Example</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">batukh.tensorflow.segmenter</span> <span class="kn">import</span> <span class="n">PageExtraction</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">page_extracter</span> <span class="o">=</span> <span class="n">PageExtraction</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">page_extracter</span><span class="o">.</span><span class="n">load_data</span><span class="p">(</span><span class="n">train_path</span> <span class="o">=</span> <span class="s2">&quot;/train_data/&quot;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">page_extracter</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">n_epochs</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span><span class="n">batch_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">weights</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">100</span><span class="p">])</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">batukh.tensorflow.segmenter</span> <span class="kn">import</span> <span class="n">BaselineDetector</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">baseline_Detector</span> <span class="o">=</span> <span class="n">BaselineDetector</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">baseline_Detector</span><span class="o">.</span><span class="n">load_data</span><span class="p">(</span><span class="s2">&quot;/train_data/&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">baseline_Detector</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">weights</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">700</span><span class="p">])</span>
 <span class="go">Initializing from scratch</span>
 <span class="go">Epoch: 1. Traininig: 100%|██████████| 70/70 [00:02&lt;00:00, 23.95it/s, loss=0.0708]</span>
 <span class="go">Model saved to /tf_ckpts/Fri Oct 16 08:23:13 2020/ckpt-14280</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">page_extracter</span><span class="o">.</span><span class="n">save_model</span><span class="p">(</span><span class="s2">&quot;/model/&quot;</span><span class="p">)</span>
-<span class="go">Model saved at /saved_models</span>
 </pre></div>
 </div>
 <dl class="method">
-<dt id="batukh.tensorflow.segmenter.PageExtracter.load_data">
-<code class="sig-name descname">load_data</code><span class="sig-paren">(</span><em class="sig-param">train_path</em>, <em class="sig-param">val_path=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/batukh/tensorflow/segmenter.html#PageExtracter.load_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#batukh.tensorflow.segmenter.PageExtracter.load_data" title="Permalink to this definition">¶</a></dt>
+<dt id="batukh.tensorflow.segmenter.BaselineDetector.load_data">
+<code class="sig-name descname">load_data</code><span class="sig-paren">(</span><em class="sig-param">train_path</em>, <em class="sig-param">val_path=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/batukh/tensorflow/segmenter.html#BaselineDetector.load_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#batukh.tensorflow.segmenter.BaselineDetector.load_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Loads Train and Validation datset.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Respective images and labels should be of same size with same filename.
-label images should be of black background with  pixels corresponding to page area colored red.</p>
+label images should be of black background with  red lines of about 5px representing baselines.</p>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -303,8 +301,8 @@ label images should be of black background with  pixels corresponding to page ar
 </dd></dl>
 
 <dl class="method">
-<dt id="batukh.tensorflow.segmenter.PageExtracter.load_model">
-<code class="sig-name descname">load_model</code><span class="sig-paren">(</span><em class="sig-param">path</em><span class="sig-paren">)</span><a class="headerlink" href="#batukh.tensorflow.segmenter.PageExtracter.load_model" title="Permalink to this definition">¶</a></dt>
+<dt id="batukh.tensorflow.segmenter.BaselineDetector.load_model">
+<code class="sig-name descname">load_model</code><span class="sig-paren">(</span><em class="sig-param">path</em><span class="sig-paren">)</span><a class="headerlink" href="#batukh.tensorflow.segmenter.BaselineDetector.load_model" title="Permalink to this definition">¶</a></dt>
 <dd><p>Loads presaved weights.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -314,8 +312,8 @@ label images should be of black background with  pixels corresponding to page ar
 </dd></dl>
 
 <dl class="method">
-<dt id="batukh.tensorflow.segmenter.PageExtracter.predict">
-<code class="sig-name descname">predict</code><span class="sig-paren">(</span><em class="sig-param">x</em><span class="sig-paren">)</span><a class="headerlink" href="#batukh.tensorflow.segmenter.PageExtracter.predict" title="Permalink to this definition">¶</a></dt>
+<dt id="batukh.tensorflow.segmenter.BaselineDetector.predict">
+<code class="sig-name descname">predict</code><span class="sig-paren">(</span><em class="sig-param">x</em><span class="sig-paren">)</span><a class="headerlink" href="#batukh.tensorflow.segmenter.BaselineDetector.predict" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>x</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">tensorflow.Tensor</span></code>) – Input image tensor.</p>
@@ -330,8 +328,8 @@ label images should be of black background with  pixels corresponding to page ar
 </dd></dl>
 
 <dl class="method">
-<dt id="batukh.tensorflow.segmenter.PageExtracter.save_model">
-<code class="sig-name descname">save_model</code><span class="sig-paren">(</span><em class="sig-param">path</em>, <em class="sig-param">name</em><span class="sig-paren">)</span><a class="headerlink" href="#batukh.tensorflow.segmenter.PageExtracter.save_model" title="Permalink to this definition">¶</a></dt>
+<dt id="batukh.tensorflow.segmenter.BaselineDetector.save_model">
+<code class="sig-name descname">save_model</code><span class="sig-paren">(</span><em class="sig-param">path</em>, <em class="sig-param">name</em><span class="sig-paren">)</span><a class="headerlink" href="#batukh.tensorflow.segmenter.BaselineDetector.save_model" title="Permalink to this definition">¶</a></dt>
 <dd><p>Saves model</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -352,10 +350,10 @@ label images should be of black background with  pixels corresponding to page ar
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="batukh.tensorflow.segmenter.ImageExtracter.html" class="btn btn-neutral float-right" title="ImageExtracter" accesskey="n" rel="next">Next <img src="../_static/images/chevron-right-orange.svg" class="next-page"></a>
+        <a href="batukh.tensorflow.ocr.OCR.html" class="btn btn-neutral float-right" title="OCR" accesskey="n" rel="next">Next <img src="../_static/images/chevron-right-orange.svg" class="next-page"></a>
       
       
-        <a href="../tensorflow.html" class="btn btn-neutral" title="tensorflow" accesskey="p" rel="prev"><img src="../_static/images/chevron-right-orange.svg" class="previous-page"> Previous</a>
+        <a href="batukh.tensorflow.segmenter.ImageExtractor.html" class="btn btn-neutral" title="ImageExtractor" accesskey="p" rel="prev"><img src="../_static/images/chevron-right-orange.svg" class="previous-page"> Previous</a>
       
     </div>
   
@@ -387,7 +385,7 @@ label images should be of black background with  pixels corresponding to page ar
           <div class="pytorch-right-menu" id="pytorch-right-menu">
             <div class="pytorch-side-scroll" id="pytorch-side-scroll-right">
               <ul>
-<li><a class="reference internal" href="#">PageExtracter</a></li>
+<li><a class="reference internal" href="#">BaselineDetector</a></li>
 </ul>
 
             </div>
@@ -432,7 +430,7 @@ label images should be of black background with  pixels corresponding to page ar
         <div class="col-md-4 text-center">
           <h2>Docs</h2>
           <p>Access comprehensive developer documentation for batukh.</p>
-          <a class="with-right-arrow" href="https://ourwebsite/docs/stable/index.html">View Docs</a>
+          <a class="with-right-arrow" href="https://koshurnizam.github.io/batukh">View Docs</a>
         </div>
 
         <div class="col-md-4 text-center">
@@ -453,18 +451,18 @@ label images should be of black background with  pixels corresponding to page ar
   <footer class="site-footer">
     <div class="container footer-container">
       <div class="footer-logo-wrapper">
-        <a href="ourwebsite" class="footer-logo"></a>
+        <a href="https://koshurnizam.github.io" class="footer-logo"></a>
       </div>
 
       <div class="footer-links-wrapper">
         <div class="footer-links-col">
           <ul>
-            <li class="list-title"><a href="ourwebsite">batukh</a></li>
+            <li class="list-title"><a href="https://koshurnizam.github.io">batukh</a></li>
             <!-- <li><a href="https://ourwebsite/get-started">Get Started</a></li> -->
             <!-- <li><a href="https://ourwebsite/features">Features</a></li> -->
             <!-- <li><a href="https://ourwebsite/ecosystem">Ecosystem</a></li> -->
             <!-- <li><a href="https://ourwebsite/blog/">Blog</a></li> -->
-            <!-- <li><a href="https://github.com/pytorch/pytorch/blob/master/CONTRIBUTING.md">Contributing</a></li> -->
+            <!-- <li><a href="https://github.com/KoshurNizam/batukh/blob/master/CONTRIBUTING.md">Contributing</a></li> -->
           </ul>
         </div>
 
@@ -472,7 +470,7 @@ label images should be of black background with  pixels corresponding to page ar
           <ul>
             <li class="list-title"><a href="https://ourwebsite/resources">Resources</a></li>
             <li><a href="https://ourwebsite/tutorials">Tutorials</a></li>
-            <li><a href="https://ourwebsite/docs/stable/index.html">Docs</a></li>
+            <li><a href="https://koshurnizam.github.io/batukh">Docs</a></li>
             <li><a href="https://discuss.ourwebsite" target="_blank">Discuss</a></li>
             <li><a href="https://github.com/KoshurNizam/batukh/issues" target="_blank">Github Issues</a></li>
             <!-- <li><a href="https://ourwebsite/assets/brand-guidelines/Brand-Guidelines.pdf" target="_blank">Brand Guidelines</a> -->
@@ -541,7 +539,7 @@ label images should be of black background with  pixels corresponding to page ar
     <div class="container-fluid">
       <div class="container">
         <div class="mobile-main-menu-header-container">
-          <a class="header-logo" href="ourwebsite" aria-label="PyTorch"></a>
+          <a class="header-logo" href="https://koshurnizam.github.io" aria-label="PyTorch"></a>
           <a class="main-menu-close-button" href="#" data-behavior="close-mobile-menu"></a>
         </div>
       </div>
@@ -579,7 +577,7 @@ label images should be of black background with  pixels corresponding to page ar
           </li>
 
           <li class="active">
-            <a href="https://ourwebsite/docs/stable/index.html">Docs</a>
+            <a href="https://koshurnizam.github.io/batukh">Docs</a>
           </li>
 
           <li>

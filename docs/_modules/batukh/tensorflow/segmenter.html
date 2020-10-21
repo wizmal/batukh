@@ -64,7 +64,7 @@
 <div class="container-fluid header-holder tutorials-header" id="header-holder">
   <div class="container">
     <div class="header-container">
-      <a class="header-logo" href="ourwebsite" aria-label="PyTorch"></a>
+      <a class="header-logo" href="https://koshurnizam.github.io" aria-label="PyTorch"></a>
 
       <div class="main-menu">
         <ul>
@@ -105,7 +105,7 @@
           </li>
 
           <li class="active" >
-            <a href="https://ourwebsite/docs/stable/index.html">Docs</a>
+            <a href="https://koshurnizam.github.io/batukh">Docs</a>
           </li>
 
           <li>
@@ -267,7 +267,7 @@
 <span class="c1"># todo:apply augmentation</span>
 
 
-<div class="viewcode-block" id="PageExtracter"><a class="viewcode-back" href="../../../generated/batukh.tensorflow.segmenter.PageExtracter.html#batukh.tensorflow.segmenter.PageExtracter">[docs]</a><span class="k">class</span> <span class="nc">PageExtracter</span><span class="p">(</span><span class="n">Train</span><span class="p">):</span>
+<div class="viewcode-block" id="PageExtractor"><a class="viewcode-back" href="../../../generated/batukh.tensorflow.segmenter.PageExtractor.html#batukh.tensorflow.segmenter.PageExtractor">[docs]</a><span class="k">class</span> <span class="nc">PageExtractor</span><span class="p">(</span><span class="n">Train</span><span class="p">):</span>
     <span class="sa">r</span><span class="sd">&quot;&quot;&quot;This class used to extract pages (removing borders and blank spaces around pages) from originals.</span>
 
 <span class="sd">    Example</span>
@@ -275,13 +275,13 @@
 <span class="sd">    .. code-block:: python</span>
 
 <span class="sd">        &gt;&gt;&gt; from batukh.tensorflow.segmenter import PageExtraction</span>
-<span class="sd">        &gt;&gt;&gt; page_extracter = PageExtraction()</span>
-<span class="sd">        &gt;&gt;&gt; page_extracter.load_data(train_path = &quot;/train_data/&quot;)</span>
-<span class="sd">        &gt;&gt;&gt; page_extracter.train(n_epochs=10,batch_size=1,weights=[1,100])</span>
+<span class="sd">        &gt;&gt;&gt; page_Extractor = PageExtraction()</span>
+<span class="sd">        &gt;&gt;&gt; page_Extractor.load_data(train_path = &quot;/train_data/&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; page_Extractor.train(n_epochs=10,batch_size=1,weights=[1,100])</span>
 <span class="sd">        Initializing from scratch</span>
 <span class="sd">        Epoch: 1. Traininig: 100%|██████████| 70/70 [00:02&lt;00:00, 23.95it/s, loss=0.0708]</span>
 <span class="sd">        Model saved to /tf_ckpts/Fri Oct 16 08:23:13 2020/ckpt-14280</span>
-<span class="sd">        &gt;&gt;&gt; page_extracter.save_model(&quot;/model/&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; page_Extractor.save_model(&quot;/model/&quot;)</span>
 <span class="sd">        Model saved at /saved_models</span>
 
 
@@ -292,7 +292,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">train_dl</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">val_dl</span> <span class="o">=</span> <span class="kc">None</span>
 
-<div class="viewcode-block" id="PageExtracter.load_data"><a class="viewcode-back" href="../../../generated/batukh.tensorflow.segmenter.PageExtracter.html#batukh.tensorflow.segmenter.PageExtracter.load_data">[docs]</a>    <span class="k">def</span> <span class="nf">load_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">train_path</span><span class="p">,</span> <span class="n">val_path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="PageExtractor.load_data"><a class="viewcode-back" href="../../../generated/batukh.tensorflow.segmenter.PageExtractor.html#batukh.tensorflow.segmenter.PageExtractor.load_data">[docs]</a>    <span class="k">def</span> <span class="nf">load_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">train_path</span><span class="p">,</span> <span class="n">val_path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Loads Train and Validation datset.</span>
 
 <span class="sd">        Note:</span>
@@ -309,22 +309,26 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">val_dl</span> <span class="o">=</span> <span class="n">SegmentationDataLoader</span><span class="p">(</span>
                 <span class="n">val_path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">n_classes</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_epochs</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">criterion</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">class_weights</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">optimizer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.0001</span><span class="p">,</span> <span class="n">save_checkpoints</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">checkpoint_freq</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">checkpoint_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">max_to_keep</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">n_epochs</span><span class="p">,</span> <span class="n">train_dl</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">train_dl</span><span class="p">,</span> <span class="n">val_dl</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">val_dl</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="n">repeat</span><span class="p">,</span> <span class="n">criterion</span><span class="o">=</span><span class="n">criterion</span><span class="p">,</span> <span class="n">class_weights</span><span class="o">=</span><span class="n">class_weights</span><span class="p">,</span>
+    <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_epochs</span><span class="p">,</span> <span class="n">train_dl</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">val_dl</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">criterion</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">class_weights</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">optimizer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.0001</span><span class="p">,</span> <span class="n">save_checkpoints</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">checkpoint_freq</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">checkpoint_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">max_to_keep</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">train_dl</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">train_dl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">train_dl</span>
+        <span class="k">if</span> <span class="n">val_dl</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">val_dl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">val_dl</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">n_epochs</span><span class="p">,</span> <span class="n">train_dl</span><span class="o">=</span><span class="n">train_dl</span><span class="p">,</span> <span class="n">val_dl</span><span class="o">=</span><span class="n">val_dl</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="n">repeat</span><span class="p">,</span> <span class="n">criterion</span><span class="o">=</span><span class="n">criterion</span><span class="p">,</span> <span class="n">class_weights</span><span class="o">=</span><span class="n">class_weights</span><span class="p">,</span>
                       <span class="n">optimizer</span><span class="o">=</span><span class="n">optimizer</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="n">learning_rate</span><span class="p">,</span> <span class="n">save_checkpoints</span><span class="o">=</span><span class="n">save_checkpoints</span><span class="p">,</span> <span class="n">checkpoint_freq</span><span class="o">=</span><span class="n">checkpoint_freq</span><span class="p">,</span> <span class="n">checkpoint_path</span><span class="o">=</span><span class="n">checkpoint_path</span><span class="p">,</span> <span class="n">max_to_keep</span><span class="o">=</span><span class="n">max_to_keep</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="ImageExtracter"><a class="viewcode-back" href="../../../generated/batukh.tensorflow.segmenter.ImageExtracter.html#batukh.tensorflow.segmenter.ImageExtracter">[docs]</a><span class="k">class</span> <span class="nc">ImageExtracter</span><span class="p">(</span><span class="n">Train</span><span class="p">):</span>
+<div class="viewcode-block" id="ImageExtractor"><a class="viewcode-back" href="../../../generated/batukh.tensorflow.segmenter.ImageExtractor.html#batukh.tensorflow.segmenter.ImageExtractor">[docs]</a><span class="k">class</span> <span class="nc">ImageExtractor</span><span class="p">(</span><span class="n">Train</span><span class="p">):</span>
     <span class="sa">r</span><span class="sd">&quot;&quot;&quot;The class used to extract images.</span>
 
 <span class="sd">    Example</span>
 
 <span class="sd">    .. code-block:: python</span>
 
-<span class="sd">        &gt;&gt;&gt; from batukh.tensorflow.segmenter import ImageExtracter</span>
-<span class="sd">        &gt;&gt;&gt; image_extracter = ImageExtracter()</span>
-<span class="sd">        &gt;&gt;&gt; image_extracter.load_data( train_path=&quot;/train_data/&quot;,val_path=&quot;/val_data/&quot;)</span>
-<span class="sd">        &gt;&gt;&gt; image_extracter.train(n_epochs=1)</span>
+<span class="sd">        &gt;&gt;&gt; from batukh.tensorflow.segmenter import ImageExtractor</span>
+<span class="sd">        &gt;&gt;&gt; image_Extractor = ImageExtractor()</span>
+<span class="sd">        &gt;&gt;&gt; image_Extractor.load_data( train_path=&quot;/train_data/&quot;,val_path=&quot;/val_data/&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; image_Extractor.train(n_epochs=1)</span>
 <span class="sd">        Initializing from scratch</span>
 <span class="sd">        Epoch: 1. Traininig: 100%|██████████| 70/70 [00:02&lt;00:00, 23.95it/s, loss=0.0708]</span>
 <span class="sd">        Epoch: 1. validation: 100%|██████████| 70/70 [00:02&lt;00:00, 23.95it/s, loss=0.0708]</span>
@@ -337,7 +341,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">train_dl</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">val_dl</span> <span class="o">=</span> <span class="kc">None</span>
 
-<div class="viewcode-block" id="ImageExtracter.load_data"><a class="viewcode-back" href="../../../generated/batukh.tensorflow.segmenter.ImageExtracter.html#batukh.tensorflow.segmenter.ImageExtracter.load_data">[docs]</a>    <span class="k">def</span> <span class="nf">load_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">train_path</span><span class="p">,</span> <span class="n">val_path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="ImageExtractor.load_data"><a class="viewcode-back" href="../../../generated/batukh.tensorflow.segmenter.ImageExtractor.html#batukh.tensorflow.segmenter.ImageExtractor.load_data">[docs]</a>    <span class="k">def</span> <span class="nf">load_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">train_path</span><span class="p">,</span> <span class="n">val_path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Loads Train and Validation datset.</span>
 
 <span class="sd">        Note:</span>
@@ -354,22 +358,27 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">val_dl</span> <span class="o">=</span> <span class="n">SegmentationDataLoader</span><span class="p">(</span>
                 <span class="n">val_path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">n_classes</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_epochs</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">criterion</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">class_weights</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">optimizer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.0001</span><span class="p">,</span> <span class="n">save_checkpoints</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">checkpoint_freq</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">checkpoint_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">max_to_keep</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">n_epochs</span><span class="p">,</span> <span class="n">train_dl</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">train_dl</span><span class="p">,</span> <span class="n">val_dl</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">val_dl</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="n">repeat</span><span class="p">,</span> <span class="n">criterion</span><span class="o">=</span><span class="n">criterion</span><span class="p">,</span> <span class="n">class_weights</span><span class="o">=</span><span class="n">class_weights</span><span class="p">,</span>
+    <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_epochs</span><span class="p">,</span> <span class="n">train_dl</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">val_dl</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">criterion</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">class_weights</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">optimizer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.0001</span><span class="p">,</span> <span class="n">save_checkpoints</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">checkpoint_freq</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">checkpoint_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">max_to_keep</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">train_dl</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">train_dl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">train_dl</span>
+        <span class="k">if</span> <span class="n">val_dl</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">val_dl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">val_dl</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">n_epochs</span><span class="p">,</span> <span class="n">train_dl</span><span class="o">=</span><span class="n">train_dl</span><span class="p">,</span> <span class="n">val_dl</span><span class="o">=</span><span class="n">val_dl</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="n">repeat</span><span class="p">,</span> <span class="n">criterion</span><span class="o">=</span><span class="n">criterion</span><span class="p">,</span> <span class="n">class_weights</span><span class="o">=</span><span class="n">class_weights</span><span class="p">,</span>
                       <span class="n">optimizer</span><span class="o">=</span><span class="n">optimizer</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="n">learning_rate</span><span class="p">,</span> <span class="n">save_checkpoints</span><span class="o">=</span><span class="n">save_checkpoints</span><span class="p">,</span> <span class="n">checkpoint_freq</span><span class="o">=</span><span class="n">checkpoint_freq</span><span class="p">,</span> <span class="n">checkpoint_path</span><span class="o">=</span><span class="n">checkpoint_path</span><span class="p">,</span> <span class="n">max_to_keep</span><span class="o">=</span><span class="n">max_to_keep</span><span class="p">)</span></div>
 
 
-<span class="k">class</span> <span class="nc">LayoutExtracter</span><span class="p">(</span><span class="n">Train</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">LayoutExtractor</span><span class="p">(</span><span class="n">Train</span><span class="p">):</span>
     <span class="sa">r</span><span class="sd">&quot;&quot;&quot;This class is used to extract diffrent layouts from a image.</span>
 
 <span class="sd">    Example</span>
 
 <span class="sd">    .. code-block:: python</span>
 
-<span class="sd">        &gt;&gt;&gt; from batukh.tensorflow.segmenter import LayoutExtracter</span>
-<span class="sd">        &gt;&gt;&gt; layout_extracter = LayoutExtracter(2)</span>
-<span class="sd">        &gt;&gt;&gt; layout_extracter.load_data(train_path =&quot;/train_data/&quot;,val_data=&quot;/val_data/&quot;)</span>
-<span class="sd">        &gt;&gt;&gt; layout_extracter.train(n_epochs=1,checkpoint_path=&quot;/tf_chkpts/&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; from batukh.tensorflow.segmenter import LayoutExtractor</span>
+<span class="sd">        &gt;&gt;&gt; layout_Extractor = LayoutExtractor(2)</span>
+<span class="sd">        &gt;&gt;&gt; layout_Extractor.load_data(train_path =&quot;/train_data/&quot;,val_data=&quot;/val_data/&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; layout_Extractor.train(n_epochs=1,checkpoint_path=&quot;/tf_chkpts/&quot;)</span>
 <span class="sd">        Restored from /tf_chkpts/ckpt-13280</span>
 <span class="sd">        Epoch: 1. Traininig: 100%|██████████| 70/70 [00:02&lt;00:00, 23.95it/s, loss=0.0708]</span>
 <span class="sd">        Epoch: 1. validation: 100%|██████████| 70/70 [00:02&lt;00:00, 23.95it/s, loss=0.0708]</span>
@@ -399,22 +408,26 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">val_dl</span> <span class="o">=</span> <span class="n">SegmentationDataLoader</span><span class="p">(</span>
                 <span class="n">val_path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">n_classes</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_epochs</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">criterion</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">class_weights</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">optimizer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.0001</span><span class="p">,</span> <span class="n">save_checkpoints</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">checkpoint_freq</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">checkpoint_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">max_to_keep</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">n_epochs</span><span class="p">,</span> <span class="n">train_dl</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">train_dl</span><span class="p">,</span> <span class="n">val_dl</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">val_dl</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="n">repeat</span><span class="p">,</span> <span class="n">criterion</span><span class="o">=</span><span class="n">criterion</span><span class="p">,</span> <span class="n">class_weights</span><span class="o">=</span><span class="n">class_weights</span><span class="p">,</span>
+    <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_epochs</span><span class="p">,</span> <span class="n">train_dl</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">val_dl</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">criterion</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">class_weights</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">optimizer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.0001</span><span class="p">,</span> <span class="n">save_checkpoints</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">checkpoint_freq</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">checkpoint_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">max_to_keep</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">train_dl</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">train_dl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">train_dl</span>
+        <span class="k">if</span> <span class="n">val_dl</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">val_dl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">val_dl</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">n_epochs</span><span class="p">,</span> <span class="n">train_dl</span><span class="o">=</span><span class="n">train_dl</span><span class="p">,</span> <span class="n">val_dl</span><span class="o">=</span><span class="n">val_dl</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="n">repeat</span><span class="p">,</span> <span class="n">criterion</span><span class="o">=</span><span class="n">criterion</span><span class="p">,</span> <span class="n">class_weights</span><span class="o">=</span><span class="n">class_weights</span><span class="p">,</span>
                       <span class="n">optimizer</span><span class="o">=</span><span class="n">optimizer</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="n">learning_rate</span><span class="p">,</span> <span class="n">save_checkpoints</span><span class="o">=</span><span class="n">save_checkpoints</span><span class="p">,</span> <span class="n">checkpoint_freq</span><span class="o">=</span><span class="n">checkpoint_freq</span><span class="p">,</span> <span class="n">checkpoint_path</span><span class="o">=</span><span class="n">checkpoint_path</span><span class="p">,</span> <span class="n">max_to_keep</span><span class="o">=</span><span class="n">max_to_keep</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="BaselineDetecter"><a class="viewcode-back" href="../../../generated/batukh.tensorflow.segmenter.BaselineDetecter.html#batukh.tensorflow.segmenter.BaselineDetecter">[docs]</a><span class="k">class</span> <span class="nc">BaselineDetecter</span><span class="p">(</span><span class="n">Train</span><span class="p">):</span>
+<div class="viewcode-block" id="BaselineDetector"><a class="viewcode-back" href="../../../generated/batukh.tensorflow.segmenter.BaselineDetector.html#batukh.tensorflow.segmenter.BaselineDetector">[docs]</a><span class="k">class</span> <span class="nc">BaselineDetector</span><span class="p">(</span><span class="n">Train</span><span class="p">):</span>
     <span class="sa">r</span><span class="sd">&quot;&quot;&quot;This class is used to detect baseline.</span>
 
 <span class="sd">    Example</span>
 
 <span class="sd">    .. code-block:: python</span>
 
-<span class="sd">        &gt;&gt;&gt; from batukh.tensorflow.segmenter import BaselineDetecter</span>
-<span class="sd">        &gt;&gt;&gt; baseline_detecter = BaselineDetecter()</span>
-<span class="sd">        &gt;&gt;&gt; baseline_detecter.load_data(&quot;/train_data/&quot;)</span>
-<span class="sd">        &gt;&gt;&gt; baseline_detecter.train(1,weights=[1:700])</span>
+<span class="sd">        &gt;&gt;&gt; from batukh.tensorflow.segmenter import BaselineDetector</span>
+<span class="sd">        &gt;&gt;&gt; baseline_Detector = BaselineDetector()</span>
+<span class="sd">        &gt;&gt;&gt; baseline_Detector.load_data(&quot;/train_data/&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; baseline_Detector.train(1,weights=[1:700])</span>
 <span class="sd">        Initializing from scratch</span>
 <span class="sd">        Epoch: 1. Traininig: 100%|██████████| 70/70 [00:02&lt;00:00, 23.95it/s, loss=0.0708]</span>
 <span class="sd">        Model saved to /tf_ckpts/Fri Oct 16 08:23:13 2020/ckpt-14280</span>
@@ -426,7 +439,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">train_dl</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">val_dl</span> <span class="o">=</span> <span class="kc">None</span>
 
-<div class="viewcode-block" id="BaselineDetecter.load_data"><a class="viewcode-back" href="../../../generated/batukh.tensorflow.segmenter.BaselineDetecter.html#batukh.tensorflow.segmenter.BaselineDetecter.load_data">[docs]</a>    <span class="k">def</span> <span class="nf">load_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">train_path</span><span class="p">,</span> <span class="n">val_path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="BaselineDetector.load_data"><a class="viewcode-back" href="../../../generated/batukh.tensorflow.segmenter.BaselineDetector.html#batukh.tensorflow.segmenter.BaselineDetector.load_data">[docs]</a>    <span class="k">def</span> <span class="nf">load_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">train_path</span><span class="p">,</span> <span class="n">val_path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Loads Train and Validation datset.</span>
 
 <span class="sd">        Note:</span>
@@ -443,8 +456,12 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">val_dl</span> <span class="o">=</span> <span class="n">SegmentationDataLoader</span><span class="p">(</span>
                 <span class="n">val_path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">n_classes</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_epochs</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">criterion</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">class_weights</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">optimizer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.0001</span><span class="p">,</span> <span class="n">save_checkpoints</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">checkpoint_freq</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">checkpoint_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">max_to_keep</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">n_epochs</span><span class="p">,</span> <span class="n">train_dl</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">train_dl</span><span class="p">,</span> <span class="n">val_dl</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">val_dl</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="n">repeat</span><span class="p">,</span> <span class="n">criterion</span><span class="o">=</span><span class="n">criterion</span><span class="p">,</span> <span class="n">class_weights</span><span class="o">=</span><span class="n">class_weights</span><span class="p">,</span>
+    <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_epochs</span><span class="p">,</span> <span class="n">train_dl</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">val_dl</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">criterion</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">class_weights</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">optimizer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.0001</span><span class="p">,</span> <span class="n">save_checkpoints</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">checkpoint_freq</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">checkpoint_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">max_to_keep</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">train_dl</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">train_dl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">train_dl</span>
+        <span class="k">if</span> <span class="n">val_dl</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">val_dl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">val_dl</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">n_epochs</span><span class="p">,</span> <span class="n">train_dl</span><span class="o">=</span><span class="n">train_dl</span><span class="p">,</span> <span class="n">val_dl</span><span class="o">=</span><span class="n">val_dl</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="n">repeat</span><span class="p">,</span> <span class="n">criterion</span><span class="o">=</span><span class="n">criterion</span><span class="p">,</span> <span class="n">class_weights</span><span class="o">=</span><span class="n">class_weights</span><span class="p">,</span>
                       <span class="n">optimizer</span><span class="o">=</span><span class="n">optimizer</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="n">learning_rate</span><span class="p">,</span> <span class="n">save_checkpoints</span><span class="o">=</span><span class="n">save_checkpoints</span><span class="p">,</span> <span class="n">checkpoint_freq</span><span class="o">=</span><span class="n">checkpoint_freq</span><span class="p">,</span> <span class="n">checkpoint_path</span><span class="o">=</span><span class="n">checkpoint_path</span><span class="p">,</span> <span class="n">max_to_keep</span><span class="o">=</span><span class="n">max_to_keep</span><span class="p">)</span></div>
 </pre></div>
 
@@ -523,7 +540,7 @@
         <div class="col-md-4 text-center">
           <h2>Docs</h2>
           <p>Access comprehensive developer documentation for batukh.</p>
-          <a class="with-right-arrow" href="https://ourwebsite/docs/stable/index.html">View Docs</a>
+          <a class="with-right-arrow" href="https://koshurnizam.github.io/batukh">View Docs</a>
         </div>
 
         <div class="col-md-4 text-center">
@@ -544,18 +561,18 @@
   <footer class="site-footer">
     <div class="container footer-container">
       <div class="footer-logo-wrapper">
-        <a href="ourwebsite" class="footer-logo"></a>
+        <a href="https://koshurnizam.github.io" class="footer-logo"></a>
       </div>
 
       <div class="footer-links-wrapper">
         <div class="footer-links-col">
           <ul>
-            <li class="list-title"><a href="ourwebsite">batukh</a></li>
+            <li class="list-title"><a href="https://koshurnizam.github.io">batukh</a></li>
             <!-- <li><a href="https://ourwebsite/get-started">Get Started</a></li> -->
             <!-- <li><a href="https://ourwebsite/features">Features</a></li> -->
             <!-- <li><a href="https://ourwebsite/ecosystem">Ecosystem</a></li> -->
             <!-- <li><a href="https://ourwebsite/blog/">Blog</a></li> -->
-            <!-- <li><a href="https://github.com/pytorch/pytorch/blob/master/CONTRIBUTING.md">Contributing</a></li> -->
+            <!-- <li><a href="https://github.com/KoshurNizam/batukh/blob/master/CONTRIBUTING.md">Contributing</a></li> -->
           </ul>
         </div>
 
@@ -563,7 +580,7 @@
           <ul>
             <li class="list-title"><a href="https://ourwebsite/resources">Resources</a></li>
             <li><a href="https://ourwebsite/tutorials">Tutorials</a></li>
-            <li><a href="https://ourwebsite/docs/stable/index.html">Docs</a></li>
+            <li><a href="https://koshurnizam.github.io/batukh">Docs</a></li>
             <li><a href="https://discuss.ourwebsite" target="_blank">Discuss</a></li>
             <li><a href="https://github.com/KoshurNizam/batukh/issues" target="_blank">Github Issues</a></li>
             <!-- <li><a href="https://ourwebsite/assets/brand-guidelines/Brand-Guidelines.pdf" target="_blank">Brand Guidelines</a> -->
@@ -632,7 +649,7 @@
     <div class="container-fluid">
       <div class="container">
         <div class="mobile-main-menu-header-container">
-          <a class="header-logo" href="ourwebsite" aria-label="PyTorch"></a>
+          <a class="header-logo" href="https://koshurnizam.github.io" aria-label="PyTorch"></a>
           <a class="main-menu-close-button" href="#" data-behavior="close-mobile-menu"></a>
         </div>
       </div>
@@ -670,7 +687,7 @@
           </li>
 
           <li class="active">
-            <a href="https://ourwebsite/docs/stable/index.html">Docs</a>
+            <a href="https://koshurnizam.github.io/batukh">Docs</a>
           </li>
 
           <li>

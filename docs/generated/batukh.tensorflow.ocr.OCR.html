@@ -36,7 +36,7 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato" type="text/css" />
   <link rel="index" title="Index" href="../genindex.html" />
   <link rel="search" title="Search" href="../search.html" />
-  <link rel="prev" title="BaselineDetecter" href="batukh.tensorflow.segmenter.BaselineDetecter.html" /> 
+  <link rel="prev" title="BaselineDetector" href="batukh.tensorflow.segmenter.BaselineDetector.html" /> 
 
   
   <script src="../_static/js/modernizr.min.js"></script>
@@ -65,7 +65,7 @@
 <div class="container-fluid header-holder tutorials-header" id="header-holder">
   <div class="container">
     <div class="header-container">
-      <a class="header-logo" href="ourwebsite" aria-label="PyTorch"></a>
+      <a class="header-logo" href="https://koshurnizam.github.io" aria-label="PyTorch"></a>
 
       <div class="main-menu">
         <ul>
@@ -106,7 +106,7 @@
           </li>
 
           <li class="active" >
-            <a href="https://ourwebsite/docs/stable/index.html">Docs</a>
+            <a href="https://koshurnizam.github.io/batukh">Docs</a>
           </li>
 
           <li>
@@ -297,6 +297,69 @@
 </dd></dl>
 
 <dl class="method">
+<dt id="batukh.tensorflow.ocr.OCR.map2string">
+<code class="sig-name descname">map2string</code><span class="sig-paren">(</span><em class="sig-param">inputs</em>, <em class="sig-param">table=None</em>, <em class="sig-param">blank_index=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/batukh/tensorflow/ocr.html#OCR.map2string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#batukh.tensorflow.ocr.OCR.map2string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Maps tensor to stings as per <code class="xref py py-class docutils literal notranslate"><span class="pre">inv_table</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>inputs</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">tensorflow.SparseTensor</span></code>) – Input tensors.</p></li>
+<li><p><strong>table</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">tensorflow.lookup.StaticHashTable</span></code>,optional) – Table according to which maping is done.
+Default: <code class="docutils literal notranslate"><span class="pre">self.train_dl.inv_table</span></code></p></li>
+<li><p><strong>blank_index</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a><em>,</em><em>optional</em>) – Blank index.
+Default : <code class="docutils literal notranslate"><span class="pre">self.train_dl.blank_index</span></code></p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>list of strings.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.9)">list</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="batukh.tensorflow.ocr.OCR.decode">
+<code class="sig-name descname">decode</code><span class="sig-paren">(</span><em class="sig-param">inputs</em>, <em class="sig-param">from_pred=True</em>, <em class="sig-param">method='gready'</em>, <em class="sig-param">merge_repeated=True</em>, <em class="sig-param">table=None</em>, <em class="sig-param">blank_index=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/batukh/tensorflow/ocr.html#OCR.decode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#batukh.tensorflow.ocr.OCR.decode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Decodes the model logits using ctc decoder.</p>
+<p>Example</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">batukh.tensorflow.ocr</span> <span class="kn">import</span> <span class="n">OCR</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">m</span> <span class="o">=</span> <span class="n">OCR</span><span class="p">(</span><span class="mi">177</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">m</span><span class="o">.</span><span class="n">load_model</span><span class="p">(</span><span class="s2">&quot;/saved_model/&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="s2">&quot;/image.png&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">decode_png</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">channels</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pred</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>inputs</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">tensorflow.Tensor</span></code>) – Input tensor.</p></li>
+<li><p><strong>from_pred</strong> (<em>bol</em><em>,</em><em>optional</em>) – <code class="docutils literal notranslate"><span class="pre">True</span></code> if input is return of ( <a class="reference internal" href="#batukh.tensorflow.ocr.OCR.predict" title="batukh.tensorflow.ocr.OCR.predict"><code class="xref py py-class docutils literal notranslate"><span class="pre">predict</span></code></a>. <code class="docutils literal notranslate"><span class="pre">False</span></code> if input is a <code class="xref py py-class docutils literal notranslate"><span class="pre">tensorflow.SparseTensor</span></code>.
+Default: <code class="docutils literal notranslate"><span class="pre">True</span></code></p></li>
+<li><p><strong>method</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>,</em><em>optional</em>) – if  <code class="docutils literal notranslate"><span class="pre">'gready'</span></code>  <code class="xref py py-class docutils literal notranslate"><span class="pre">tensorflow.nn.ctc_greedy_decoder</span></code> used for decoding.if  <code class="docutils literal notranslate"><span class="pre">'beam_search'</span></code>  <code class="xref py py-class docutils literal notranslate"><span class="pre">tensorflow.nn.ctc_beam_search_decoder</span></code> used.
+Default: `` ‘greedy’ ``</p></li>
+<li><p><strong>merge_repeated</strong> (<em>bol</em><em>,</em><em>optional</em>) – Specifes if similar charsters will be merged.
+Default: <code class="docutils literal notranslate"><span class="pre">True</span></code></p></li>
+<li><p><strong>table</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">tensorflow.lookup.StaticHashTable</span></code>,optional) – Table according to which maping is done.
+Default: <code class="docutils literal notranslate"><span class="pre">self.train_dl.inv_table</span></code></p></li>
+<li><p><strong>blank_index</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a><em>,</em><em>optional</em>) – Blank index.
+Default : <code class="docutils literal notranslate"><span class="pre">self.train_dl.blank_index</span></code></p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>decoded list of strings</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.9)">list</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
 <dt id="batukh.tensorflow.ocr.OCR.load_model">
 <code class="sig-name descname">load_model</code><span class="sig-paren">(</span><em class="sig-param">path</em><span class="sig-paren">)</span><a class="headerlink" href="#batukh.tensorflow.ocr.OCR.load_model" title="Permalink to this definition">¶</a></dt>
 <dd><p>Loads presaved weights.</p>
@@ -347,7 +410,7 @@
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
       
-        <a href="batukh.tensorflow.segmenter.BaselineDetecter.html" class="btn btn-neutral" title="BaselineDetecter" accesskey="p" rel="prev"><img src="../_static/images/chevron-right-orange.svg" class="previous-page"> Previous</a>
+        <a href="batukh.tensorflow.segmenter.BaselineDetector.html" class="btn btn-neutral" title="BaselineDetector" accesskey="p" rel="prev"><img src="../_static/images/chevron-right-orange.svg" class="previous-page"> Previous</a>
       
     </div>
   
@@ -424,7 +487,7 @@
         <div class="col-md-4 text-center">
           <h2>Docs</h2>
           <p>Access comprehensive developer documentation for batukh.</p>
-          <a class="with-right-arrow" href="https://ourwebsite/docs/stable/index.html">View Docs</a>
+          <a class="with-right-arrow" href="https://koshurnizam.github.io/batukh">View Docs</a>
         </div>
 
         <div class="col-md-4 text-center">
@@ -445,18 +508,18 @@
   <footer class="site-footer">
     <div class="container footer-container">
       <div class="footer-logo-wrapper">
-        <a href="ourwebsite" class="footer-logo"></a>
+        <a href="https://koshurnizam.github.io" class="footer-logo"></a>
       </div>
 
       <div class="footer-links-wrapper">
         <div class="footer-links-col">
           <ul>
-            <li class="list-title"><a href="ourwebsite">batukh</a></li>
+            <li class="list-title"><a href="https://koshurnizam.github.io">batukh</a></li>
             <!-- <li><a href="https://ourwebsite/get-started">Get Started</a></li> -->
             <!-- <li><a href="https://ourwebsite/features">Features</a></li> -->
             <!-- <li><a href="https://ourwebsite/ecosystem">Ecosystem</a></li> -->
             <!-- <li><a href="https://ourwebsite/blog/">Blog</a></li> -->
-            <!-- <li><a href="https://github.com/pytorch/pytorch/blob/master/CONTRIBUTING.md">Contributing</a></li> -->
+            <!-- <li><a href="https://github.com/KoshurNizam/batukh/blob/master/CONTRIBUTING.md">Contributing</a></li> -->
           </ul>
         </div>
 
@@ -464,7 +527,7 @@
           <ul>
             <li class="list-title"><a href="https://ourwebsite/resources">Resources</a></li>
             <li><a href="https://ourwebsite/tutorials">Tutorials</a></li>
-            <li><a href="https://ourwebsite/docs/stable/index.html">Docs</a></li>
+            <li><a href="https://koshurnizam.github.io/batukh">Docs</a></li>
             <li><a href="https://discuss.ourwebsite" target="_blank">Discuss</a></li>
             <li><a href="https://github.com/KoshurNizam/batukh/issues" target="_blank">Github Issues</a></li>
             <!-- <li><a href="https://ourwebsite/assets/brand-guidelines/Brand-Guidelines.pdf" target="_blank">Brand Guidelines</a> -->
@@ -533,7 +596,7 @@
     <div class="container-fluid">
       <div class="container">
         <div class="mobile-main-menu-header-container">
-          <a class="header-logo" href="ourwebsite" aria-label="PyTorch"></a>
+          <a class="header-logo" href="https://koshurnizam.github.io" aria-label="PyTorch"></a>
           <a class="main-menu-close-button" href="#" data-behavior="close-mobile-menu"></a>
         </div>
       </div>
@@ -571,7 +634,7 @@
           </li>
 
           <li class="active">
-            <a href="https://ourwebsite/docs/stable/index.html">Docs</a>
+            <a href="https://koshurnizam.github.io/batukh">Docs</a>
           </li>
 
           <li>

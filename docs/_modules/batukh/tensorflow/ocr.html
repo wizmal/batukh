@@ -64,7 +64,7 @@
 <div class="container-fluid header-holder tutorials-header" id="header-holder">
   <div class="container">
     <div class="header-container">
-      <a class="header-logo" href="ourwebsite" aria-label="PyTorch"></a>
+      <a class="header-logo" href="https://koshurnizam.github.io" aria-label="PyTorch"></a>
 
       <div class="main-menu">
         <ul>
@@ -105,7 +105,7 @@
           </li>
 
           <li class="active" >
-            <a href="https://ourwebsite/docs/stable/index.html">Docs</a>
+            <a href="https://koshurnizam.github.io/batukh">Docs</a>
           </li>
 
           <li>
@@ -262,6 +262,7 @@
 <span class="kn">from</span> <span class="nn">.utils.data.dataloader</span> <span class="kn">import</span> <span class="n">OCRDataLoader</span>
 <span class="kn">from</span> <span class="nn">.utils.data.augmentation</span> <span class="kn">import</span> <span class="n">MultipleColorJitter</span>
 <span class="kn">from</span> <span class="nn">.utils.models.ocr_model</span> <span class="kn">import</span> <span class="n">OCRModel</span>
+<span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
 
 
 <div class="viewcode-block" id="OCR"><a class="viewcode-back" href="../../../generated/batukh.tensorflow.ocr.OCR.html#batukh.tensorflow.ocr.OCR">[docs]</a><span class="k">class</span> <span class="nc">OCR</span><span class="p">(</span><span class="n">Train</span><span class="p">):</span>
@@ -300,9 +301,91 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">val_dl</span> <span class="o">=</span> <span class="n">OCRDataLoader</span><span class="p">(</span>
                 <span class="n">val_path</span><span class="p">,</span> <span class="n">height</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_epochs</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">criterion</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">class_weights</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">optimizer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.0001</span><span class="p">,</span> <span class="n">save_checkpoints</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">checkpoint_freq</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">checkpoint_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">max_to_keep</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">n_epochs</span><span class="p">,</span> <span class="n">train_dl</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">train_dl</span><span class="p">,</span> <span class="n">val_dl</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">val_dl</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="n">repeat</span><span class="p">,</span> <span class="n">criterion</span><span class="o">=</span><span class="n">criterion</span><span class="p">,</span> <span class="n">class_weights</span><span class="o">=</span><span class="n">class_weights</span><span class="p">,</span>
-                      <span class="n">optimizer</span><span class="o">=</span><span class="n">optimizer</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="n">learning_rate</span><span class="p">,</span> <span class="n">save_checkpoints</span><span class="o">=</span><span class="n">save_checkpoints</span><span class="p">,</span> <span class="n">checkpoint_freq</span><span class="o">=</span><span class="n">checkpoint_freq</span><span class="p">,</span> <span class="n">checkpoint_path</span><span class="o">=</span><span class="n">checkpoint_path</span><span class="p">,</span> <span class="n">max_to_keep</span><span class="o">=</span><span class="n">max_to_keep</span><span class="p">)</span></div>
+    <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_epochs</span><span class="p">,</span> <span class="n">train_dl</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">val_dl</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">criterion</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">class_weights</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">optimizer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.0001</span><span class="p">,</span> <span class="n">save_checkpoints</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">checkpoint_freq</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">checkpoint_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">max_to_keep</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">train_dl</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">train_dl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">train_dl</span>
+        <span class="k">if</span> <span class="n">val_dl</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">val_dl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">val_dl</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">n_epochs</span><span class="p">,</span> <span class="n">train_dl</span><span class="o">=</span><span class="n">train_dl</span><span class="p">,</span> <span class="n">val_dl</span><span class="o">=</span><span class="n">val_dl</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="n">repeat</span><span class="p">,</span> <span class="n">criterion</span><span class="o">=</span><span class="n">criterion</span><span class="p">,</span> <span class="n">class_weights</span><span class="o">=</span><span class="n">class_weights</span><span class="p">,</span>
+                      <span class="n">optimizer</span><span class="o">=</span><span class="n">optimizer</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="n">learning_rate</span><span class="p">,</span> <span class="n">save_checkpoints</span><span class="o">=</span><span class="n">save_checkpoints</span><span class="p">,</span> <span class="n">checkpoint_freq</span><span class="o">=</span><span class="n">checkpoint_freq</span><span class="p">,</span> <span class="n">checkpoint_path</span><span class="o">=</span><span class="n">checkpoint_path</span><span class="p">,</span> <span class="n">max_to_keep</span><span class="o">=</span><span class="n">max_to_keep</span><span class="p">)</span>
+
+<div class="viewcode-block" id="OCR.map2string"><a class="viewcode-back" href="../../../generated/batukh.tensorflow.ocr.OCR.html#batukh.tensorflow.ocr.OCR.map2string">[docs]</a>    <span class="k">def</span> <span class="nf">map2string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">table</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">blank_index</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="c1"># todo : shift theese methods to ocr</span>
+        <span class="sd">&quot;&quot;&quot;Maps tensor to stings as per :class:`~self.inv_table`.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            inputs (:class:`tensorflow.SparseTensor`) : Input tensors.</span>
+<span class="sd">            table ( :class:`tensorflow.lookup.StaticHashTable`,optional) : Table according to which maping is done.</span>
+<span class="sd">                Default: ``self.train_dl.inv_table``</span>
+<span class="sd">            blank_index (int,optional) : Blank index.</span>
+<span class="sd">                Default : ``self.train_dl.blank_index``</span>
+
+
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list : list of strings.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">table</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">table</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">train_dl</span><span class="o">.</span><span class="n">inv_table</span>
+        <span class="k">if</span> <span class="n">blank_index</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">blank_index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">train_dl</span><span class="o">.</span><span class="n">blank_index</span>
+        <span class="n">inputs</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">sparse</span><span class="o">.</span><span class="n">to_dense</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span>
+                                    <span class="n">default_value</span><span class="o">=</span><span class="n">blank_index</span><span class="p">)</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+        <span class="n">strings</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">inputs</span><span class="p">:</span>
+            <span class="n">text</span> <span class="o">=</span> <span class="p">[</span><span class="n">table</span><span class="p">[</span><span class="n">char_index</span><span class="p">]</span> <span class="k">for</span> <span class="n">char_index</span> <span class="ow">in</span> <span class="n">i</span>
+                    <span class="k">if</span> <span class="n">char_index</span> <span class="o">!=</span> <span class="n">blank_index</span><span class="p">]</span>
+            <span class="n">strings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">text</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">strings</span></div>
+
+<div class="viewcode-block" id="OCR.decode"><a class="viewcode-back" href="../../../generated/batukh.tensorflow.ocr.OCR.html#batukh.tensorflow.ocr.OCR.decode">[docs]</a>    <span class="k">def</span> <span class="nf">decode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">from_pred</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;gready&#39;</span><span class="p">,</span> <span class="n">merge_repeated</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">table</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">blank_index</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Decodes the model logits using ctc decoder.</span>
+
+<span class="sd">        Example</span>
+
+<span class="sd">        .. code:: python</span>
+
+<span class="sd">            &gt;&gt;&gt; from batukh.tensorflow.ocr import OCR</span>
+<span class="sd">            &gt;&gt;&gt; import tensorflow as tf</span>
+<span class="sd">            &gt;&gt;&gt; m = OCR(177)</span>
+<span class="sd">            &gt;&gt;&gt; m.load_model(&quot;/saved_model/&quot;)</span>
+<span class="sd">            &gt;&gt;&gt; x = tf.io.read_file(&quot;/image.png&quot;)</span>
+<span class="sd">            &gt;&gt;&gt; x = tf.io.decode_png(x,channels=1)</span>
+<span class="sd">            &gt;&gt;&gt; y = m.predict(x)</span>
+<span class="sd">            &gt;&gt;&gt; pred = m.decode(y)</span>
+
+
+
+<span class="sd">        Args:</span>
+<span class="sd">            inputs ( :class:`tensorflow.Tensor`) : Input tensor.</span>
+<span class="sd">            from_pred (bol,optional): ``True`` if input is return of ( :class:`~batukh.tensorflow.ocr.OCR.predict`. ``False`` if input is a :class:`tensorflow.SparseTensor`.</span>
+<span class="sd">                Default: ``True``</span>
+<span class="sd">            method (str,optional)   :if  ``&#39;gready&#39;``  :class:`tensorflow.nn.ctc_greedy_decoder` used for decoding.if  ``&#39;beam_search&#39;``  :class:`tensorflow.nn.ctc_beam_search_decoder` used.</span>
+<span class="sd">                Default: `` &#39;greedy&#39; ``</span>
+<span class="sd">            merge_repeated (bol,optional): Specifes if similar charsters will be merged.</span>
+<span class="sd">                Default: ``True``</span>
+<span class="sd">            table ( :class:`tensorflow.lookup.StaticHashTable`,optional) : Table according to which maping is done.</span>
+<span class="sd">                Default: ``self.train_dl.inv_table``</span>
+<span class="sd">            blank_index (int,optional) : Blank index.</span>
+<span class="sd">                Default : ``self.train_dl.blank_index``</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list: decoded list of strings  &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">merge_repeated</span> <span class="o">=</span> <span class="n">merge_repeated</span>
+        <span class="k">if</span> <span class="n">from_pred</span><span class="p">:</span>
+            <span class="n">logit_length</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">fill</span><span class="p">([</span><span class="n">tf</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">inputs</span><span class="p">)[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">tf</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">inputs</span><span class="p">)[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;greedy&#39;</span><span class="p">:</span>
+                <span class="n">decoded</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ctc_greedy_decoder</span><span class="p">(</span>
+                    <span class="n">inputs</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">perm</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">]),</span>
+                    <span class="n">sequence_length</span><span class="o">=</span><span class="n">logit_length</span><span class="p">,</span>
+                    <span class="n">merge_repeated</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">merge_repeated</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;beam_search&#39;</span><span class="p">:</span>
+                <span class="n">decoded</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ctc_beam_search_decoder</span><span class="p">(</span>
+                    <span class="n">inputs</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">perm</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">]),</span>
+                    <span class="n">sequence_length</span><span class="o">=</span><span class="n">logit_length</span><span class="p">)</span>
+            <span class="n">inputs</span> <span class="o">=</span> <span class="n">decoded</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="n">decoded</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">map2string</span><span class="p">(</span><span class="n">decoded</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">decoded</span></div></div>
 </pre></div>
 
               </article>
@@ -380,7 +463,7 @@
         <div class="col-md-4 text-center">
           <h2>Docs</h2>
           <p>Access comprehensive developer documentation for batukh.</p>
-          <a class="with-right-arrow" href="https://ourwebsite/docs/stable/index.html">View Docs</a>
+          <a class="with-right-arrow" href="https://koshurnizam.github.io/batukh">View Docs</a>
         </div>
 
         <div class="col-md-4 text-center">
@@ -401,18 +484,18 @@
   <footer class="site-footer">
     <div class="container footer-container">
       <div class="footer-logo-wrapper">
-        <a href="ourwebsite" class="footer-logo"></a>
+        <a href="https://koshurnizam.github.io" class="footer-logo"></a>
       </div>
 
       <div class="footer-links-wrapper">
         <div class="footer-links-col">
           <ul>
-            <li class="list-title"><a href="ourwebsite">batukh</a></li>
+            <li class="list-title"><a href="https://koshurnizam.github.io">batukh</a></li>
             <!-- <li><a href="https://ourwebsite/get-started">Get Started</a></li> -->
             <!-- <li><a href="https://ourwebsite/features">Features</a></li> -->
             <!-- <li><a href="https://ourwebsite/ecosystem">Ecosystem</a></li> -->
             <!-- <li><a href="https://ourwebsite/blog/">Blog</a></li> -->
-            <!-- <li><a href="https://github.com/pytorch/pytorch/blob/master/CONTRIBUTING.md">Contributing</a></li> -->
+            <!-- <li><a href="https://github.com/KoshurNizam/batukh/blob/master/CONTRIBUTING.md">Contributing</a></li> -->
           </ul>
         </div>
 
@@ -420,7 +503,7 @@
           <ul>
             <li class="list-title"><a href="https://ourwebsite/resources">Resources</a></li>
             <li><a href="https://ourwebsite/tutorials">Tutorials</a></li>
-            <li><a href="https://ourwebsite/docs/stable/index.html">Docs</a></li>
+            <li><a href="https://koshurnizam.github.io/batukh">Docs</a></li>
             <li><a href="https://discuss.ourwebsite" target="_blank">Discuss</a></li>
             <li><a href="https://github.com/KoshurNizam/batukh/issues" target="_blank">Github Issues</a></li>
             <!-- <li><a href="https://ourwebsite/assets/brand-guidelines/Brand-Guidelines.pdf" target="_blank">Brand Guidelines</a> -->
@@ -489,7 +572,7 @@
     <div class="container-fluid">
       <div class="container">
         <div class="mobile-main-menu-header-container">
-          <a class="header-logo" href="ourwebsite" aria-label="PyTorch"></a>
+          <a class="header-logo" href="https://koshurnizam.github.io" aria-label="PyTorch"></a>
           <a class="main-menu-close-button" href="#" data-behavior="close-mobile-menu"></a>
         </div>
       </div>
@@ -527,7 +610,7 @@
           </li>
 
           <li class="active">
-            <a href="https://ourwebsite/docs/stable/index.html">Docs</a>
+            <a href="https://koshurnizam.github.io/batukh">Docs</a>
           </li>
 
           <li>
