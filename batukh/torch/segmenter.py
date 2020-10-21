@@ -225,7 +225,7 @@ class BaseProcessor:
         Args:
             path (str): path to a .pt or .pth file.
             optimizer (:class:`~torch.optim.Optimizer`): optimizer
-            (preferably the same one which was saved) to load it's parameters.
+                (preferably the same one which was saved) to load it's parameters.
 
         Returns:
             tuple(int, :class:`~torch.optim.Optimizer`, float): tuple of epoch,
@@ -280,7 +280,7 @@ class BaseProcessor:
             x (:class:`~torch.Tensor`): input tensor of shape 
                 ``[batch_size, height, width, 3]``.
             device (str, optional): device on which to perform the computation.
-                Default: GPU is it is available, else CPU.
+                Default: GPU if it is available, else CPU.
         """
         # TODO: add dataloader option
         if device is None:
