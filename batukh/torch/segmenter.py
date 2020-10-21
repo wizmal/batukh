@@ -11,8 +11,9 @@ from tqdm import tqdm
 from time import localtime
 from torch import optim
 
+from datetime import datetime
+
 # TODO: Add types to args
-# TODO: For checkpoints, have default directory named after the task
 
 
 default_transform = transforms.Compose([MultipleRandomRotation(10, fill=(255, 0)),
@@ -111,34 +112,50 @@ class BaseProcessor:
               learning_rate=0.0001,
               save_checkpoints=True,
               checkpoint_freq=None,
-              checkpoint_path="./",  # Change to None
+              checkpoint_path=None,
               max_to_keep=5,
               device=None,
               ):
 
-        checkpoint_path = join(checkpoint_path, "checkpoints")
+        # check if train loaders are ok
+        if train_dl is None:
+
+            # TEST IT
+
+            if getattr(self, "train_dl", None) is None:
+                raise Exception(
+                    "No DataLoader found. Either pass one in train or use load_data method.")
+
+            train_dl = self.train_dl(
+                batch_size, shuffle, num_workers, pin_memory)
+        if val_dl is None:
+            if getattr(self, "val_dl", None) is None:
+                val_dl = None
+            else:
+                val_dl = self.val_dl(
+                    batch_size, shuffle, num_workers, pin_memory)
+            ######
+
+        # checkpoint stuff
+        if checkpoint_path is None:
+            checkpoint_path = join(
+                os.getcwd(), "checkpoints", self.__class__.__name__)
         os.makedirs(checkpoint_path, exist_ok=True)
         if checkpoint_freq is None:
             checkpoint_freq = n_epochs//10+1
 
-        for epoch in range(n_epochs):
-            if train_dl is None:
+        current_epoch = 0
+        if len(os.listdir(checkpoint_path)) > 0:
+            checkpoint_file_path = self.get_latest_ckpt_path(
+                checkpoint_path)
+            current_epoch, optimizer, loss = self.load_checkpoint(
+                join(checkpoint_file_path), optimizer)
+            print("Latest checkpoint found.")
+            print(
+                f"Epoch: {current_epoch}    loss: {loss}\nResuming training...")
 
-                # TEST IT
-
-                if getattr(self, "train_dl", None) is None:
-                    raise Exception(
-                        "No DataLoader found. Either pass one in train or use load_data method.")
-
-                train_dl = self.train_dl(
-                    batch_size, shuffle, num_workers, pin_memory)
-            if val_dl is None:
-                if getattr(self, "val_dl", None) is None:
-                    val_dl = None
-                else:
-                    val_dl = self.val_dl(
-                        batch_size, shuffle, num_workers, pin_memory)
-                ######
+        current_epoch += 1
+        for epoch in range(current_epoch, current_epoch+n_epochs):
 
             self.model.to(device)
             self.model.train()
@@ -177,16 +194,66 @@ class BaseProcessor:
                     pbar.set_postfix(loss=eval_loss/(i+1))
                 pbar.close()
             if epoch % checkpoint_freq == 0:
-                self.save_model(checkpoint_path, epoch)
+                name = "{}-{}-{}-{}-{}-{}-{}.pt".format(
+                    epoch, *localtime()[:6])
+                self.save_checkpoint(join(checkpoint_path, name), epoch,
+                                     optimizer, total_loss)
 
-    def save_checkpoint(self, checkpoint, path):
-        # To be used instead of `save_model` later on!
-        # TODO: code here
-        pass
+    def save_checkpoint(self, path, epoch, optimizer, loss):
+        r"""
+        save the checkpoint (epoch, model parameters, optimizer parameters, loss).
+
+        Args:
+            path (str): path of the checkpoint file(.pt or .pth).
+            epoch (int): epoch number to be saved in the checkpoint.
+            optimizer (:class:`~torch.optim.Optimizer`): optimizer whose
+                parameters need to be saved.
+            loss (float): loss value to be stored.
+        """
+        checkpoint = {
+            "epoch": epoch,
+            "model": self.model.state_dict(),
+            "optimizer": optimizer.state_dict(),
+            "loss": loss,
+        }
+        torch.save(checkpoint, path)
+
+    def load_checkpoint(self, path, optimizer):
+        r"""
+        loads a saved checkpoint.
+
+        Args:
+            path (str): path to a .pt or .pth file.
+            optimizer (:class:`~torch.optim.Optimizer`): optimizer
+                (preferably the same one which was saved) to load it's parameters.
+
+        Returns:
+            tuple(int, :class:`~torch.optim.Optimizer`, float): tuple of epoch,
+            optimizer and loss.
+        """
+        checkpoint = torch.load(path)
+        self.model.load_state_dict(checkpoint["model"])
+        optimizer.load_state_dict(checkpoint["optimizer"])
+
+        return checkpoint["epoch"], optimizer, checkpoint["loss"]
+
+    def get_latest_ckpt_path(self, path):
+        min_time = datetime.now()
+        for filename in os.listdir(path):
+            date = list(map(int, filename.split(".")[0].split("-")))
+            c_time = datetime(*date[1:])
+            if c_time > min_time:
+                min_time = c_time
+                min_file = filename
+            elif c_time == min_time:
+                min_file = filename if date[0] > int(
+                    min_file.split("-")) else min_file
+
+        return join(path, min_file)
 
     def load_model(self, path):
         """
-        Loads the model parameters for ``self.model``.
+        Loads the model parameters for :attr:`self.model`.
 
         Args:
             path (str): path to a .pth(or .pt) file.
@@ -194,14 +261,34 @@ class BaseProcessor:
         print(self.model.load_state_dict(torch.load(path)))
         print("Model Loaded!")
 
-    def save_model(self, path, postfix=0):
-        name = "{} {}-{}-{} {}.{}.{}.pt".format(postfix, *localtime()[:6])
-        torch.save(self.model.state_dict(), join(path, name))
+    def save_model(self, path):
+        r"""saves the current model.
+
+        Args:
+            path(str): path to the file. (.pt or .pth)
+        """
+        if not (path.endswith(".pt") or path.endswith(".pth")):
+            path = path+".pt"
+
+        torch.save(self.model.state_dict(), path)
         print("Model Saved!")
 
-    def predict(self, x):
-        # TODO: add dataloader option
+    def predict(self, x, device=None):
+        r"""predicts the output for a given input.
 
+        Args:
+            x (:class:`~torch.Tensor`): input tensor of shape 
+                ``[batch_size, height, width, 3]``.
+            device (str, optional): device on which to perform the computation.
+                Default: GPU if it is available, else CPU.
+        """
+        # TODO: add dataloader option
+        if device is None:
+            device = torch.device(
+                "cuda" if torch.cuda.is_available() else "cpu")
+
+        self.model.to(device)
+        x = x.to(device)
         self.model.eval()
         return self.model(x)
 
