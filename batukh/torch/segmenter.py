@@ -231,6 +231,7 @@ class BaseProcessor:
             path (str): path to a .pt or .pth file.
             optimizer (:class:`~torch.optim.Optimizer`): optimizer
                 (preferably the same one which was saved) to load it's parameters.
+            device (str): device to load on the checkpoint. "cuda" or "cpu".
 
         Returns:
             tuple(int, :class:`~torch.optim.Optimizer`, float): tuple of epoch,
