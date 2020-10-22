@@ -25,8 +25,8 @@ default_transform = transforms.Compose([MultipleRandomRotation(10, fill=(255, 0)
 
 # General base class for Processors.
 class BaseProcessor:
-    def __init__(self):
-        self.model = SegmentationModel()
+    def __init__(self, use_pretrained=True, lock_pretrained=True):
+        self.model = SegmentationModel(use_pretrained, lock_pretrained)
 
     def load_data(self,
                   train_path,
@@ -151,6 +151,9 @@ class BaseProcessor:
                 checkpoint_path)
             current_epoch, optimizer, loss = self.load_checkpoint(
                 join(checkpoint_file_path), optimizer, device)
+
+            optimizer.param_groups[0]["lr"] = learning_rate
+
             print("Latest checkpoint found.")
             print(
                 f"Epoch: {current_epoch}    loss: {loss}\nResuming training...")
