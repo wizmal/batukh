@@ -246,18 +246,21 @@ class BaseProcessor:
         return checkpoint["epoch"], optimizer, checkpoint["loss"]
 
     def get_latest_ckpt_path(self, path):
-        min_time = datetime.now()
-        for filename in os.listdir(path):
+        checkpoints = os.listdir(path)
+        recent_time = datetime(
+            *list(map(int, checkpoints[0].split(".")[0].split("-")))[1:])
+        recent_file = checkpoints[0]
+        for filename in checkpoints[1:]:
             date = list(map(int, filename.split(".")[0].split("-")))
             c_time = datetime(*date[1:])
-            if c_time < min_time:
-                min_time = c_time
-                min_file = filename
-            elif c_time == min_time:
-                min_file = filename if date[0] > int(
-                    min_file.split("-")) else min_file
+            if c_time > recent_time:
+                recent_time = c_time
+                recent_file = filename
+            elif c_time == recent_time:
+                recent_file = filename if date[0] > int(
+                    recent_file.split("-")) else recent_file
 
-        return join(path, min_file)
+        return join(path, recent_file)
 
     def load_model(self, path):
         """
