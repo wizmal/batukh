@@ -7,7 +7,7 @@ from .utils.data.augmentation import MultipleColorJitter
 # todo:apply augmentation
 
 
-class PageExtracter(Train):
+class PageExtractor(Train):
     r"""This class used to extract pages (removing borders and blank spaces around pages) from originals.
 
     Example
@@ -15,13 +15,13 @@ class PageExtracter(Train):
     .. code-block:: python
 
         >>> from batukh.tensorflow.segmenter import PageExtraction
-        >>> page_extracter = PageExtraction()
-        >>> page_extracter.load_data(train_path = "/train_data/")
-        >>> page_extracter.train(n_epochs=10,batch_size=1,weights=[1,100])
+        >>> page_Extractor = PageExtraction()
+        >>> page_Extractor.load_data(train_path = "/train_data/")
+        >>> page_Extractor.train(n_epochs=10,batch_size=1,weights=[1,100])
         Initializing from scratch
         Epoch: 1. Traininig: 100%|██████████| 70/70 [00:02<00:00, 23.95it/s, loss=0.0708]
         Model saved to /tf_ckpts/Fri Oct 16 08:23:13 2020/ckpt-14280
-        >>> page_extracter.save_model("/model/")
+        >>> page_Extractor.save_model("/model/")
         Model saved at /saved_models
 
 
@@ -49,22 +49,26 @@ class PageExtracter(Train):
             self.val_dl = SegmentationDataLoader(
                 val_path, self.model.n_classes)
 
-    def train(self, n_epochs, batch_size=1, repeat=1, criterion=None, class_weights=None, optimizer=None, learning_rate=0.0001, save_checkpoints=True, checkpoint_freq=None, checkpoint_path=None, max_to_keep=5):
-        super().train(n_epochs, train_dl=self.train_dl, val_dl=self.val_dl, batch_size=batch_size, repeat=repeat, criterion=criterion, class_weights=class_weights,
+    def train(self, n_epochs, train_dl=None, val_dl=None, batch_size=1, repeat=1, criterion=None, class_weights=None, optimizer=None, learning_rate=0.0001, save_checkpoints=True, checkpoint_freq=None, checkpoint_path=None, max_to_keep=5):
+        if train_dl is None:
+            train_dl = self.train_dl
+        if val_dl is None:
+            val_dl = self.val_dl
+        super().train(n_epochs, train_dl=train_dl, val_dl=val_dl, batch_size=batch_size, repeat=repeat, criterion=criterion, class_weights=class_weights,
                       optimizer=optimizer, learning_rate=learning_rate, save_checkpoints=save_checkpoints, checkpoint_freq=checkpoint_freq, checkpoint_path=checkpoint_path, max_to_keep=max_to_keep)
 
 
-class ImageExtracter(Train):
+class ImageExtractor(Train):
     r"""The class used to extract images.
 
     Example
 
     .. code-block:: python
 
-        >>> from batukh.tensorflow.segmenter import ImageExtracter
-        >>> image_extracter = ImageExtracter()
-        >>> image_extracter.load_data( train_path="/train_data/",val_path="/val_data/")
-        >>> image_extracter.train(n_epochs=1)
+        >>> from batukh.tensorflow.segmenter import ImageExtractor
+        >>> image_Extractor = ImageExtractor()
+        >>> image_Extractor.load_data( train_path="/train_data/",val_path="/val_data/")
+        >>> image_Extractor.train(n_epochs=1)
         Initializing from scratch
         Epoch: 1. Traininig: 100%|██████████| 70/70 [00:02<00:00, 23.95it/s, loss=0.0708]
         Epoch: 1. validation: 100%|██████████| 70/70 [00:02<00:00, 23.95it/s, loss=0.0708]
@@ -94,22 +98,27 @@ class ImageExtracter(Train):
             self.val_dl = SegmentationDataLoader(
                 val_path, self.model.n_classes)
 
-    def train(self, n_epochs, batch_size=1, repeat=1, criterion=None, class_weights=None, optimizer=None, learning_rate=0.0001, save_checkpoints=True, checkpoint_freq=None, checkpoint_path=None, max_to_keep=5):
-        super().train(n_epochs, train_dl=self.train_dl, val_dl=self.val_dl, batch_size=batch_size, repeat=repeat, criterion=criterion, class_weights=class_weights,
+    def train(self, n_epochs, train_dl=None, val_dl=None, batch_size=1, repeat=1, criterion=None, class_weights=None, optimizer=None, learning_rate=0.0001, save_checkpoints=True, checkpoint_freq=None, checkpoint_path=None, max_to_keep=5):
+        if train_dl is None:
+            train_dl = self.train_dl
+        if val_dl is None:
+            val_dl = self.val_dl
+
+        super().train(n_epochs, train_dl=train_dl, val_dl=val_dl, batch_size=batch_size, repeat=repeat, criterion=criterion, class_weights=class_weights,
                       optimizer=optimizer, learning_rate=learning_rate, save_checkpoints=save_checkpoints, checkpoint_freq=checkpoint_freq, checkpoint_path=checkpoint_path, max_to_keep=max_to_keep)
 
 
-class LayoutExtracter(Train):
+class LayoutExtractor(Train):
     r"""This class is used to extract diffrent layouts from a image.
 
     Example
 
     .. code-block:: python
 
-        >>> from batukh.tensorflow.segmenter import LayoutExtracter
-        >>> layout_extracter = LayoutExtracter(2)
-        >>> layout_extracter.load_data(train_path ="/train_data/",val_data="/val_data/")
-        >>> layout_extracter.train(n_epochs=1,checkpoint_path="/tf_chkpts/")
+        >>> from batukh.tensorflow.segmenter import LayoutExtractor
+        >>> layout_Extractor = LayoutExtractor(2)
+        >>> layout_Extractor.load_data(train_path ="/train_data/",val_data="/val_data/")
+        >>> layout_Extractor.train(n_epochs=1,checkpoint_path="/tf_chkpts/")
         Restored from /tf_chkpts/ckpt-13280
         Epoch: 1. Traininig: 100%|██████████| 70/70 [00:02<00:00, 23.95it/s, loss=0.0708]
         Epoch: 1. validation: 100%|██████████| 70/70 [00:02<00:00, 23.95it/s, loss=0.0708]
@@ -139,22 +148,26 @@ class LayoutExtracter(Train):
             self.val_dl = SegmentationDataLoader(
                 val_path, self.model.n_classes)
 
-    def train(self, n_epochs, batch_size=2, repeat=1, criterion=None, class_weights=None, optimizer=None, learning_rate=0.0001, save_checkpoints=True, checkpoint_freq=None, checkpoint_path=None, max_to_keep=5):
-        super().train(n_epochs, train_dl=self.train_dl, val_dl=self.val_dl, batch_size=batch_size, repeat=repeat, criterion=criterion, class_weights=class_weights,
+    def train(self, n_epochs, train_dl=None, val_dl=None, batch_size=1, repeat=1, criterion=None, class_weights=None, optimizer=None, learning_rate=0.0001, save_checkpoints=True, checkpoint_freq=None, checkpoint_path=None, max_to_keep=5):
+        if train_dl is None:
+            train_dl = self.train_dl
+        if val_dl is None:
+            val_dl = self.val_dl
+        super().train(n_epochs, train_dl=train_dl, val_dl=val_dl, batch_size=batch_size, repeat=repeat, criterion=criterion, class_weights=class_weights,
                       optimizer=optimizer, learning_rate=learning_rate, save_checkpoints=save_checkpoints, checkpoint_freq=checkpoint_freq, checkpoint_path=checkpoint_path, max_to_keep=max_to_keep)
 
 
-class BaselineDetecter(Train):
+class BaselineDetector(Train):
     r"""This class is used to detect baseline.
 
     Example
 
     .. code-block:: python
 
-        >>> from batukh.tensorflow.segmenter import BaselineDetecter
-        >>> baseline_detecter = BaselineDetecter()
-        >>> baseline_detecter.load_data("/train_data/")
-        >>> baseline_detecter.train(1,weights=[1:700])
+        >>> from batukh.tensorflow.segmenter import BaselineDetector
+        >>> baseline_Detector = BaselineDetector()
+        >>> baseline_Detector.load_data("/train_data/")
+        >>> baseline_Detector.train(1,weights=[1:700])
         Initializing from scratch
         Epoch: 1. Traininig: 100%|██████████| 70/70 [00:02<00:00, 23.95it/s, loss=0.0708]
         Model saved to /tf_ckpts/Fri Oct 16 08:23:13 2020/ckpt-14280
@@ -183,6 +196,10 @@ class BaselineDetecter(Train):
             self.val_dl = SegmentationDataLoader(
                 val_path, self.model.n_classes)
 
-    def train(self, n_epochs, batch_size=2, repeat=1, criterion=None, class_weights=None, optimizer=None, learning_rate=0.0001, save_checkpoints=True, checkpoint_freq=None, checkpoint_path=None, max_to_keep=5):
-        super().train(n_epochs, train_dl=self.train_dl, val_dl=self.val_dl, batch_size=batch_size, repeat=repeat, criterion=criterion, class_weights=class_weights,
+    def train(self, n_epochs, train_dl=None, val_dl=None, batch_size=1, repeat=1, criterion=None, class_weights=None, optimizer=None, learning_rate=0.0001, save_checkpoints=True, checkpoint_freq=None, checkpoint_path=None, max_to_keep=5):
+        if train_dl is None:
+            train_dl = self.train_dl
+        if val_dl is None:
+            val_dl = self.val_dl
+        super().train(n_epochs, train_dl=train_dl, val_dl=val_dl, batch_size=batch_size, repeat=repeat, criterion=criterion, class_weights=class_weights,
                       optimizer=optimizer, learning_rate=learning_rate, save_checkpoints=save_checkpoints, checkpoint_freq=checkpoint_freq, checkpoint_path=checkpoint_path, max_to_keep=max_to_keep)

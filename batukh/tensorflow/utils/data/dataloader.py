@@ -6,9 +6,9 @@ import numpy as np
 
 
 class SegmentationDataLoader():
-    r""" Loads the :class:`tensorflow.data.Dataset` for :class:`~batukh.tensorflow.segmenter.PageExtracter`, 
-    :class:`~batukh.tensorflow.segmenter.ImageExtracter`, :class:`~batukh.tensorflow.segmenter.LayoutExtracter` and 
-    :class:`~batukh.tensorflow.segmenter.BaselineDetecter` classes.
+    r""" Loads the :class:`tensorflow.data.Dataset` for :class:`~batukh.tensorflow.segmenter.PageExtractor`, 
+    :class:`~batukh.tensorflow.segmenter.ImageExtractor`, :class:`~batukh.tensorflow.segmenter.LayoutExtractor` and 
+    :class:`~batukh.tensorflow.segmenter.BaselineDetector` classes.
 
     Example
 
@@ -207,7 +207,7 @@ class OCRDataLoader():
         """
         return self.size
 
-    def __call__(self, batch_size=1, repeat=1):
+    def __call__(self, repeat=1):
         r"""
 
         Args:
@@ -219,7 +219,7 @@ class OCRDataLoader():
             :class:`tensorflow.data.dataset` : Dataloader.
             """
         ds = self.dataset
-        ds = ds.batch(batch_size).map(
+        ds = ds.batch(1).map(
             self._convert_label).repeat(repeat)
         ds = ds.prefetch(tf.data.experimental.AUTOTUNE)
         return ds
@@ -245,66 +245,3 @@ class OCRDataLoader():
         for i in img_path:
             labels.append(labels_[int(i.split(".")[0].split("/")[-1])])
         return img_path, labels
-
-    def map2string(self, inputs):
-        # todo : shift theese methods to ocr
-        """Maps tensor to stings as per :class:`~self.inv_table`.
-
-        Args:
-            inputs (:class:`tensorflow.Tensor`) : Input tensor.
-
-        Returns:
-            list : list of strings."""
-        strings = []
-        for i in inputs:
-            text = [self.inv_table[char_index] for char_index in i
-                    if char_index != self.blank_index]
-            strings.append(''.join(text))
-        return strings
-
-    def decode(self, inputs, from_pred=True, method='gready', merge_repeated=True):
-        """Decodes the model logits using ctc decoder.
-
-        Example
-
-        .. code:: python
-
-            >>> from batukh.tensorflow.ocr import OCR
-            >>> import tensorflow as tf
-            >>> m = OCR(177)
-            >>> m.load_model("/saved_model/")
-            >>> x = tf.io.read_file("/image.png")
-            >>> x = tf.io.decode_png(x,channels=1)
-            >>> y = m.predict(x)
-            >>> pred = m.train_dl.decode(y)
-
-
-
-        Args:
-            inputs ( :class:`tensorflow.Tensor`) : Input tensor.
-            from_pred (bol,optional): ``True`` if input is return of ( :class:`~batukh.tensorflow.ocr.OCR.predict`. ``False`` if input is a :class:`tensorflow.SparseTensor`.
-                Default: ``True``
-            method (str,optional)   :if  ``'gready'``  :class:`tensorflow.nn.ctc_greedy_decoder` used for decoding.if  ``'beam_search'``  :class:`tensorflow.nn.ctc_beam_search_decoder` used.
-                Default: `` 'greedy' ``
-            merge_repeated (bol,optional): Specifes if similar charsters will be merged.
-                Default: ``True``
-
-        Returns:
-            list: decoded list of strings  """
-        self.merge_repeated = merge_repeated
-        if from_pred:
-            logit_length = tf.fill([tf.shape(inputs)[0]], tf.shape(inputs)[1])
-            if method == 'greedy':
-                decoded, _ = tf.nn.ctc_greedy_decoder(
-                    inputs=tf.transpose(inputs, perm=[1, 0, 2]),
-                    sequence_length=logit_length,
-                    merge_repeated=self.merge_repeated)
-            elif method == 'beam_search':
-                decoded, _ = tf.nn.ctc_beam_search_decoder(
-                    inputs=tf.transpose(inputs, perm=[1, 0, 2]),
-                    sequence_length=logit_length)
-            inputs = decoded[0]
-        decoded = tf.sparse.to_dense(inputs,
-                                     default_value=self.blank_index).numpy()
-        decoded = self.map2string(decoded)
-        return decoded
