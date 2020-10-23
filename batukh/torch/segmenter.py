@@ -109,6 +109,7 @@ class BaseProcessor:
               criterion=None,
               optimizer=None,
               learning_rate=0.0001,
+              learning_rate_decay=None,
               save_checkpoints=True,
               checkpoint_freq=None,
               checkpoint_path=None,
@@ -135,6 +136,8 @@ class BaseProcessor:
                     batch_size, shuffle, num_workers, pin_memory)
             ######
 
+        if learning_rate_decay is None:
+            learning_rate_decay = 1.0
         self.model.to(device)
 
         # checkpoint stuff
@@ -154,11 +157,13 @@ class BaseProcessor:
             current_epoch, optimizer, loss = self.load_checkpoint(
                 join(checkpoint_file_path), optimizer, device)
 
-            optimizer.param_groups[0]["lr"] = learning_rate
-
             print("Latest checkpoint found.")
             print(
                 f"Epoch: {current_epoch}    loss: {loss}\nResuming training...")
+
+        optimizer.param_groups[0]["lr"] = learning_rate
+        scheduler = optim.lr_scheduler.ExponentialLR(
+            optimizer, learning_rate_decay)
 
         current_epoch += 1
         for epoch in range(current_epoch, current_epoch+n_epochs):
@@ -202,6 +207,9 @@ class BaseProcessor:
                     pbar.update(1)
                     pbar.set_postfix(loss=eval_loss/(i+1))
                 pbar.close()
+
+            scheduler.step()
+
             if epoch % checkpoint_freq == 0:
                 name = "{}-{}-{}-{}-{}-{}-{}.pt".format(
                     epoch, *localtime()[:6])
@@ -351,6 +359,7 @@ class PageExtractor(BaseProcessor):
               criterion=None,
               optimizer=None,
               learning_rate=0.0001,
+              learning_rate_decay=None,
               save_checkpoints=True,
               checkpoint_freq=None,
               checkpoint_path=None,
@@ -392,6 +401,8 @@ class PageExtractor(BaseProcessor):
             learning_rate (float, optional): Learning rate to be used for the 
                 default optimizer.
                 Default: 0.0001.
+            learning_rate_decay (float, optional): exponential decay to be used on learning rate.
+                Default: None.
             save_checkpoints (bool, optional): Whether to save training checkpoints.
                 Default: ``True``.
             checkpoint_freq (int, optional): The saving frequency. After each 
@@ -462,6 +473,7 @@ class ImageExtractor(BaseProcessor):
               criterion=None,
               optimizer=None,
               learning_rate=0.0001,
+              learning_rate_decay=None,
               save_checkpoints=True,
               checkpoint_freq=None,
               checkpoint_path=None,
@@ -504,6 +516,8 @@ class ImageExtractor(BaseProcessor):
             learning_rate (float, optional): Learning rate to be used for the 
                 default optimizer.
                 Default: 0.0001.
+            learning_rate_decay (float, optional): exponential decay to be used on learning rate.
+                Default: None.            
             save_checkpoints (bool, optional): Whether to save training checkpoints.
                 Default: ``True``.
             checkpoint_freq (int, optional): The saving frequency. After each 
@@ -575,6 +589,7 @@ class BaselineDetector(BaseProcessor):
               criterion=None,
               optimizer=None,
               learning_rate=0.0001,
+              learning_rate_decay=None,
               save_checkpoints=True,
               checkpoint_freq=None,
               checkpoint_path=None,
@@ -613,6 +628,8 @@ class BaselineDetector(BaseProcessor):
             optimizer (:class:`~torch.optim.Optimizer`, optional): The optimizer
                 to be used to update the parameters.
                 Default: ``Adam(model.parameters(), lr=learning_rate)``
+            learning_rate_decay (float, optional): exponential decay to be used on learning rate.
+                Default: None.
             learning_rate (float, optional): Learning rate to be used for the 
                 default optimizer.
                 Default: 0.0001.
