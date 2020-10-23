@@ -147,8 +147,10 @@ class BaseProcessor:
 
         current_epoch = 0
         if len(os.listdir(checkpoint_path)) > 0:
-            checkpoint_file_path = self.get_latest_ckpt_path(
+            recent_file = self.get_latest_ckpt_path(
                 checkpoint_path)
+
+            checkpoint_file_path = join(checkpoint_path, recent_file)
             current_epoch, optimizer, loss = self.load_checkpoint(
                 join(checkpoint_file_path), optimizer, device)
 
@@ -261,9 +263,9 @@ class BaseProcessor:
                 recent_file = filename
             elif c_time == recent_time:
                 recent_file = filename if date[0] > int(
-                    recent_file.split("-")) else recent_file
+                    recent_file.split("-")[0]) else recent_file
 
-        return join(path, recent_file)
+        return recent_file
 
     def load_model(self, path):
         """
