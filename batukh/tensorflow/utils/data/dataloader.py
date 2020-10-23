@@ -33,8 +33,12 @@ class SegmentationDataLoader():
 
         images_path = os.path.join(path, "originals")
         labels_path = os.path.join(path, "labels")
+        assert os.path.isdir(
+            images_path), "Path does not contian images folder."
+        assert os.path.isdir(
+            labels_path), "Path does not contian labels folder."
 
-        img_paths, label_paths = self._read_img_paths_and_labels(
+        img_paths, label_paths = self._read_img_label_paths(
             images_path,
             labels_path)
         self.n_classes = n_classes
@@ -95,7 +99,7 @@ class SegmentationDataLoader():
         """
         return self.size
 
-    def _read_img_paths_and_labels(self, images_path, labels_path):
+    def _read_img_label_paths(self, images_path, labels_path):
         r"""Reads paths of images and labels.
 
 
@@ -141,6 +145,12 @@ class OCRDataLoader():
         images_path = os.path.join(path, "images")
         labels_path = os.path.join(path, "labels.txt")
         table_path = os.path.join(path, "table.txt")
+        assert os.path.isdir(
+            images_path), "Path does not contian images folder."
+        assert os.path.exists(
+            labels_path), "Path does not contian label.txt."
+        assert os.path.exists(
+            labels_path), "Path does not contian table.txt."
         img_paths, labels = self._read_img_paths_and_labels(
             images_path,
             labels_path)
