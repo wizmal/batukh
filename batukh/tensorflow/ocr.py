@@ -4,6 +4,16 @@ from .utils.data.augmentation import MultipleColorJitter
 from .utils.models.ocr_model import OCRModel
 import tensorflow as tf
 
+# todo batch size segmenter.
+# todo dynamic  weights.
+# todo checkpoints.
+# lr sheduler.
+# l2 regulirization e-6.
+
+# todo tensorboard
+# todo example boun
+#
+
 
 class OCR(Train):
     r"""This class is used for octical character recognition.

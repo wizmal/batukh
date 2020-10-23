@@ -75,7 +75,7 @@ class Train():
             pbar.set_postfix(loss=float(self.train_loss.result()))
         pbar.close()
 
-    def train(self, n_epochs, train_dl=None, val_dl=None,  batch_size=1, repeat=1, criterion=None, class_weights=None, optimizer=None, learning_rate=0.0001, save_checkpoints=True, checkpoint_freq=None, checkpoint_path=None, max_to_keep=5):
+    def train(self, n_epochs, train_dl=None, val_dl=None,  batch_size=1, repeat=1, criterion=None, class_weights=None, optimizer=None, learning_rate=0.0001, lr_decay=None, save_checkpoints=True, checkpoint_freq=None, checkpoint_path=None, max_to_keep=5):
         r"""
         Args:
             n_epochs (int) : Number of epochs.
@@ -105,6 +105,13 @@ class Train():
             max_to_keep (int,optional) : Maximun number of latest checkpoints to keep.
                 Default : :math:`5`
                 """
+        if lr_decay is not None:
+            learning_rate = tf.keras.optimizers.schedules.ExponentialDecay(
+                learning_rate,
+                decay_steps=100000,
+                decay_rate=lr_decay,
+                staircase=True)
+
         if optimizer is None:
             optimizer = tf.keras.optimizers.Adam(learning_rate=learning_rate)
         self.optimizer = optimizer
