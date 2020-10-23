@@ -3,6 +3,7 @@ from .utils.data.augmentation import MultipleRandomRotation, MultipleColorJitter
 from .utils.data.dataloader import SegmentationDataLoader
 import torch
 import torch.nn as nn
+from torch.utils.tensorboard import SummaryWriter
 from torchvision import transforms
 import os
 from torch.utils.data import DataLoader
@@ -115,6 +116,8 @@ class BaseProcessor:
               checkpoint_freq=None,
               checkpoint_path=None,
               max_to_keep=5,
+              log_dir="./tensorboard_logs",
+              log_freq=1000,
               device=None,
               ):
 
@@ -168,6 +171,10 @@ class BaseProcessor:
             optimizer, learning_rate_decay)
 
         current_epoch += 1
+
+        now = datetime.now()
+
+        writer = SummaryWriter(join(log_dir, now.strftime("%Y%m%d-%H%M%S")))
         for epoch in range(current_epoch, current_epoch+n_epochs):
 
             self.model.train()
@@ -177,7 +184,8 @@ class BaseProcessor:
             pbar = tqdm(total=len(train_dl))
             pbar.set_description(f"Epoch: {epoch}. Traininig")
 
-            for i, (x, y) in enumerate(train_dl):
+            running_loss = 0.0
+            for i, (x, y) in enumerate(train_dl, 1):
 
                 x = x.to(device)
                 y = y.to(device)
@@ -187,7 +195,17 @@ class BaseProcessor:
                 total_loss += loss
 
                 pbar.update()
-                pbar.set_postfix(loss=total_loss/(i+1))
+                pbar.set_postfix(loss=total_loss/(i))
+
+                running_loss += loss
+                if ((epoch-1)*len(train_dl) + i) % log_freq == 0:
+
+                    writer.add_scalar('Loss/train',
+                                      running_loss/log_freq,
+                                      (epoch-1)*len(train_dl) + i)
+
+                    running_loss = 0.0
+
             pbar.close()
 
             if val_dl is not None:
@@ -198,7 +216,8 @@ class BaseProcessor:
                 pbar = tqdm(total=len(val_dl))
                 pbar.set_description(f"Epoch: {epoch}. Validating")
 
-                for i, (x, y) in enumerate(val_dl):
+                running_loss = 0
+                for i, (x, y) in enumerate(val_dl, 1):
 
                     x = x.to(device)
                     y = y.to(device)
@@ -207,7 +226,17 @@ class BaseProcessor:
                     eval_loss += loss
 
                     pbar.update(1)
-                    pbar.set_postfix(loss=eval_loss/(i+1))
+                    pbar.set_postfix(loss=eval_loss/(i))
+
+                    running_loss += loss
+                    if ((epoch-1)*len(val_dl) + i) % log_freq == 0:
+
+                        writer.add_scalar('Loss/val',
+                                          eval_loss/log_freq,
+                                          (epoch-1)*len(val_dl) + i)
+
+                        running_loss = 0.0
+
                 pbar.close()
 
             scheduler.step()
@@ -217,6 +246,9 @@ class BaseProcessor:
                     epoch, *localtime()[:6])
                 self.save_checkpoint(join(checkpoint_path, name), epoch,
                                      optimizer, total_loss/len(train_dl))
+
+        writer.flush()
+        writer.close()
 
     def save_checkpoint(self, path, epoch, optimizer, loss):
         r"""
@@ -375,6 +407,8 @@ class PageExtractor(BaseProcessor):
               checkpoint_freq=None,
               checkpoint_path=None,
               max_to_keep=5,
+              log_dir="./tensorboard_logs",
+              log_freq=1000,
               device=None,
               ):
         r"""
@@ -441,7 +475,8 @@ class PageExtractor(BaseProcessor):
         super().train(n_epochs, train_dl, val_dl, batch_size, shuffle,
                       num_workers, pin_memory, criterion, optimizer, weight_decay,
                       learning_rate, learning_rate_decay, save_checkpoints,
-                      checkpoint_freq, checkpoint_path, max_to_keep, device)
+                      checkpoint_freq, checkpoint_path, max_to_keep, log_dir,
+                      log_freq, device)
 
 
 class ImageExtractor(BaseProcessor):
@@ -500,6 +535,8 @@ class ImageExtractor(BaseProcessor):
               checkpoint_freq=None,
               checkpoint_path=None,
               max_to_keep=5,
+              log_dir="./tensorboard_logs",
+              log_freq=1000,
               device=None,
               ):
         r"""
@@ -567,7 +604,8 @@ class ImageExtractor(BaseProcessor):
         super().train(n_epochs, train_dl, val_dl, batch_size, shuffle,
                       num_workers, pin_memory, criterion, optimizer, weight_decay,
                       learning_rate, learning_rate_decay, save_checkpoints,
-                      checkpoint_freq, checkpoint_path, max_to_keep, device)
+                      checkpoint_freq, checkpoint_path, max_to_keep, log_dir,
+                      log_freq, device)
 
 
 class BaselineDetector(BaseProcessor):
@@ -627,6 +665,8 @@ class BaselineDetector(BaseProcessor):
               checkpoint_freq=None,
               checkpoint_path=None,
               max_to_keep=5,
+              log_dir="./tensorboard_logs",
+              log_freq=1000,
               device=None,
               ):
         r"""
@@ -694,4 +734,5 @@ class BaselineDetector(BaseProcessor):
         super().train(n_epochs, train_dl, val_dl, batch_size, shuffle,
                       num_workers, pin_memory, criterion, optimizer, weight_decay,
                       learning_rate, learning_rate_decay, save_checkpoints,
-                      checkpoint_freq, checkpoint_path, max_to_keep, device)
+                      checkpoint_freq, checkpoint_path, max_to_keep, log_dir,
+                      log_freq, device)
