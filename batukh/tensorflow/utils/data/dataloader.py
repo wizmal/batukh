@@ -34,7 +34,7 @@ class SegmentationDataLoader():
         images_path = os.path.join(path, "originals")
         labels_path = os.path.join(path, "labels")
         assert os.path.isdir(
-            images_path), "Path does not contian images folder."
+            images_path), "Path does not contian originals folder."
         assert os.path.isdir(
             labels_path), "Path does not contian labels folder."
 
@@ -114,9 +114,13 @@ class SegmentationDataLoader():
         """
         img_path = os.listdir(images_path)
         img_path.sort()
-        img_path = [str(os.path.join(images_path, i)) for i in img_path]
         label_path = os.listdir(labels_path)
         label_path.sort()
+        check = [True if img_path.split('.')[0] == label_path.split(
+            ".")[0] else False for i, j in zip(img_path, label_path)]
+        assert tf.reduce_all(
+            check), "Originals and Labels does not contain  images with same filenames."
+        img_path = [str(os.path.join(images_path, i)) for i in img_path]
         label_path = [str(os.path.join(labels_path, i)) for i in label_path]
 
         return img_path, label_path
@@ -245,13 +249,19 @@ class OCRDataLoader():
             list      : List of labels.
         """
         img_path_ = os.listdir(images_path)
-        img_path = [os.path.join(images_path, i) for i in img_path_]
+        img_path_.sort()
 
         label_ = open(labels_path, 'r')
         labels_ = label_.readlines()
         labels_ = [labels_[i].split(":")[1].strip()
                    for i in range(len(labels_))]
         labels = []
+        check = [True if 0 <= int(i.split(".")[0]) < len(
+            labels) else False for i in img_path_]
+        img_path = [os.path.join(images_path, i) for i in img_path_]
+        assert tf.reduce_all(
+            check), "Image filenames doesnt match with any line number in labels.txt"
+
         for i in img_path:
             labels.append(labels_[int(i.split(".")[0].split("/")[-1])])
         return img_path, labels
