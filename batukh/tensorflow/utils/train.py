@@ -2,6 +2,7 @@ import tensorflow as tf
 import time
 from tqdm import tqdm
 import numpy as np
+import tensorflow_addons as tfa
 
 
 class Train():
@@ -75,7 +76,7 @@ class Train():
             pbar.set_postfix(loss=float(self.train_loss.result()))
         pbar.close()
 
-    def train(self, n_epochs, train_dl=None, val_dl=None,  batch_size=1, repeat=1, criterion=None, class_weights=None, optimizer=None, learning_rate=0.0001, lr_decay=None, save_checkpoints=True, checkpoint_freq=None, checkpoint_path=None, max_to_keep=5):
+    def train(self, n_epochs, train_dl=None, val_dl=None,  batch_size=1, repeat=1, criterion=None, class_weights=None, optimizer=None, weight_decay=None, learning_rate=0.0001, lr_decay=None, save_checkpoints=True, checkpoint_freq=None, checkpoint_path=None, max_to_keep=5):
         r"""
         Args:
             n_epochs (int) : Number of epochs.
@@ -107,13 +108,13 @@ class Train():
                 """
         if lr_decay is not None:
             learning_rate = tf.keras.optimizers.schedules.ExponentialDecay(
-                learning_rate,
-                decay_steps=100000,
-                decay_rate=lr_decay,
-                staircase=True)
+                learning_rate, decay_steps=100000, decay_rate=lr_decay, staircase=True)
 
         if optimizer is None:
             optimizer = tf.keras.optimizers.Adam(learning_rate=learning_rate)
+        if weight_decay is not None:
+            optimizer = tfa.optimizers.AdamW(
+                learning_rate=learning_rate, weight_decay=weight_decay)
         self.optimizer = optimizer
         if criterion is None:
             if self.is_ocr:
