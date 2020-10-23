@@ -322,6 +322,14 @@ class BaseProcessor:
 class PageExtractor(BaseProcessor):
     """
     This class is used to detect boundary of text in an image of a document.
+
+    Args:
+        use_pretrained (bool, optional): whether to use the parameters of pre-trained
+            resnet50 model. 
+            Default: ``True``.
+        lock_pretrained (bool, optional): whether to lock the layers of pretrained
+            model. Only needed if ``use_pretrained`` is ``True``.
+            Default: ``True``.
     """
 
     def load_data(self,
@@ -439,6 +447,14 @@ class PageExtractor(BaseProcessor):
 class ImageExtractor(BaseProcessor):
     """
     This class is used to detect images in a document.
+
+    Args:
+        use_pretrained (bool, optional): whether to use the parameters of pre-trained
+            resnet50 model. 
+            Default: ``True``.
+        lock_pretrained (bool, optional): whether to lock the layers of pretrained
+            model. Only needed if ``use_pretrained`` is ``True``.
+            Default: ``True``.
     """
 
     def load_data(self,
@@ -557,6 +573,14 @@ class ImageExtractor(BaseProcessor):
 class BaselineDetector(BaseProcessor):
     """
     This class is used to detect baselines in an image of a document.
+
+    Args:
+        use_pretrained (bool, optional): whether to use the parameters of pre-trained
+            resnet50 model. 
+            Default: ``True``.
+        lock_pretrained (bool, optional): whether to lock the layers of pretrained
+            model. Only needed if ``use_pretrained`` is ``True``.
+            Default: ``True``.
     """
 
     def load_data(self,
