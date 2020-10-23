@@ -108,6 +108,7 @@ class BaseProcessor:
               pin_memory=True,
               criterion=None,
               optimizer=None,
+              weight_decay=0,
               learning_rate=0.0001,
               learning_rate_decay=None,
               save_checkpoints=True,
@@ -162,6 +163,7 @@ class BaseProcessor:
                 f"Epoch: {current_epoch}    loss: {loss}\nResuming training...")
 
         optimizer.param_groups[0]["lr"] = learning_rate
+        optimizer.param_groups[0]["weight_decay"] = weight_decay
         scheduler = optim.lr_scheduler.ExponentialLR(
             optimizer, learning_rate_decay)
 
@@ -358,6 +360,7 @@ class PageExtractor(BaseProcessor):
               pin_memory=True,
               criterion=None,
               optimizer=None,
+              weight_decay=0,
               learning_rate=0.0001,
               learning_rate_decay=None,
               save_checkpoints=True,
@@ -398,6 +401,8 @@ class PageExtractor(BaseProcessor):
             optimizer (:class:`~torch.optim.Optimizer`, optional): The optimizer
                 to be used to update the parameters.
                 Default: ``Adam(model.parameters(), lr=learning_rate)``
+            weight_decay (float, optional): L2 regularization parameter for the optimizer(if it applies).
+                Default: 0.
             learning_rate (float, optional): Learning rate to be used for the 
                 default optimizer.
                 Default: 0.0001.
@@ -426,9 +431,9 @@ class PageExtractor(BaseProcessor):
             criterion = nn.CrossEntropyLoss(reduction="mean")
 
         super().train(n_epochs, train_dl, val_dl, batch_size, shuffle,
-                      num_workers, pin_memory, criterion, optimizer,
-                      learning_rate, save_checkpoints, checkpoint_freq,
-                      checkpoint_path, max_to_keep, device)
+                      num_workers, pin_memory, criterion, optimizer, weight_decay,
+                      learning_rate, learning_rate_decay, save_checkpoints,
+                      checkpoint_freq, checkpoint_path, max_to_keep, device)
 
 
 class ImageExtractor(BaseProcessor):
@@ -472,6 +477,7 @@ class ImageExtractor(BaseProcessor):
               pin_memory=True,
               criterion=None,
               optimizer=None,
+              weight_decay=0,
               learning_rate=0.0001,
               learning_rate_decay=None,
               save_checkpoints=True,
@@ -513,6 +519,8 @@ class ImageExtractor(BaseProcessor):
             optimizer (:class:`~torch.optim.Optimizer`, optional): The optimizer
                 to be used to update the parameters.
                 Default: ``Adam(model.parameters(), lr=learning_rate)``
+            weight_decay (float, optional): L2 regularization parameter for the optimizer(if it applies).
+                Default: 0.
             learning_rate (float, optional): Learning rate to be used for the 
                 default optimizer.
                 Default: 0.0001.
@@ -541,9 +549,9 @@ class ImageExtractor(BaseProcessor):
             criterion = nn.CrossEntropyLoss(reduction="mean")
 
         super().train(n_epochs, train_dl, val_dl, batch_size, shuffle,
-                      num_workers, pin_memory, criterion, optimizer,
-                      learning_rate, save_checkpoints, checkpoint_freq,
-                      checkpoint_path, max_to_keep, device)
+                      num_workers, pin_memory, criterion, optimizer, weight_decay,
+                      learning_rate, learning_rate_decay, save_checkpoints,
+                      checkpoint_freq, checkpoint_path, max_to_keep, device)
 
 
 class BaselineDetector(BaseProcessor):
@@ -588,6 +596,7 @@ class BaselineDetector(BaseProcessor):
               pin_memory=True,
               criterion=None,
               optimizer=None,
+              weight_decay=0,
               learning_rate=0.0001,
               learning_rate_decay=None,
               save_checkpoints=True,
@@ -628,6 +637,8 @@ class BaselineDetector(BaseProcessor):
             optimizer (:class:`~torch.optim.Optimizer`, optional): The optimizer
                 to be used to update the parameters.
                 Default: ``Adam(model.parameters(), lr=learning_rate)``
+            weight_decay (float, optional): L2 regularization parameter for the optimizer(if it applies).
+                Default: 0.
             learning_rate_decay (float, optional): exponential decay to be used on learning rate.
                 Default: None.
             learning_rate (float, optional): Learning rate to be used for the 
@@ -657,6 +668,6 @@ class BaselineDetector(BaseProcessor):
                 weight=torch.Tensor([1, 700]).to(device), reduction="mean")
 
         super().train(n_epochs, train_dl, val_dl, batch_size, shuffle,
-                      num_workers, pin_memory, criterion, optimizer,
-                      learning_rate, save_checkpoints, checkpoint_freq,
-                      checkpoint_path, max_to_keep, device)
+                      num_workers, pin_memory, criterion, optimizer, weight_decay,
+                      learning_rate, learning_rate_decay, save_checkpoints,
+                      checkpoint_freq, checkpoint_path, max_to_keep, device)
