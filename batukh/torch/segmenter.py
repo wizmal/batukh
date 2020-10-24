@@ -12,6 +12,8 @@ from tqdm import tqdm
 from time import localtime
 from torch import optim
 
+import matplotlib.pyplot as plt
+
 from datetime import datetime
 
 # TODO: Add types to args
@@ -205,6 +207,20 @@ class BaseProcessor:
                                       train_running_loss/log_freq,
                                       (epoch-1)*len(train_dl) + i)
 
+                    pred = self.predict(x[0].unsqueeze(0), device=device)
+                    v, index = pred.topk(1, dim=1)
+                    f, (ax1, ax2) = plt.subplots(1, 2)
+                    ax1.imshow(index[0, 0].cpu(), "gray")
+                    ax1.set_title("Prediction")
+                    ax2.imshow(y[0].cpu(), "gray")
+                    ax2.set_title("Ground Truth")
+
+                    writer.add_figure("Predictions/train",
+                                      f,
+                                      global_step=(epoch-1)*len(train_dl) + i)
+
+                    self.model.train()
+
                     train_running_loss = 0.0
 
             pbar.close()
@@ -229,12 +245,24 @@ class BaseProcessor:
                     pbar.update(1)
                     pbar.set_postfix(loss=eval_loss/(i))
 
-                    running_loss += loss
+                    val_running_loss += loss
                     if ((epoch-1)*len(val_dl) + i) % log_freq == 0:
 
                         writer.add_scalar('Loss/val',
                                           val_running_loss/log_freq,
                                           (epoch-1)*len(val_dl) + i)
+
+                        pred = self.predict(x[0].unsqueeze(0), device=device)
+                        _, index = pred.topk(1, dim=1)
+                        f, (ax1, ax2) = plt.subplots(1, 2)
+                        ax1.imshow(index[0, 0].cpu(), "gray")
+                        ax1.set_title("Prediction")
+                        ax2.imshow(y[0].cpu(), "gray")
+                        ax2.set_title("Ground Truth")
+
+                        writer.add_figure("Predictions/val",
+                                          f,
+                                          global_step=(epoch-1)*len(val_dl) + i)
 
                         val_running_loss = 0.0
 
