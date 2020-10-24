@@ -173,7 +173,9 @@ class BaseProcessor:
         current_epoch += 1
 
         now = datetime.now()
-
+        train_running_loss = 0
+        if val_dl is not None:
+            val_running_loss = 0
         writer = SummaryWriter(join(log_dir, now.strftime("%Y%m%d-%H%M%S")))
         for epoch in range(current_epoch, current_epoch+n_epochs):
 
@@ -184,7 +186,6 @@ class BaseProcessor:
             pbar = tqdm(total=len(train_dl))
             pbar.set_description(f"Epoch: {epoch}. Traininig")
 
-            running_loss = 0.0
             for i, (x, y) in enumerate(train_dl, 1):
 
                 x = x.to(device)
@@ -197,14 +198,14 @@ class BaseProcessor:
                 pbar.update()
                 pbar.set_postfix(loss=total_loss/(i))
 
-                running_loss += loss
+                train_running_loss += loss
                 if ((epoch-1)*len(train_dl) + i) % log_freq == 0:
 
                     writer.add_scalar('Loss/train',
-                                      running_loss/log_freq,
+                                      train_running_loss/log_freq,
                                       (epoch-1)*len(train_dl) + i)
 
-                    running_loss = 0.0
+                    train_running_loss = 0.0
 
             pbar.close()
 
@@ -216,7 +217,7 @@ class BaseProcessor:
                 pbar = tqdm(total=len(val_dl))
                 pbar.set_description(f"Epoch: {epoch}. Validating")
 
-                running_loss = 0
+                val_running_loss = 0
                 for i, (x, y) in enumerate(val_dl, 1):
 
                     x = x.to(device)
@@ -232,10 +233,10 @@ class BaseProcessor:
                     if ((epoch-1)*len(val_dl) + i) % log_freq == 0:
 
                         writer.add_scalar('Loss/val',
-                                          eval_loss/log_freq,
+                                          val_running_loss/log_freq,
                                           (epoch-1)*len(val_dl) + i)
 
-                        running_loss = 0.0
+                        val_running_loss = 0.0
 
                 pbar.close()
 
