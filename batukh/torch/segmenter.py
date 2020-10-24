@@ -79,7 +79,7 @@ class BaseProcessor:
                    y,
                    optimizer,
                    criterion,
-                   learning_rate):
+                   ):
 
         optimizer.zero_grad()
 
@@ -100,6 +100,113 @@ class BaseProcessor:
         loss = criterion(preds, y)
 
         return loss.item()
+
+    def train_epoch(self,
+                    epoch,
+                    train_dl,
+                    optimizer,
+                    criterion,
+                    writer,
+                    train_running_loss,
+                    log_freq,
+                    device,):
+
+        self.model.train()
+        total_loss = 0
+
+        # Progress bar
+        pbar = tqdm(total=len(train_dl))
+        pbar.set_description(f"Epoch: {epoch}. Traininig")
+
+        for i, (x, y) in enumerate(train_dl, 1):
+
+            x = x.to(device)
+            y = y.to(device)
+
+            loss = self.train_step(x, y, optimizer, criterion)
+            total_loss += loss
+
+            pbar.update()
+            pbar.set_postfix(loss=total_loss/(i))
+
+            train_running_loss += loss
+            if ((epoch-1)*len(train_dl) + i) % log_freq == 0:
+
+                writer.add_scalar('Loss/train',
+                                  train_running_loss/log_freq,
+                                  (epoch-1)*len(train_dl) + i)
+
+                pred = self.predict(x[0].unsqueeze(0), device=device)
+                _, index = pred.topk(1, dim=1)
+                f, (ax1, ax2) = plt.subplots(1, 2)
+                ax1.imshow(index[0, 0].cpu(), "gray")
+                ax1.set_title("Prediction")
+                ax2.imshow(y[0].cpu(), "gray")
+                ax2.set_title("Ground Truth")
+
+                writer.add_figure("Predictions/train",
+                                  f,
+                                  global_step=(epoch-1)*len(train_dl) + i)
+
+                self.model.train()
+
+                train_running_loss = 0.0
+
+        pbar.close()
+
+        return train_running_loss, total_loss
+
+    def val_epoch(self,
+                  epoch,
+                  val_dl,
+                  criterion,
+                  writer,
+                  val_running_loss,
+                  log_freq,
+                  device):
+        self.model.eval()
+        eval_loss = 0
+
+        # validation progress bar
+        pbar = tqdm(total=len(val_dl))
+        pbar.set_description(f"Epoch: {epoch}. Validating")
+
+        val_running_loss = 0
+        for i, (x, y) in enumerate(val_dl, 1):
+
+            x = x.to(device)
+            y = y.to(device)
+
+            loss = self.val_step(x, y, criterion)
+            eval_loss += loss
+
+            pbar.update(1)
+            pbar.set_postfix(loss=eval_loss/(i))
+
+            val_running_loss += loss
+            if ((epoch-1)*len(val_dl) + i) % log_freq == 0:
+
+                writer.add_scalar('Loss/val',
+                                  val_running_loss/log_freq,
+                                  (epoch-1)*len(val_dl) + i)
+
+                pred = self.predict(x[0].unsqueeze(0), device=device)
+                _, index = pred.topk(1, dim=1)
+                f, (ax1, ax2) = plt.subplots(1, 2)
+                ax1.imshow(index[0, 0].cpu(), "gray")
+                ax1.set_title("Prediction")
+                ax2.imshow(y[0].cpu(), "gray")
+                ax2.set_title("Ground Truth")
+
+                writer.add_figure("Predictions/val",
+                                  f,
+                                  global_step=(epoch-1)*len(val_dl) + i)
+
+                val_running_loss = 0.0
+
+        pbar.close()
+
+        return val_running_loss, eval_loss
 
     def train(self,
               n_epochs,
@@ -179,94 +286,15 @@ class BaseProcessor:
         if val_dl is not None:
             val_running_loss = 0
         writer = SummaryWriter(join(log_dir, now.strftime("%Y%m%d-%H%M%S")))
+
         for epoch in range(current_epoch, current_epoch+n_epochs):
 
-            self.model.train()
-            total_loss = 0
-
-            # Progress bar
-            pbar = tqdm(total=len(train_dl))
-            pbar.set_description(f"Epoch: {epoch}. Traininig")
-
-            for i, (x, y) in enumerate(train_dl, 1):
-
-                x = x.to(device)
-                y = y.to(device)
-
-                loss = self.train_step(x, y, optimizer, criterion,
-                                       learning_rate=learning_rate)
-                total_loss += loss
-
-                pbar.update()
-                pbar.set_postfix(loss=total_loss/(i))
-
-                train_running_loss += loss
-                if ((epoch-1)*len(train_dl) + i) % log_freq == 0:
-
-                    writer.add_scalar('Loss/train',
-                                      train_running_loss/log_freq,
-                                      (epoch-1)*len(train_dl) + i)
-
-                    pred = self.predict(x[0].unsqueeze(0), device=device)
-                    v, index = pred.topk(1, dim=1)
-                    f, (ax1, ax2) = plt.subplots(1, 2)
-                    ax1.imshow(index[0, 0].cpu(), "gray")
-                    ax1.set_title("Prediction")
-                    ax2.imshow(y[0].cpu(), "gray")
-                    ax2.set_title("Ground Truth")
-
-                    writer.add_figure("Predictions/train",
-                                      f,
-                                      global_step=(epoch-1)*len(train_dl) + i)
-
-                    self.model.train()
-
-                    train_running_loss = 0.0
-
-            pbar.close()
+            train_running_loss, total_loss = self.train_epoch(
+                epoch, train_dl, optimizer, criterion, writer, train_running_loss, log_freq, device)
 
             if val_dl is not None:
-                self.model.eval()
-                eval_loss = 0
-
-                # validation progress bar
-                pbar = tqdm(total=len(val_dl))
-                pbar.set_description(f"Epoch: {epoch}. Validating")
-
-                val_running_loss = 0
-                for i, (x, y) in enumerate(val_dl, 1):
-
-                    x = x.to(device)
-                    y = y.to(device)
-
-                    loss = self.val_step(x, y, criterion)
-                    eval_loss += loss
-
-                    pbar.update(1)
-                    pbar.set_postfix(loss=eval_loss/(i))
-
-                    val_running_loss += loss
-                    if ((epoch-1)*len(val_dl) + i) % log_freq == 0:
-
-                        writer.add_scalar('Loss/val',
-                                          val_running_loss/log_freq,
-                                          (epoch-1)*len(val_dl) + i)
-
-                        pred = self.predict(x[0].unsqueeze(0), device=device)
-                        _, index = pred.topk(1, dim=1)
-                        f, (ax1, ax2) = plt.subplots(1, 2)
-                        ax1.imshow(index[0, 0].cpu(), "gray")
-                        ax1.set_title("Prediction")
-                        ax2.imshow(y[0].cpu(), "gray")
-                        ax2.set_title("Ground Truth")
-
-                        writer.add_figure("Predictions/val",
-                                          f,
-                                          global_step=(epoch-1)*len(val_dl) + i)
-
-                        val_running_loss = 0.0
-
-                pbar.close()
+                val_running_loss, eval_loss = self.val_epoch(
+                    epoch, val_dl, criterion, writer, val_running_loss, log_freq, device)
 
             scheduler.step()
 
