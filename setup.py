@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="batukh",
-    version="0.0.2",
+    version="0.1.0",
     author="Murtaza, Wajid, Naveed",
     author_email="batukhorg@gmail.com",
     description="Document recognizer for multiple languages.",
