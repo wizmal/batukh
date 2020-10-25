@@ -2,6 +2,9 @@ import tensorflow as tf
 import time
 from tqdm import tqdm
 import numpy as np
+import tensorflow_addons as tfa
+import matplotlib.pyplot as plt
+import io
 
 
 class Train():
@@ -56,7 +59,7 @@ class Train():
             zip(grads, self.model.trainable_variables))
         return loss
 
-    def _train(self, ds, epoch, batch_size, repeat):
+    def _train(self, ds, epoch, batch_size, repeat, log_freq):
         r"""
         Args:
             ds ( :class:`tensorflow.data.Dataset`)  : dataset.
@@ -71,11 +74,22 @@ class Train():
         for x, y in ds(batch_size, repeat):
             loss = self._train_one_step(x, y)
             self.train_loss.update_state(loss)
+            if tf.equal(self.optimizer.iterations % log_freq, 0):
+                img = tf.math.argmax(self.predict(x)[0], -1)
+                with self.train_summary_writer.as_default():
+                    tf.summary.scalar('loss', self.train_loss.result(),
+                                      step=self.optimizer.iterations)
+
+                    tf.summary.image("Predictions/train",
+                                     self._plot_to_image(
+                                         self._plot(img, y[0][:, :, 1])),
+                                     step=self.optimizer.iterations)
+
             pbar.update(1)
             pbar.set_postfix(loss=float(self.train_loss.result()))
         pbar.close()
 
-    def train(self, n_epochs, train_dl=None, val_dl=None,  batch_size=1, repeat=1, criterion=None, class_weights=None, optimizer=None, learning_rate=0.0001, save_checkpoints=True, checkpoint_freq=None, checkpoint_path=None, max_to_keep=5):
+    def train(self, n_epochs, train_dl=None, val_dl=None,  batch_size=1, repeat=1, criterion=None, class_weights=None, optimizer=None, weight_decay=None, learning_rate=0.0001, lr_decay=None, save_checkpoints=True, checkpoint_freq=None, checkpoint_path=None, max_to_keep=5, log_freq=100):
         r"""
         Args:
             n_epochs (int) : Number of epochs.
@@ -88,16 +102,16 @@ class Train():
             repeat (int,optional) : specifies the number of times dataset will be itterated in one epoch.
                 Default : :math:`1`
             criterion (optional): Specifies loss function to be used in training.
-                Default : if is_ocr is ``True`` :class:`tensorflow.nn.ctc_loss` used 
+                Default : if is_ocr is ``True`` :class:`tensorflow.nn.ctc_loss` used
                 else :class:`tensorflow.nn.softmax_cross_entropy_with_logits` used.
-            class_weights (list,,optional) : weights given to class while calculating loss. 
+            class_weights (list,,optional) : weights given to class while calculating loss.
                 Default : Same for each class.
             optimizer (optional) : optimizer used in training.
                 Default : :class:`tensorflow.keras.optimizers.Adam`
             learning_rate (float,optional):learning rate of optimizer.
-                Default: :math:`0.0001` 
+                Default: :math:`0.0001`
             save_checkpoints (bol,optional) : Specifes whether to save checkpoints.
-                Default: ``True`` 
+                Default: ``True``
             checkpoint_freq (int,optional) : Specifies the number of epochs after checkpoints will be saved.
                 Default:  :math:`=\lfloor \frac{ \text{n_epochs}}{10}+1 \rfloor`
             checkpoint_path (str,optional): Path where  checkpoints will be saved or loaded from.
@@ -105,8 +119,15 @@ class Train():
             max_to_keep (int,optional) : Maximun number of latest checkpoints to keep.
                 Default : :math:`5`
                 """
+        if lr_decay is not None:
+            learning_rate = tf.keras.optimizers.schedules.ExponentialDecay(
+                learning_rate, decay_steps=100000, decay_rate=lr_decay, staircase=True)
+
         if optimizer is None:
             optimizer = tf.keras.optimizers.Adam(learning_rate=learning_rate)
+        if weight_decay is not None:
+            optimizer = tfa.optimizers.AdamW(
+                learning_rate=learning_rate, weight_decay=weight_decay)
         self.optimizer = optimizer
         if criterion is None:
             if self.is_ocr:
@@ -139,17 +160,15 @@ class Train():
             print("Initializing from scratch")
 
         for epoch in range(1, n_epochs + 1):
-
-            with self.train_summary_writer.as_default():
-                self._train(train_dl, epoch, batch_size, repeat)
+            self._train(train_dl, epoch, batch_size, repeat, log_freq)
             if epoch % checkpoint_freq == 0:
                 checkpoint_path = self.manager.save(self.optimizer.iterations)
                 print("Model saved to {}".format(checkpoint_path))
             if val_dl is not None:
                 with self.val_summary_writer.as_default():
-                    self._val(val_dl,  batch_size, repeat, epoch)
-        self.train_loss.reset_states()
-        self.val_loss.reset_states()
+                    self._val(val_dl,  batch_size, repeat, epoch, log_freq)
+            self.val_loss.reset_states()
+            self.train_loss.reset_states()
 
     def _val_one_step(self, x, y):
         r"""
@@ -177,7 +196,7 @@ class Train():
 
         return loss, logits
 
-    def _val(self, ds, epoch,  batch_size, repeat):
+    def _val(self, ds, epoch,  batch_size, repeat, log_freq):
         r"""
         Args:
             ds ( :class:`tensorflow.data.Dataset`) : datsset.
@@ -187,9 +206,18 @@ class Train():
             """
         pbar = tqdm(total=len(ds)*repeat)
         pbar.set_description(f"Epoch: {epoch}. validation")
-        for x, y in ds(batch_size, repeat):
+        for i, (x, y) in enumerate(ds(batch_size, repeat)):
             loss, _ = self._val_one_step(x, y)
             self.val_loss.update_state(loss)
+            if tf.equal(((epoch-1)*len(ds)+i) % log_freq, 0):
+                img = tf.math.argmax(self.predict(x)[0], -1)
+                with self.train_summary_writer.as_default():
+                    tf.summary.scalar('loss', self.val_loss.result(),
+                                      step=self.optimizer.iterations)
+                    tf.summary.image("Predictions/val",
+                                     self._plot_to_image(
+                                         self._plot(img, y[0][:, :, 1])),
+                                     step=self.optimizer.iterations)
             pbar.update(1)
             pbar.set_postfix(loss=float(self.val_loss.result()))
         pbar.close()
@@ -225,3 +253,24 @@ class Train():
         """
         self.model.load_weights(path)
         print("Model Loaded")
+
+    def _plot_to_image(self, figure):
+        """
+        Converts the matplotlib plot specified by 'figure' to a PNG image and
+        returns it. The supplied figure is closed and inaccessible after this call.
+        """
+        buf = io.BytesIO()
+        plt.savefig(buf, format='png')
+        plt.close(figure)
+        buf.seek(0)
+        image = tf.image.decode_png(buf.getvalue(), channels=4)
+        image = tf.expand_dims(image, 0)
+        return image
+
+    def _plot(self, x, y):
+        fig, (ax1, ax2) = plt.subplots(1, 2)
+        ax1.imshow(x, "gray")
+        ax1.set_title("Prediction")
+        ax2.imshow(y, "gray")
+        ax2.set_title("Ground Truth")
+        return fig
