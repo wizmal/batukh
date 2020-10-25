@@ -84,7 +84,6 @@ class Train():
                                      self._plot_to_image(
                                          self._plot(img, y[0][:, :, 1])),
                                      step=self.optimizer.iterations)
-                self.train_loss.reset_states()
 
             pbar.update(1)
             pbar.set_postfix(loss=float(self.train_loss.result()))
@@ -168,6 +167,8 @@ class Train():
             if val_dl is not None:
                 with self.val_summary_writer.as_default():
                     self._val(val_dl,  batch_size, repeat, epoch, log_freq)
+            self.val_loss.reset_states()
+            self.train_loss.reset_states()
 
     def _val_one_step(self, x, y):
         r"""
@@ -217,7 +218,6 @@ class Train():
                                      self._plot_to_image(
                                          self._plot(img, y[0][:, :, 1])),
                                      step=self.optimizer.iterations)
-                self.val_loss.reset_states()
             pbar.update(1)
             pbar.set_postfix(loss=float(self.val_loss.result()))
         pbar.close()
