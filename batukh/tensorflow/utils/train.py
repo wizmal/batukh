@@ -79,14 +79,11 @@ class Train():
                 with self.train_summary_writer.as_default():
                     tf.summary.scalar('loss', self.train_loss.result(),
                                       step=self.optimizer.iterations)
-                    fig, (ax1, ax2) = plt.subplots(1, 2)
-                    ax1.imshow(img, "gray")
-                    ax1.set_title("Prediction")
-                    ax2.imshow(y[0], "gray")
-                    ax2.set_title("Ground Truth")
+
                     tf.summary.image("Predictions/train",
-                                     self._plot_to_image(fig),
-                                     global_step=self.optimizer.iterations)
+                                     self._plot_to_image(
+                                         self._plot(img, y[0][:, :, 1])),
+                                     step=self.optimizer.iterations)
                 self.train_loss.reset_states()
 
             pbar.update(1)
@@ -106,16 +103,16 @@ class Train():
             repeat (int,optional) : specifies the number of times dataset will be itterated in one epoch.
                 Default : :math:`1`
             criterion (optional): Specifies loss function to be used in training.
-                Default : if is_ocr is ``True`` :class:`tensorflow.nn.ctc_loss` used 
+                Default : if is_ocr is ``True`` :class:`tensorflow.nn.ctc_loss` used
                 else :class:`tensorflow.nn.softmax_cross_entropy_with_logits` used.
-            class_weights (list,,optional) : weights given to class while calculating loss. 
+            class_weights (list,,optional) : weights given to class while calculating loss.
                 Default : Same for each class.
             optimizer (optional) : optimizer used in training.
                 Default : :class:`tensorflow.keras.optimizers.Adam`
             learning_rate (float,optional):learning rate of optimizer.
-                Default: :math:`0.0001` 
+                Default: :math:`0.0001`
             save_checkpoints (bol,optional) : Specifes whether to save checkpoints.
-                Default: ``True`` 
+                Default: ``True``
             checkpoint_freq (int,optional) : Specifies the number of epochs after checkpoints will be saved.
                 Default:  :math:`=\lfloor \frac{ \text{n_epochs}}{10}+1 \rfloor`
             checkpoint_path (str,optional): Path where  checkpoints will be saved or loaded from.
@@ -208,22 +205,18 @@ class Train():
             """
         pbar = tqdm(total=len(ds)*repeat)
         pbar.set_description(f"Epoch: {epoch}. validation")
-        for x, y in ds(batch_size, repeat):
+        for i, (x, y) in enumerate(ds(batch_size, repeat)):
             loss, _ = self._val_one_step(x, y)
             self.val_loss.update_state(loss)
-            if tf.equal(self.optimizer.iterations % log_freq, 0):
+            if tf.equal(((epoch-1)*len(ds)+i) % log_freq, 0):
                 img = tf.math.argmax(self.predict(x)[0], -1)
                 with self.train_summary_writer.as_default():
                     tf.summary.scalar('loss', self.val_loss.result(),
                                       step=self.optimizer.iterations)
-                    fig, (ax1, ax2) = plt.subplots(1, 2)
-                    ax1.imshow(img, "gray")
-                    ax1.set_title("Prediction")
-                    ax2.imshow(y[0], "gray")
-                    ax2.set_title("Ground Truth")
                     tf.summary.image("Predictions/val",
-                                     self._plot_to_image(fig),
-                                     global_step=self.optimizer.iterations)
+                                     self._plot_to_image(
+                                         self._plot(img, y[0][:, :, 1])),
+                                     step=self.optimizer.iterations)
                 self.val_loss.reset_states()
             pbar.update(1)
             pbar.set_postfix(loss=float(self.val_loss.result()))
@@ -273,3 +266,11 @@ class Train():
         image = tf.image.decode_png(buf.getvalue(), channels=4)
         image = tf.expand_dims(image, 0)
         return image
+
+    def _plot(self, x, y):
+        fig, (ax1, ax2) = plt.subplots(1, 2)
+        ax1.imshow(x, "gray")
+        ax1.set_title("Prediction")
+        ax2.imshow(y, "gray")
+        ax2.set_title("Ground Truth")
+        return fig

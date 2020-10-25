@@ -116,7 +116,7 @@ class SegmentationDataLoader():
         img_path.sort()
         label_path = os.listdir(labels_path)
         label_path.sort()
-        check = [True if img_path.split('.')[0] == label_path.split(
+        check = [True if i.split('.')[0] == j.split(
             ".")[0] else False for i, j in zip(img_path, label_path)]
         assert tf.reduce_all(
             check), "Originals and Labels does not contain  images with same filenames."
