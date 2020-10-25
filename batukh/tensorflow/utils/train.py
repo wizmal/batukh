@@ -3,6 +3,8 @@ import time
 from tqdm import tqdm
 import numpy as np
 import tensorflow_addons as tfa
+import matplotlib.pyplot as plt
+import io
 
 
 class Train():
@@ -57,7 +59,7 @@ class Train():
             zip(grads, self.model.trainable_variables))
         return loss
 
-    def _train(self, ds, epoch, batch_size, repeat):
+    def _train(self, ds, epoch, batch_size, repeat, log_freq):
         r"""
         Args:
             ds ( :class:`tensorflow.data.Dataset`)  : dataset.
@@ -72,11 +74,26 @@ class Train():
         for x, y in ds(batch_size, repeat):
             loss = self._train_one_step(x, y)
             self.train_loss.update_state(loss)
+            if tf.equal(self.optimizer.iterations % log_freq, 0):
+                img = tf.math.argmax(self.predict(x)[0], -1)
+                with self.train_summary_writer.as_default():
+                    tf.summary.scalar('loss', self.train_loss.result(),
+                                      step=self.optimizer.iterations)
+                    fig, (ax1, ax2) = plt.subplots(1, 2)
+                    ax1.imshow(img, "gray")
+                    ax1.set_title("Prediction")
+                    ax2.imshow(y[0], "gray")
+                    ax2.set_title("Ground Truth")
+                    tf.summary.image("Predictions/train",
+                                     self._plot_to_image(fig),
+                                     global_step=self.optimizer.iterations)
+                self.train_loss.reset_states()
+
             pbar.update(1)
             pbar.set_postfix(loss=float(self.train_loss.result()))
         pbar.close()
 
-    def train(self, n_epochs, train_dl=None, val_dl=None,  batch_size=1, repeat=1, criterion=None, class_weights=None, optimizer=None, weight_decay=None, learning_rate=0.0001, lr_decay=None, save_checkpoints=True, checkpoint_freq=None, checkpoint_path=None, max_to_keep=5):
+    def train(self, n_epochs, train_dl=None, val_dl=None,  batch_size=1, repeat=1, criterion=None, class_weights=None, optimizer=None, weight_decay=None, learning_rate=0.0001, lr_decay=None, save_checkpoints=True, checkpoint_freq=None, checkpoint_path=None, max_to_keep=5, log_freq=100):
         r"""
         Args:
             n_epochs (int) : Number of epochs.
@@ -147,17 +164,13 @@ class Train():
             print("Initializing from scratch")
 
         for epoch in range(1, n_epochs + 1):
-
-            with self.train_summary_writer.as_default():
-                self._train(train_dl, epoch, batch_size, repeat)
+            self._train(train_dl, epoch, batch_size, repeat, log_freq)
             if epoch % checkpoint_freq == 0:
                 checkpoint_path = self.manager.save(self.optimizer.iterations)
                 print("Model saved to {}".format(checkpoint_path))
             if val_dl is not None:
                 with self.val_summary_writer.as_default():
-                    self._val(val_dl,  batch_size, repeat, epoch)
-        self.train_loss.reset_states()
-        self.val_loss.reset_states()
+                    self._val(val_dl,  batch_size, repeat, epoch, log_freq)
 
     def _val_one_step(self, x, y):
         r"""
@@ -185,7 +198,7 @@ class Train():
 
         return loss, logits
 
-    def _val(self, ds, epoch,  batch_size, repeat):
+    def _val(self, ds, epoch,  batch_size, repeat, log_freq):
         r"""
         Args:
             ds ( :class:`tensorflow.data.Dataset`) : datsset.
@@ -198,6 +211,20 @@ class Train():
         for x, y in ds(batch_size, repeat):
             loss, _ = self._val_one_step(x, y)
             self.val_loss.update_state(loss)
+            if tf.equal(self.optimizer.iterations % log_freq, 0):
+                img = tf.math.argmax(self.predict(x)[0], -1)
+                with self.train_summary_writer.as_default():
+                    tf.summary.scalar('loss', self.val_loss.result(),
+                                      step=self.optimizer.iterations)
+                    fig, (ax1, ax2) = plt.subplots(1, 2)
+                    ax1.imshow(img, "gray")
+                    ax1.set_title("Prediction")
+                    ax2.imshow(y[0], "gray")
+                    ax2.set_title("Ground Truth")
+                    tf.summary.image("Predictions/val",
+                                     self._plot_to_image(fig),
+                                     global_step=self.optimizer.iterations)
+                self.val_loss.reset_states()
             pbar.update(1)
             pbar.set_postfix(loss=float(self.val_loss.result()))
         pbar.close()
@@ -233,3 +260,16 @@ class Train():
         """
         self.model.load_weights(path)
         print("Model Loaded")
+
+    def _plot_to_image(self, figure):
+        """
+        Converts the matplotlib plot specified by 'figure' to a PNG image and
+        returns it. The supplied figure is closed and inaccessible after this call.
+        """
+        buf = io.BytesIO()
+        plt.savefig(buf, format='png')
+        plt.close(figure)
+        buf.seek(0)
+        image = tf.image.decode_png(buf.getvalue(), channels=4)
+        image = tf.expand_dims(image, 0)
+        return image
