@@ -214,7 +214,7 @@ class UpScaler(nn.Module):
 
 
 class SegmentationModel(nn.Module):
-    def __init__(self):
+    def __init__(self, use_pretrained=True, lock_pretrained=True):
         super(SegmentationModel, self).__init__()
 
         self.downsampler = MyResNet(ModifiedBottleneck, [3, 4, 6, 3],
@@ -222,13 +222,15 @@ class SegmentationModel(nn.Module):
                                              [1, 1, 1, 1, 1, 2], None],
                                     sec_output_blocks=[1, 2, 4, None])
 
-        resnet = models.resnet50(pretrained=True)
-        resnet.avgpool = Identity()
-        resnet.fc = Identity()
+        if use_pretrained:
+            resnet = models.resnet50(pretrained=True)
+            resnet.avgpool = Identity()
+            resnet.fc = Identity()
+            print(self.downsampler.load_state_dict(resnet.state_dict()))
 
-        print(self.downsampler.load_state_dict(resnet.state_dict()))
-        for param in self.downsampler.parameters():
-            param.requires_grad = False
+            if lock_pretrained:
+                for param in self.downsampler.parameters():
+                    param.requires_grad = False
 
         self.conv1 = nn.Conv2d(1024, 512, kernel_size=(1, 1), bias=False)
         self.conv2 = nn.Conv2d(2048, 512, kernel_size=(1, 1), bias=False)
