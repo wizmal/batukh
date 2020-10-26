@@ -269,8 +269,20 @@
 <h1>BaselineDetector<a class="headerlink" href="#baselinedetector" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="batukh.torch.segmenter.BaselineDetector">
-<em class="property">class </em><code class="sig-prename descclassname">batukh.torch.segmenter.</code><code class="sig-name descname">BaselineDetector</code><a class="reference internal" href="../_modules/batukh/torch/segmenter.html#BaselineDetector"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#batukh.torch.segmenter.BaselineDetector" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">batukh.torch.segmenter.</code><code class="sig-name descname">BaselineDetector</code><span class="sig-paren">(</span><em class="sig-param">use_pretrained=True</em>, <em class="sig-param">lock_pretrained=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/batukh/torch/segmenter.html#BaselineDetector"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#batukh.torch.segmenter.BaselineDetector" title="Permalink to this definition">¶</a></dt>
 <dd><p>This class is used to detect baselines in an image of a document.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>use_pretrained</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a><em>, </em><em>optional</em>) – whether to use the parameters of pre-trained
+resnet50 model.
+Default: <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
+<li><p><strong>lock_pretrained</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a><em>, </em><em>optional</em>) – whether to lock the layers of pretrained
+model. Only needed if <code class="docutils literal notranslate"><span class="pre">use_pretrained</span></code> is <code class="docutils literal notranslate"><span class="pre">True</span></code>.
+Default: <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="method">
 <dt id="batukh.torch.segmenter.BaselineDetector.load_data">
 <code class="sig-name descname">load_data</code><span class="sig-paren">(</span><em class="sig-param">train_path</em>, <em class="sig-param">val_path=None</em>, <em class="sig-param">transform='default'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/batukh/torch/segmenter.html#BaselineDetector.load_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#batukh.torch.segmenter.BaselineDetector.load_data" title="Permalink to this definition">¶</a></dt>
@@ -299,7 +311,7 @@ transformed images.</p></li>
 
 <dl class="method">
 <dt id="batukh.torch.segmenter.BaselineDetector.train">
-<code class="sig-name descname">train</code><span class="sig-paren">(</span><em class="sig-param">n_epochs</em>, <em class="sig-param">train_dl=None</em>, <em class="sig-param">val_dl=None</em>, <em class="sig-param">batch_size=1</em>, <em class="sig-param">shuffle=True</em>, <em class="sig-param">num_workers=4</em>, <em class="sig-param">pin_memory=True</em>, <em class="sig-param">criterion=None</em>, <em class="sig-param">optimizer=None</em>, <em class="sig-param">learning_rate=0.0001</em>, <em class="sig-param">save_checkpoints=True</em>, <em class="sig-param">checkpoint_freq=None</em>, <em class="sig-param">checkpoint_path=None</em>, <em class="sig-param">max_to_keep=5</em>, <em class="sig-param">device=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/batukh/torch/segmenter.html#BaselineDetector.train"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#batukh.torch.segmenter.BaselineDetector.train" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">train</code><span class="sig-paren">(</span><em class="sig-param">n_epochs</em>, <em class="sig-param">train_dl=None</em>, <em class="sig-param">val_dl=None</em>, <em class="sig-param">batch_size=1</em>, <em class="sig-param">shuffle=True</em>, <em class="sig-param">num_workers=4</em>, <em class="sig-param">pin_memory=True</em>, <em class="sig-param">criterion=None</em>, <em class="sig-param">optimizer=None</em>, <em class="sig-param">weight_decay=0</em>, <em class="sig-param">learning_rate=0.0001</em>, <em class="sig-param">learning_rate_decay=None</em>, <em class="sig-param">save_checkpoints=True</em>, <em class="sig-param">checkpoint_freq=None</em>, <em class="sig-param">checkpoint_path=None</em>, <em class="sig-param">max_to_keep=5</em>, <em class="sig-param">log_dir='./tensorboard_logs'</em>, <em class="sig-param">log_freq=1000</em>, <em class="sig-param">device=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/batukh/torch/segmenter.html#BaselineDetector.train"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#batukh.torch.segmenter.BaselineDetector.train" title="Permalink to this definition">¶</a></dt>
 <dd><p>Training method to detect baselines.</p>
 <p><code class="xref py py-attr docutils literal notranslate"><span class="pre">train_dl</span></code> and <code class="xref py py-attr docutils literal notranslate"><span class="pre">val_dl</span></code> should be provided if custom dataloaders
 are required. Although, most of the times, <a class="reference internal" href="#batukh.torch.segmenter.BaselineDetector.load_data" title="batukh.torch.segmenter.BaselineDetector.load_data"><code class="xref py py-meth docutils literal notranslate"><span class="pre">load_data()</span></code></a>
@@ -330,6 +342,10 @@ Default: <code class="docutils literal notranslate"><span class="pre">CrossEntro
 <li><p><strong>optimizer</strong> (<a class="reference external" href="https://pytorch.org/docs/stable/optim.html#torch.optim.Optimizer" title="(in PyTorch vmaster (1.6.0a0+4392e52 ))"><code class="xref py py-class docutils literal notranslate"><span class="pre">Optimizer</span></code></a>, optional) – The optimizer
 to be used to update the parameters.
 Default: <code class="docutils literal notranslate"><span class="pre">Adam(model.parameters(),</span> <span class="pre">lr=learning_rate)</span></code></p></li>
+<li><p><strong>weight_decay</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a><em>, </em><em>optional</em>) – L2 regularization parameter for the optimizer(if it applies).
+Default: 0.</p></li>
+<li><p><strong>learning_rate_decay</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a><em>, </em><em>optional</em>) – exponential decay to be used on learning rate.
+Default: None.</p></li>
 <li><p><strong>learning_rate</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a><em>, </em><em>optional</em>) – Learning rate to be used for the
 default optimizer.
 Default: 0.0001.</p></li>
@@ -360,6 +376,7 @@ Default: GPU, if GPU is available, else CPU.</p></li>
 <li><p><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – path to a .pt or .pth file.</p></li>
 <li><p><strong>optimizer</strong> (<a class="reference external" href="https://pytorch.org/docs/stable/optim.html#torch.optim.Optimizer" title="(in PyTorch vmaster (1.6.0a0+4392e52 ))"><code class="xref py py-class docutils literal notranslate"><span class="pre">Optimizer</span></code></a>) – optimizer
 (preferably the same one which was saved) to load it’s parameters.</p></li>
+<li><p><strong>device</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – device to load on the checkpoint. “cuda” or “cpu”.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>

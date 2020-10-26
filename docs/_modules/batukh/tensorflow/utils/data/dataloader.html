@@ -293,8 +293,12 @@
 
         <span class="n">images_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">&quot;originals&quot;</span><span class="p">)</span>
         <span class="n">labels_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">&quot;labels&quot;</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span>
+            <span class="n">images_path</span><span class="p">),</span> <span class="s2">&quot;Path does not contian originals folder.&quot;</span>
+        <span class="k">assert</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span>
+            <span class="n">labels_path</span><span class="p">),</span> <span class="s2">&quot;Path does not contian labels folder.&quot;</span>
 
-        <span class="n">img_paths</span><span class="p">,</span> <span class="n">label_paths</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_read_img_paths_and_labels</span><span class="p">(</span>
+        <span class="n">img_paths</span><span class="p">,</span> <span class="n">label_paths</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_read_img_label_paths</span><span class="p">(</span>
             <span class="n">images_path</span><span class="p">,</span>
             <span class="n">labels_path</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">n_classes</span> <span class="o">=</span> <span class="n">n_classes</span>
@@ -355,7 +359,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span>
 
-    <span class="k">def</span> <span class="nf">_read_img_paths_and_labels</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">images_path</span><span class="p">,</span> <span class="n">labels_path</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_read_img_label_paths</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">images_path</span><span class="p">,</span> <span class="n">labels_path</span><span class="p">):</span>
         <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Reads paths of images and labels.</span>
 
 
@@ -370,9 +374,13 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">img_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">images_path</span><span class="p">)</span>
         <span class="n">img_path</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
-        <span class="n">img_path</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">images_path</span><span class="p">,</span> <span class="n">i</span><span class="p">))</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">img_path</span><span class="p">]</span>
         <span class="n">label_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">labels_path</span><span class="p">)</span>
         <span class="n">label_path</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+        <span class="n">check</span> <span class="o">=</span> <span class="p">[</span><span class="kc">True</span> <span class="k">if</span> <span class="n">i</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">j</span><span class="o">.</span><span class="n">split</span><span class="p">(</span>
+            <span class="s2">&quot;.&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="k">else</span> <span class="kc">False</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">img_path</span><span class="p">,</span> <span class="n">label_path</span><span class="p">)]</span>
+        <span class="k">assert</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_all</span><span class="p">(</span>
+            <span class="n">check</span><span class="p">),</span> <span class="s2">&quot;Originals and Labels does not contain  images with same filenames.&quot;</span>
+        <span class="n">img_path</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">images_path</span><span class="p">,</span> <span class="n">i</span><span class="p">))</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">img_path</span><span class="p">]</span>
         <span class="n">label_path</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">labels_path</span><span class="p">,</span> <span class="n">i</span><span class="p">))</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">label_path</span><span class="p">]</span>
 
         <span class="k">return</span> <span class="n">img_path</span><span class="p">,</span> <span class="n">label_path</span></div>
@@ -401,6 +409,12 @@
         <span class="n">images_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">&quot;images&quot;</span><span class="p">)</span>
         <span class="n">labels_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">&quot;labels.txt&quot;</span><span class="p">)</span>
         <span class="n">table_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">&quot;table.txt&quot;</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span>
+            <span class="n">images_path</span><span class="p">),</span> <span class="s2">&quot;Path does not contian images folder.&quot;</span>
+        <span class="k">assert</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span>
+            <span class="n">labels_path</span><span class="p">),</span> <span class="s2">&quot;Path does not contian label.txt.&quot;</span>
+        <span class="k">assert</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span>
+            <span class="n">labels_path</span><span class="p">),</span> <span class="s2">&quot;Path does not contian table.txt.&quot;</span>
         <span class="n">img_paths</span><span class="p">,</span> <span class="n">labels</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_read_img_paths_and_labels</span><span class="p">(</span>
             <span class="n">images_path</span><span class="p">,</span>
             <span class="n">labels_path</span><span class="p">)</span>
@@ -495,13 +509,19 @@
 <span class="sd">            list      : List of labels.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">img_path_</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">images_path</span><span class="p">)</span>
-        <span class="n">img_path</span> <span class="o">=</span> <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">images_path</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">img_path_</span><span class="p">]</span>
+        <span class="n">img_path_</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
 
         <span class="n">label_</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">labels_path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
         <span class="n">labels_</span> <span class="o">=</span> <span class="n">label_</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
         <span class="n">labels_</span> <span class="o">=</span> <span class="p">[</span><span class="n">labels_</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
                    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">labels_</span><span class="p">))]</span>
         <span class="n">labels</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">check</span> <span class="o">=</span> <span class="p">[</span><span class="kc">True</span> <span class="k">if</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="nb">int</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span>
+            <span class="n">labels</span><span class="p">)</span> <span class="k">else</span> <span class="kc">False</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">img_path_</span><span class="p">]</span>
+        <span class="n">img_path</span> <span class="o">=</span> <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">images_path</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">img_path_</span><span class="p">]</span>
+        <span class="k">assert</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_all</span><span class="p">(</span>
+            <span class="n">check</span><span class="p">),</span> <span class="s2">&quot;Image filenames doesnt match with any line number in labels.txt&quot;</span>
+
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">img_path</span><span class="p">:</span>
             <span class="n">labels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">labels_</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">])])</span>
         <span class="k">return</span> <span class="n">img_path</span><span class="p">,</span> <span class="n">labels</span></div>
