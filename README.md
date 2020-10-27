@@ -2,18 +2,41 @@
 
 Detection of Languages using CRNN.
 
+## Installation
+
 Using [pip](http://pypi.org)
 
-`pip install batukh`
+For tensorflow only installation:
+
+`pip install batukh[tf]`
+
+For pytorch only installation:
+
+`pip install batukh[torch]`
+
+For tensorflow and pytorch installation:
+
+`pip install batukh[full]`
+
+
+
+> :heavy_exclamation_mark: **Warning**:
+>
+> A simple `pip install batukh` will install neither tensorflow nor pytorch dependencies.
+> 
+
+
+## Training
 
 After all the dependencies have been installed, you can train any model.
+
 
 For Page Extraction(tensorflow):
 
 ```python
 >>> from batukh.tensorflow.segmenter import PageExtractor
->>> page_extractor=PageExtractor()
->>> page_extractor.load_data("temp")
+>>> page_extractor = PageExtractor()
+>>> page_extractor.load_data("/path/to/data/")
 >>> page_extractor.train(n_epochs=10, batch_size=1,repeat=1)
 Initializing from scratch
 
@@ -48,10 +71,8 @@ For OCR(tensorflow):
 ```python
 >>> from batukh.tensorflow.ocr import OCR
 >>> m = OCR()
->>> m.load_data("temp")
+>>> m.load_data("/path/to/data")
 >>> m.train(10,batch_size=1,repeat=1)       
-Epoch: 1. Traininig:   0%|          | 0/70 [00:00<?, ?it/s]
-
 Initializing from scratch
 
 Epoch: 1. Traininig: 100%|██████████| 70/70 [00:04<00:00, 15.84it/s, loss=37.1]
@@ -105,7 +126,7 @@ For OCR(pytorch):
 "/path/to/val_dir", "/path/to/val_labels")
 Building Dictionary. . .
 Building Dictionary. . .
->>> m.train(5)       
+>>> m.train(5)
 Epoch: 0. Traininig: 100%|███████████████| 140/140 [00:04<00:00, 30.18it/s, loss=2.59]
 Epoch: 0. Validating: 100%|███████████████| 140/140 [00:01<00:00, 112.06it/s, loss=2.59]
 Models Saved!
