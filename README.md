@@ -1,5 +1,9 @@
 # batukh
 
+![license](https://img.shields.io/github/license/koshurnizam/batukh)
+![gh-release](https://img.shields.io/github/v/release/koshurnizam/batukh?include_prereleases)
+![pypi-ver](https://img.shields.io/pypi/v/batukh)
+
 Detection of Languages using CRNN.
 
 ## Installation

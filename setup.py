@@ -4,9 +4,9 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 requirements = [
-    "numpy>=1.19.1",
+    "numpy",
     "tensorboard>=2.0.2",
-    "tqdm>=4.48.0",
+    "tqdm",
 ]
 
 torch_requirements = [
@@ -22,7 +22,7 @@ tf_requirements = [
 
 setuptools.setup(
     name="batukh",
-    version="0.1.0",
+    version="0.1.1",
     author="Murtaza, Wajid, Naveed",
     author_email="batukhorg@gmail.com",
     description="Document recognizer for multiple languages.",
