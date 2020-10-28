@@ -24,9 +24,9 @@ segmenter
     :toctree: generated
     :nosignatures:
 
-    ~segmenter.PageExtracter
-    ~segmenter.ImageExtracter
-    ~segmenter.BaselineDetecter
+    ~segmenter.PageExtractor
+    ~segmenter.ImageExtractor
+    ~segmenter.BaselineDetector
 
 
 ocr
