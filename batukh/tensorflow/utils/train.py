@@ -80,10 +80,19 @@ class Train():
                     tf.summary.scalar('loss', self.train_loss.result(),
                                       step=self.optimizer.iterations)
 
-                    tf.summary.image("Predictions/train",
-                                     self._plot_to_image(
-                                         self._plot(img, y[0][:, :, 1])),
-                                     step=self.optimizer.iterations)
+                    if not self.is_ocr:
+                        tf.summary.image("Predictions/train",
+                                         self._plot_to_image(
+                                             self._plot(img, y[0][:, :, 1])),
+                                         step=self.optimizer.iterations)
+                    else:
+                        tf.summary.image("Ground_image/train", x,
+                                         step=self.optimizer.iterations)
+
+                        tf.summary.text("Ground_truth/train",
+                                        self.decode(self.predict(x)), table=ds.inv_table, blank_index=ds.blank_index)
+                        tf.summary.text("Ground_truth/train",
+                                        self.map2string(y), table=ds.inv_table, blank_index=ds.blank_index)
 
             pbar.update(1)
             pbar.set_postfix(loss=float(self.train_loss.result()))
@@ -223,7 +232,10 @@ class Train():
                         tf.summary.image("Ground_image/val", x,
                                          step=self.optimizer.iterations)
 
-                        tf.summary.text("Ground_truth/val", self.predict(x))
+                        tf.summary.text("Ground_truth/val",
+                                        self.decode(self.predict(x)), table=ds.inv_table, blank_index=ds.blank_index)
+                        tf.summary.text("Ground_truth/val",
+                                        self.map2string(y), table=ds.inv_table, blank_index=ds.blank_index)
 
             pbar.update(1)
             pbar.set_postfix(loss=float(self.val_loss.result()))
@@ -281,3 +293,83 @@ class Train():
         ax2.imshow(y, "gray")
         ax2.set_title("Ground Truth")
         return fig
+
+    def map2string(self, inputs, table=None, blank_index=None):
+        # todo : shift theese methods to ocr
+        """Maps tensor to stings as per :class:`~self.inv_table`.
+
+        Args:
+            inputs (:class:`tensorflow.SparseTensor`) : Input tensors.
+            table ( :class:`tensorflow.lookup.StaticHashTable`,optional) : Table according to which maping is done.
+                Default: ``self.train_dl.inv_table``
+            blank_index (int,optional) : Blank index.
+                Default : ``self.train_dl.blank_index``
+
+
+
+        Returns:
+            list : list of strings."""
+        """if table is None:
+            table = self.train_dl.inv_table
+        if blank_index is None:
+            blank_index = self.train_dl.blank_index"""
+        inputs = tf.sparse.to_dense(inputs,
+                                    default_value=blank_index).numpy()
+        strings = []
+        for i in inputs:
+            text = [table[char_index] for char_index in i
+                    if char_index != blank_index]
+            strings.append(''.join(text))
+        return strings
+
+    def decode(self, inputs, from_pred=True, method='gready', merge_repeated=True, table=None, blank_index=None):
+        """Decodes the model logits using ctc decoder.
+
+
+        Args:
+            inputs ( :class:`tensorflow.Tensor`) : Input tensor.
+            from_pred (bol,optional): ``True`` if input is return of ( :class:`~batukh.tensorflow.ocr.OCR.predict`. ``False`` if input is a :class:`tensorflow.SparseTensor`.
+                Default: ``True``
+            method (str,optional)   :if  ``'gready'``  :class:`tensorflow.nn.ctc_greedy_decoder` used for decoding.if  ``'beam_search'``  :class:`tensorflow.nn.ctc_beam_search_decoder` used.
+                Default: `` 'greedy' ``
+            merge_repeated (bol,optional): Specifes if similar charsters will be merged.
+                Default: ``True``
+            table ( :class:`tensorflow.lookup.StaticHashTable`,optional) : Table according to which maping is done.
+                Default: ``self.train_dl.inv_table``
+            blank_index (int,optional) : Blank index.
+                Default : ``self.train_dl.blank_index``
+
+        Returns:
+            list: decoded list of strings 
+
+        Example
+
+        .. code:: python
+
+            >>> from batukh.tensorflow.ocr import OCR
+            >>> import tensorflow as tf
+            >>> m = OCR(177)
+            >>> m.load_model("/saved_model/")
+            >>> x = tf.io.read_file("/image.png")
+            >>> x = tf.io.decode_png(x,channels=1)
+            >>> y = m.predict(x)
+            >>> pred = m.decode(y)
+
+
+         """
+        self.merge_repeated = merge_repeated
+        if from_pred:
+            logit_length = tf.fill([tf.shape(inputs)[0]], tf.shape(inputs)[1])
+            if method == 'greedy':
+                decoded, _ = tf.nn.ctc_greedy_decoder(
+                    inputs=tf.transpose(inputs, perm=[1, 0, 2]),
+                    sequence_length=logit_length,
+                    merge_repeated=self.merge_repeated)
+            elif method == 'beam_search':
+                decoded, _ = tf.nn.ctc_beam_search_decoder(
+                    inputs=tf.transpose(inputs, perm=[1, 0, 2]),
+                    sequence_length=logit_length)
+            inputs = decoded[0]
+
+        decoded = self.map2string(decoded)
+        return decoded
