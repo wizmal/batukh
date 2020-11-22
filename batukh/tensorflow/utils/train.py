@@ -214,10 +214,17 @@ class Train():
                 with self.train_summary_writer.as_default():
                     tf.summary.scalar('loss', self.val_loss.result(),
                                       step=self.optimizer.iterations)
-                    tf.summary.image("Predictions/val",
-                                     self._plot_to_image(
-                                         self._plot(img, y[0][:, :, 1])),
-                                     step=self.optimizer.iterations)
+                    if not self.is_ocr:
+                        tf.summary.image("Predictions/val",
+                                         self._plot_to_image(
+                                             self._plot(img, y[0][:, :, 1])),
+                                         step=self.optimizer.iterations)
+                    else:
+                        tf.summary.image("Ground_image/val", x,
+                                         step=self.optimizer.iterations)
+
+                        tf.summary.text("Ground_truth/val", self.predict(x))
+
             pbar.update(1)
             pbar.set_postfix(loss=float(self.val_loss.result()))
         pbar.close()
