@@ -16,6 +16,9 @@ import matplotlib.pyplot as plt
 
 from datetime import datetime
 
+# for coordinates
+import cv2
+
 # TODO: Add types to args
 
 
@@ -534,6 +537,40 @@ class PageExtractor(BaseProcessor):
                       learning_rate, learning_rate_decay, save_checkpoints,
                       checkpoint_freq, checkpoint_path, max_to_keep, log_dir,
                       log_freq, device)
+
+    def get_coordinates(self, probability_map, iterations=2):
+        # works for only one image right now, will work for a batch later as well
+        kernel = torch.ones((7, 7), dtype=torch.uint8)
+        binary = (probability_map.topk(1, dim=0)[1]*255).to(torch.uint8)[0]
+        erroded = cv2.erode(binary.numpy(), kernel.numpy(),
+                            iterations=iterations)
+        contours, _ = cv2.findContours(
+            erroded, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
+
+        contours = [cv2.boundingRect(contour) for contour in contours]
+        # sort by descending area
+        contours.sort(key=lambda x: x[-1]*x[-2], reverse=True)
+
+        return contours
+
+    def get_pages(self, original_image, probability_map, num_pages=None, min_area_percent=0.8, iterations=2):
+        # works for only one image of 3 dims
+
+        contours = self.get_coordinates(probability_map, iterations)
+        if num_pages is None:
+            min_area = min_area_percent*contours[0][-1]*contours[0][-2]
+            contours = [contour for contour in contours if contour[-1]
+                        * contour[-2] >= min_area]
+        else:
+            contours = contours[:num_pages]
+        if original_image.ndim == 2:
+            original_image = original_image.reshape(-1, *original_image.shape)
+        cropped_images = []
+        for contour in contours:
+            x, y, w, h = contour
+            cropped_images.append(original_image[:, y:y+h, x:x+w])
+
+        return cropped_images
 
 
 class ImageExtractor(BaseProcessor):
