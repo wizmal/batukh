@@ -18,7 +18,10 @@ import tensorflow as tf
 class OCR(Train):
     r"""This class is used for octical character recognition.
 
-    Example
+    Args:
+        n_classes (int) : number of outputs nodes of ocr model.
+
+     Example
 
     .. code:: python
 
@@ -26,10 +29,6 @@ class OCR(Train):
         >>> m = OCR(177)
         >>> m.load_data(train_path="/data/",height=32)
         >>> m.train(1)
-
-
-    Args:
-        n_classes (int) : number of outputs nodes of ocr model.
     """
 
     def __init__(self, n_classes):
@@ -90,20 +89,6 @@ class OCR(Train):
     def decode(self, inputs, from_pred=True, method='gready', merge_repeated=True, table=None, blank_index=None):
         """Decodes the model logits using ctc decoder.
 
-        Example
-
-        .. code:: python
-
-            >>> from batukh.tensorflow.ocr import OCR
-            >>> import tensorflow as tf
-            >>> m = OCR(177)
-            >>> m.load_model("/saved_model/")
-            >>> x = tf.io.read_file("/image.png")
-            >>> x = tf.io.decode_png(x,channels=1)
-            >>> y = m.predict(x)
-            >>> pred = m.decode(y)
-
-
 
         Args:
             inputs ( :class:`tensorflow.Tensor`) : Input tensor.
@@ -119,7 +104,23 @@ class OCR(Train):
                 Default : ``self.train_dl.blank_index``
 
         Returns:
-            list: decoded list of strings  """
+            list: decoded list of strings 
+
+        Example
+
+        .. code:: python
+
+            >>> from batukh.tensorflow.ocr import OCR
+            >>> import tensorflow as tf
+            >>> m = OCR(177)
+            >>> m.load_model("/saved_model/")
+            >>> x = tf.io.read_file("/image.png")
+            >>> x = tf.io.decode_png(x,channels=1)
+            >>> y = m.predict(x)
+            >>> pred = m.decode(y)
+
+
+         """
         self.merge_repeated = merge_repeated
         if from_pred:
             logit_length = tf.fill([tf.shape(inputs)[0]], tf.shape(inputs)[1])
