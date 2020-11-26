@@ -10,6 +10,11 @@ class SegmentationDataLoader():
     :class:`~batukh.tensorflow.segmenter.ImageExtractor`, :class:`~batukh.tensorflow.segmenter.LayoutExtractor` and 
     :class:`~batukh.tensorflow.segmenter.BaselineDetector` classes.
 
+    Args:
+        path (str)       : Path of the folder containing originals folder and labels folder to be loaded in dataset.
+            Folder names must be as mentioned.
+        n_classes (int)  : number of classes in label images.
+
     Example
 
     .. code:: python
@@ -20,16 +25,9 @@ class SegmentationDataLoader():
         ...     print(i.shape,j.shape)
         ...     break
 
-    Args:
-        path (str)       : Path of the folder containing originals folder and labels folder to be loaded in dataset.
-            Folder names must be as mentioned.
-        n_classes (int)  : number of classes in label images.
-
-
-
     """
 
-    def __init__(self, path, n_classes):
+    def __init__(self, path, n_classes=None):
 
         images_path = os.path.join(path, "originals")
         labels_path = os.path.join(path, "labels")
@@ -41,8 +39,14 @@ class SegmentationDataLoader():
         img_paths, label_paths = self._read_img_label_paths(
             images_path,
             labels_path)
-        self.n_classes = n_classes
+
         self.size = len(img_paths)
+        colors = open(os.path.join(path, "classes.txt"))
+        colors = colors.readlines()
+        colors = [tuple(map(int, color.split())) for color in colors]
+
+        self.class_colors = colors
+        self.n_classes = len(self.class_colors)
 
         ds = tf.data.Dataset.from_tensor_slices((img_paths, label_paths))
         ds = ds.map(self._decode_and_resize)
@@ -71,7 +75,14 @@ class SegmentationDataLoader():
         label = tf.io.decode_png(label, channels=3)
         label = tf.image.resize(label, resize)
         label = tf.cast((label[:, :, 0] > 100), tf.int32)
-        label = tf.one_hot(label, self.n_classes)
+
+        one_hot_map = []
+        for color in self.class_colors:
+            class_map = tf.reduce_all(tf.equal(image, color), axis=-1)
+            one_hot_map.append(class_map)
+
+        one_hot_map = tf.stack(one_hot_map, axis=-1)
+        label = tf.cast(one_hot_map, tf.float32)
         return image, label
 
     def __call__(self, batch_size=1, repeat=1):
@@ -129,6 +140,12 @@ class SegmentationDataLoader():
 class OCRDataLoader():
     r""" Loads the :class:`~tensorflow.data.Dataset` for :class:`~batukh.tensorflow.ocr.OCR` class.
 
+
+    Args:
+        path (str)        :  Path of  folder containing images folder,labels.txt and table.txt to be loaded in dataset.Name of folders and files should be same as mentioned.
+        height (int,optional)      : Specifies the height to which all images will be resized keeping same aspect ratio.
+            Default: :math:`64`
+
     Example
     .. code:: python
 
@@ -138,10 +155,6 @@ class OCRDataLoader():
         ...     print(i.shape,j.values)
         ...     break
 
-    Args:
-        path (str)        :  Path of  folder containing images folder,labels.txt and table.txt to be loaded in dataset.Name of folders and files should be same as mentioned.
-        height (int,optional)      : Specifies the height to which all images will be resized keeping same aspect ratio.
-            Default: :math:`64`
     """
 
     def __init__(self, path, height=64):
