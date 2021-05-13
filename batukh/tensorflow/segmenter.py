@@ -184,6 +184,18 @@ class LayoutExtractor(Train):
         super().train(n_epochs, train_dl=train_dl, val_dl=val_dl, batch_size=batch_size, repeat=repeat, criterion=criterion, class_weights=class_weights,
                       optimizer=optimizer, weight_decay=weight_decay, learning_rate=learning_rate, lr_decay=lr_decay, save_checkpoints=save_checkpoints, checkpoint_freq=checkpoint_freq, checkpoint_path=checkpoint_path, max_to_keep=max_to_keep, log_freq=log_freq)
 
+    def get_coordinates(self, probability_map, iterations=2):
+        binary = tf.cast(
+            (tf.math.argmax(probability_map, -1)*255), dtype=tf.uint8)
+        kernel = tf.ones((7, 7))
+        erroded = cv2.erode(binary.numpy(), kernel.numpy(),
+                            iterations=iterations)
+        (contours, _) = cv2.findContours(
+            erroded, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
+        contours = [cv2.boundingRect(contour) for contour in contours]
+        contours.sort(key=lambda x: x[-1]*x[-2], reverse=True)
+        return contours
+
 
 class BaselineDetector(Train):
     r"""This class is used to detect baseline.
