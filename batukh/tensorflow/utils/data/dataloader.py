@@ -10,6 +10,11 @@ class SegmentationDataLoader():
     :class:`~batukh.tensorflow.segmenter.ImageExtractor`, :class:`~batukh.tensorflow.segmenter.LayoutExtractor` and 
     :class:`~batukh.tensorflow.segmenter.BaselineDetector` classes.
 
+    Args:
+        path (str)       : Path of the folder containing originals folder and labels folder to be loaded in dataset.
+            Folder names must be as mentioned.
+        n_classes (int)  : number of classes in label images.
+
     Example
 
     .. code:: python
@@ -19,13 +24,6 @@ class SegmentationDataLoader():
         >>> for i,j in dl(batch_size=1):
         ...     print(i.shape,j.shape)
         ...     break
-
-    Args:
-        path (str)       : Path of the folder containing originals folder and labels folder to be loaded in dataset.
-            Folder names must be as mentioned.
-        n_classes (int)  : number of classes in label images.
-
-
 
     """
 
@@ -129,6 +127,12 @@ class SegmentationDataLoader():
 class OCRDataLoader():
     r""" Loads the :class:`~tensorflow.data.Dataset` for :class:`~batukh.tensorflow.ocr.OCR` class.
 
+
+    Args:
+        path (str)        :  Path of  folder containing images folder,labels.txt and table.txt to be loaded in dataset.Name of folders and files should be same as mentioned.
+        height (int,optional)      : Specifies the height to which all images will be resized keeping same aspect ratio.
+            Default: :math:`64`
+
     Example
     .. code:: python
 
@@ -138,10 +142,6 @@ class OCRDataLoader():
         ...     print(i.shape,j.values)
         ...     break
 
-    Args:
-        path (str)        :  Path of  folder containing images folder,labels.txt and table.txt to be loaded in dataset.Name of folders and files should be same as mentioned.
-        height (int,optional)      : Specifies the height to which all images will be resized keeping same aspect ratio.
-            Default: :math:`64`
     """
 
     def __init__(self, path, height=64):
