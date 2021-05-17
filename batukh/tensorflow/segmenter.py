@@ -231,7 +231,7 @@ class BaselineDetector(Train):
             val_path (str,optional) : path of the folder contaings originals folder (containing original images) and labels folder (containing label images) for validation dataset.
             """
         self.train_dl = SegmentationDataLoader(
-            train_path, self.model.n_classest)
+            train_path, self.model.n_classes)
         if val_path is not None:
             self.val_dl = SegmentationDataLoader(
                 val_path, self.model.n_classes)
