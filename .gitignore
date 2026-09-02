@@ -8,3 +8,7 @@ dist
 *logs
 *.ipynb_checkpoints
 *egg-info
+.venv/
+.ruff_cache/
+tf_ckpts/
+*.weights.h5

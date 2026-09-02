@@ -1,83 +1,48 @@
 # batukh
 
-Detection of Languages using CRNN.
+Custom TensorFlow and PyTorch models for document segmentation and OCR.
 
-Using [pip](http://pypi.org)
+## TensorFlow
 
-`pip install batukh`
+The TensorFlow backend targets TensorFlow 2.21 and Python 3.10–3.13. For local
+development, install it with:
 
-After all the dependencies have been installed, you can train any model.
+```bash
+python3.13 -m venv .venv
+source .venv/bin/activate
+python -m pip install -e ".[tensorflow]"
+```
 
-For Page Extraction(tensorflow):
+Segmentation datasets contain matching files under `originals/` and `labels/`.
+Binary masks use a black background and a red foreground. Multiclass masks use
+zero-based class IDs in the red channel.
+
+Page extraction:
 
 ```python
 >>> from batukh.tensorflow.segmenter import PageExtractor
->>> page_extractor=PageExtractor()
->>> page_extractor.load_data("temp")
->>> page_extractor.train(n_epochs=10, batch_size=1,repeat=1)
-Initializing from scratch
-
-Epoch: 1. Traininig: 100%|██████████| 70/70 [00:02<00:00, 23.95it/s, loss=0.0708]
-Epoch: 2. Traininig: 100%|██████████| 70/70 [00:02<00:00, 24.35it/s, loss=0.0682]
-
-Model saved to /content/tf_ckpts/Fri Oct 16 08:23:13 2020/ckpt-14280
-
-Epoch: 3. Traininig: 100%|██████████| 70/70 [00:02<00:00, 23.69it/s, loss=0.0658]
-Epoch: 4. Traininig: 100%|██████████| 70/70 [00:02<00:00, 24.74it/s, loss=0.0636]
-
-Model saved to /content/tf_ckpts/Fri Oct 16 08:23:13 2020/ckpt-14420
-
-Epoch: 5. Traininig: 100%|██████████| 70/70 [00:02<00:00, 23.68it/s, loss=0.0616]
-Epoch: 6. Traininig: 100%|██████████| 70/70 [00:02<00:00, 23.95it/s, loss=0.0597]
-
-Model saved to /content/tf_ckpts/Fri Oct 16 08:23:13 2020/ckpt-14560
-
-Epoch: 7. Traininig: 100%|██████████| 70/70 [00:03<00:00, 23.24it/s, loss=0.0579]
-Epoch: 8. Traininig: 100%|██████████| 70/70 [00:03<00:00, 23.23it/s, loss=0.0563]
-
-Model saved to /content/tf_ckpts/Fri Oct 16 08:23:13 2020/ckpt-14700
-
-Epoch: 9. Traininig: 100%|██████████| 70/70 [00:02<00:00, 23.44it/s, loss=0.0548]
-Epoch: 10. Traininig: 100%|██████████| 70/70 [00:02<00:00, 23.54it/s, loss=0.0533]
-
-Model saved to /content/tf_ckpts/Fri Oct 16 08:23:13 2020/ckpt-14840
+>>> page_extractor = PageExtractor()
+>>> page_extractor.load_data("/path/to/data")
+>>> history = page_extractor.train(
+...     n_epochs=10,
+...     batch_size=2,
+...     class_weights=[1.0, 100.0],
+... )
 ```
 
-For OCR(tensorflow):
+OCR datasets contain `images/`, `labels.txt`, and `table.txt`. Each label line
+uses `<image-stem>: <text>`. Each `table.txt` line defines one Unicode symbol;
+the final line is reserved for the CTC blank class.
+
+OCR:
 
 ```python
 >>> from batukh.tensorflow.ocr import OCR
->>> m = OCR()
->>> m.load_data("temp")
->>> m.train(10,batch_size=1,repeat=1)       
-Epoch: 1. Traininig:   0%|          | 0/70 [00:00<?, ?it/s]
-
-Initializing from scratch
-
-Epoch: 1. Traininig: 100%|██████████| 70/70 [00:04<00:00, 15.84it/s, loss=37.1]
-Epoch: 2. Traininig: 100%|██████████| 70/70 [00:02<00:00, 23.57it/s, loss=29.7]
-
-Model saved to tf_ckpts/Fri Oct 16 09:44:35 2020/ckpt-140
-
-Epoch: 3. Traininig: 100%|██████████| 70/70 [00:02<00:00, 24.01it/s, loss=26.8]
-Epoch: 4. Traininig: 100%|██████████| 70/70 [00:02<00:00, 23.84it/s, loss=25.3]
-
-Model saved to tf_ckpts/Fri Oct 16 09:44:35 2020/ckpt-280
-
-Epoch: 5. Traininig: 100%|██████████| 70/70 [00:02<00:00, 23.46it/s, loss=24.4]
-Epoch: 6. Traininig: 100%|██████████| 70/70 [00:02<00:00, 24.33it/s, loss=23.8]
-
-Model saved to tf_ckpts/Fri Oct 16 09:44:35 2020/ckpt-420
-
-Epoch: 7. Traininig: 100%|██████████| 70/70 [00:02<00:00, 23.96it/s, loss=23.3]
-Epoch: 8. Traininig: 100%|██████████| 70/70 [00:02<00:00, 23.67it/s, loss=22.9]
-
-Model saved to tf_ckpts/Fri Oct 16 09:44:35 2020/ckpt-560
-
-Epoch: 9. Traininig: 100%|██████████| 70/70 [00:03<00:00, 23.22it/s, loss=22.6]
-Epoch: 10. Traininig: 100%|██████████| 70/70 [00:02<00:00, 23.52it/s, loss=22.3]
-
-Model saved to tf_ckpts/Fri Oct 16 09:44:35 2020/ckpt-700
+>>> ocr = OCR(n_classes=177)
+>>> ocr.load_data("/path/to/ocr-data", height=64)
+>>> history = ocr.train(n_epochs=10, batch_size=2)
+>>> logits = ocr.predict(images)
+>>> text = ocr.decode(logits)
 ```
 
 
