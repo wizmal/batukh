@@ -1,9 +1,9 @@
 # Batukh development handoff
 
 This document transfers the durable project context from the Codex desktop
-task to another coding agent. It does not transfer private conversation state;
-the checked-out branch, committed files, and this document are the source of
-truth.
+task to a Codex CLI session. It does not transfer the desktop task's private
+conversation transcript; the checked-out branch, committed files, and this
+document are the source of truth on another machine.
 
 ## Repository state
 
@@ -122,10 +122,34 @@ For an NVIDIA server, confirm the driver and GPU before training:
 
 ```bash
 nvidia-smi
+python -m pip install "tensorflow[and-cuda]>=2.21,<2.22"
 python -c "import tensorflow as tf; print(tf.__version__); print(tf.config.list_physical_devices('GPU'))"
 ```
 
 Do not begin a long training job until TensorFlow lists the GPU.
+
+## Codex CLI setup and continuation
+
+Install Codex CLI on the Linux server and authenticate it:
+
+```bash
+curl -fsSL https://chatgpt.com/codex/install.sh | sh
+codex --version
+codex login --device-auth
+```
+
+Run the first server-side Codex session from the repository root and paste the
+prompt below. This creates a new server-side session grounded in the committed
+handoff; cloning the branch does not copy the desktop task transcript.
+
+After that first session, continue it from the same checkout with:
+
+```bash
+codex resume --last
+```
+
+Use `codex resume --all` if the session picker cannot find it after the checkout
+has moved or been renamed.
 
 ## Functional understanding and recommended direction
 
@@ -171,7 +195,7 @@ model, and a 5-15M parameter CTC recognizer trained independently. Use tiled
 full-page inference and FP16 mixed precision; model activations at document
 resolution are a larger memory concern than parameter count.
 
-## Suggested first prompt for Claude CLI
+## Suggested first prompt for Codex CLI
 
 ```text
 Read HANDOFF.md completely, then inspect git status, the latest commits, and
